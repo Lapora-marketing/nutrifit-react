@@ -1,0 +1,13 @@
+{
+  "buildCommand": "next build",
+  "outputDirectory": ".next",
+  "env": {
+    "NEXT_PUBLIC_SITE_URL": "@nutrifit_site_url"
+  },
+  "envs": {
+    "NEXT_PUBLIC_SITE_URL": {
+      "production": "https://nutrifit.vercel.app",
+      "preview": "@url"
+    }
+  }
+}
