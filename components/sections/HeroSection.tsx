@@ -20,7 +20,7 @@ export function HeroSection() {
 
   return (
     <section
-      className="min-h-screen flex items-center justify-center relative overflow-hidden pt-24 pb-16 px-5 md:px-10"
+      className="min-h-[90vh] flex items-center justify-center relative overflow-hidden pt-24 pb-16 px-5 sm:px-8"
       aria-label="Hero principal"
     >
       {/* Background gradients */}
@@ -38,7 +38,7 @@ export function HeroSection() {
         style={{ background: `rgba(${currentProfile.colorRgb}, 1)` }}
       />
 
-      <div className="relative z-10 max-w-4xl w-full text-center mx-auto">
+      <div className="relative z-10 max-w-3xl w-full text-center mx-auto">
 
         {/* ⭐ Stars + social proof — PRIMERA VISTA */}
         <div className="animate-fadeInDown mb-5 flex flex-col items-center gap-2">
