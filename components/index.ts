@@ -13,4 +13,3 @@ export { CTASection } from './sections/CTASection'
 
 // Context API - Global state management
 export { ProfileProvider, useProfile } from './ProfileContext'
-export type { ProfileContextType } from './ProfileContext'
