@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { ProfileProvider } from '@/components'
+import { ProfileProvider, UserProvider } from '@/components'
 import './globals.css'
 
 export const metadata: Metadata = {
@@ -32,9 +32,11 @@ export default function RootLayout({
             --ac-ll: 245, 114, 175;
           }
         `}</style>
-        <ProfileProvider>
-          {children}
-        </ProfileProvider>
+        <UserProvider>
+          <ProfileProvider>
+            {children}
+          </ProfileProvider>
+        </UserProvider>
       </body>
     </html>
   )

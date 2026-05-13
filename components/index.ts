@@ -1,6 +1,7 @@
 // Layout components
 export { Nav } from './Nav'
 export { Onboarding } from './Onboarding'
+export { FormularioOnboarding } from './FormularioOnboarding'
 export { Footer } from './Footer'
 
 // Section components
@@ -13,3 +14,4 @@ export { CTASection } from './sections/CTASection'
 
 // Context API - Global state management
 export { ProfileProvider, useProfile } from './ProfileContext'
+export { UserProvider, useUser } from './UserContext'
