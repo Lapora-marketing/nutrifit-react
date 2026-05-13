@@ -3,6 +3,8 @@ export { Nav } from './Nav'
 export { Onboarding } from './Onboarding'
 export { FormularioOnboarding } from './FormularioOnboarding'
 export { Footer } from './Footer'
+export { Reveal } from './Reveal'
+export { TrustBar } from './TrustBar'
 
 // Section components
 export { HeroSection } from './sections/HeroSection'

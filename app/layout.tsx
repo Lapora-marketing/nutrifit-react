@@ -1,17 +1,26 @@
 import type { Metadata } from 'next'
+import { Inter } from 'next/font/google'
 import { ProfileProvider, UserProvider } from '@/components'
 import './globals.css'
 
+const inter = Inter({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700', '800', '900'],
+  variable: '--font-inter',
+  display: 'swap',
+})
+
 export const metadata: Metadata = {
-  title: 'Nutrifit App - Academia Médica de Nutrición',
-  description: 'Programa de nutrición y transformación corporal personalizado según tu perfil. Acceso completo a app, consultas médicas y planes alimentarios.',
-  keywords: 'nutrición, coaching, transformación corporal, nutricionista online',
+  title: 'Nutrifit App — Tu plan de nutrición 100% personalizado',
+  description: 'Academia Médica especializada en transformación corporal. Diagnóstico personalizado, plan de alimentación a tu medida y resultados garantizados.',
+  keywords: 'nutrición, coaching, transformación corporal, nutricionista online, plan alimentario',
   authors: [{ name: 'Nutrifit' }],
   openGraph: {
-    title: 'Nutrifit App',
-    description: 'Programa de nutrición personalizado para ti',
+    title: 'Nutrifit App — Tu plan de nutrición personalizado',
+    description: 'Más de 2,847 transformaciones reales con nuestro programa médico-nutricional.',
     type: 'website',
   },
+  robots: { index: true, follow: true },
 }
 
 export default function RootLayout({
@@ -20,11 +29,12 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="es" suppressHydrationWarning>
+    <html lang="es" suppressHydrationWarning className={inter.variable}>
       <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+        <meta name="theme-color" content="#080E1A" />
       </head>
-      <body className="bg-[#080E1A] text-white antialiased">
+      <body className={`${inter.className} bg-[#080E1A] text-white antialiased`}>
         <style>{`
           :root {
             --ac: #be185d;

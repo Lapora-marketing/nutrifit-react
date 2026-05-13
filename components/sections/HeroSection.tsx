@@ -155,16 +155,15 @@ export function HeroSection() {
 
         {/* Médico + social proof */}
         <div
-          className="flex flex-col sm:flex-row items-center gap-4 max-w-sm mx-auto rounded-2xl p-4 md:p-5 animate-fadeInUp delay-500 hover-lift"
-          style={{
-            background: 'rgba(255,255,255,0.04)',
-            border: '1px solid rgba(255,255,255,0.08)',
-          }}
+          className="glass-card flex flex-col sm:flex-row items-center gap-4 max-w-sm mx-auto rounded-2xl p-4 md:p-5 animate-fadeInUp delay-500 hover-lift hover-glow"
         >
           {/* Avatar */}
           <div
-            className="flex items-center justify-center w-12 h-12 rounded-xl text-2xl shrink-0"
-            style={{ background: `rgba(${currentProfile.colorRgb}, 0.18)` }}
+            className="flex items-center justify-center w-12 h-12 rounded-xl text-2xl shrink-0 ring-2 ring-offset-2 ring-offset-transparent"
+            style={{
+              background: `linear-gradient(135deg, rgba(${currentProfile.colorRgb}, 0.25), rgba(${currentProfile.colorRgb}, 0.1))`,
+              boxShadow: `0 0 0 1px rgba(${currentProfile.colorRgb}, 0.3)`,
+            }}
           >
             {currentProfile.emoji}
           </div>
