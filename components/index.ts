@@ -11,6 +11,6 @@ export { ResultadosSection } from './sections/ResultadosSection'
 export { PlanesSection } from './sections/PlanesSection'
 export { CTASection } from './sections/CTASection'
 
-// Context
+// Context API
 export { ProfileProvider, useProfile } from './ProfileContext'
 export type { ProfileContextType } from './ProfileContext'
