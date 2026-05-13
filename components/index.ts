@@ -1,9 +1,9 @@
-// Layout
+// Layout components
 export { Nav } from './Nav'
 export { Onboarding } from './Onboarding'
 export { Footer } from './Footer'
 
-// Sections
+// Section components
 export { HeroSection } from './sections/HeroSection'
 export { ProblemaSection } from './sections/ProblemaSection'
 export { ProgramaSection } from './sections/ProgramaSection'
