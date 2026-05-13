@@ -3,7 +3,7 @@
 import React, { createContext, useContext, useState } from 'react'
 import { PERFILES, type Perfil } from '@/lib/perfiles'
 
-interface ProfileContextType {
+export interface ProfileContextType {
   currentProfile: Perfil | null
   setProfile: (id: 'rap' | 'kids' | 'fit') => void
   setProfileColors: () => void
