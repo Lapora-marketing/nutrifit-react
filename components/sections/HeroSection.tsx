@@ -2,125 +2,189 @@
 
 import { useProfile } from '@/components/ProfileContext'
 import { useUser } from '@/components/UserContext'
+import Image from 'next/image'
 
 export function HeroSection() {
   const { currentProfile } = useProfile()
   const { userPreferences } = useUser()
-
   if (!currentProfile) return null
 
-  const greeting = userPreferences?.nombre ? `${userPreferences.nombre}, ` : ''
+  const firstName = userPreferences?.nombre?.split(' ')[0] || ''
 
   return (
-    <section id="hero" style={{ background: 'var(--white)', borderBottom: '1px solid var(--border)', padding: 0 }}>
-      <div style={{ display: 'flex', flexDirection: 'column', padding: '2.5rem 1.25rem 0', maxWidth: 680, margin: '0 auto' }}>
-        {/* Hook */}
+    <section id="hero" style={{ background: 'var(--bg)', padding: '2rem 0 4rem' }}>
+      <div className="container-nut">
+        {/* HERO — Aisle-style two-column color block */}
         <div
           style={{
-            fontSize: '.82rem',
-            fontWeight: 900,
-            color: 'var(--ac)',
-            textTransform: 'uppercase',
-            letterSpacing: '.07em',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '.5rem',
-            marginBottom: '.9rem',
-          }}
-        >
-          <span style={{ display: 'block', width: 24, height: 2.5, background: 'var(--ac)', borderRadius: 2 }} />
-          {currentProfile.heroBadge}
-        </div>
-
-        {/* H1 */}
-        <h1 style={{ marginBottom: '.6rem' }}>
-          {greeting}
-          {currentProfile.heroH1.split('<span>').map((part, i) => {
-            if (i === 0) return <span key={i}>{part}</span>
-            const [spanContent, rest] = part.split('</span>')
-            return (
-              <span key={i}>
-                <em className="hi">{spanContent}</em>
-                {rest}
-              </span>
-            )
-          })}
-        </h1>
-
-        {/* Subtitle */}
-        <p style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--gray)', margin: '.75rem 0 1.5rem' }}>
-          {currentProfile.heroSub}{' '}
-          <strong style={{ color: 'var(--dark)' }}>Y vuelve a sentirte tú misma otra vez 💫</strong>
-        </p>
-
-        {/* CTA */}
-        <a
-          href="#oferta"
-          className="btn btn-rap btn-xl btn-full"
-          style={{ maxWidth: 420 }}
-        >
-          ✨ Quiero empezar — Mi plan personalizado
-        </a>
-        <p style={{ fontSize: '.78rem', fontWeight: 700, color: 'var(--gray)', textAlign: 'center', marginTop: '.65rem' }}>
-          ⚡ Empieza con una sesión gratis de diagnóstico inicial
-        </p>
-
-        {/* Social proof */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '.75rem', flexWrap: 'wrap', marginTop: '1rem' }}>
-          <span className="stars" style={{ fontSize: '1rem' }}>★★★★★</span>
-          <p style={{ fontSize: '.8rem', fontWeight: 700, color: 'var(--gray)', margin: 0 }}>
-            <strong style={{ color: 'var(--dark)' }}>+200 pacientes</strong> ya transformaron su vida con este método
-          </p>
-        </div>
-
-        {/* Banner emocional */}
-        <div
-          style={{
-            background: `linear-gradient(135deg, var(--ac) 0%, var(--ac-dark, var(--rap-dark)) 100%)`,
-            borderRadius: 'var(--radius-xl) var(--radius-xl) 0 0',
-            padding: '2rem 1.5rem',
-            marginTop: '2rem',
-            textAlign: 'center',
-            position: 'relative',
+            display: 'grid',
+            gridTemplateColumns: 'minmax(0,1fr) minmax(0,1fr)',
+            gap: 0,
+            borderRadius: 'var(--radius-card)',
             overflow: 'hidden',
+            position: 'relative',
+            minHeight: '520px',
           }}
+          className="hero-grid"
         >
+          {/* LEFT — green editorial block */}
           <div
             style={{
-              content: '""',
-              position: 'absolute',
-              top: -60,
-              right: -60,
-              width: 200,
-              height: 200,
-              borderRadius: '50%',
-              background: 'rgba(255,255,255,.06)',
-            }}
-          />
-          <span
-            style={{
-              fontSize: '4.5rem',
-              display: 'block',
-              marginBottom: '.75rem',
-              filter: 'drop-shadow(0 4px 12px rgba(0,0,0,.3))',
-            }}
-          >
-            {currentProfile.emoji}
-          </span>
-          <p
-            style={{
-              fontStyle: 'italic',
-              fontWeight: 800,
-              fontSize: '1.05rem',
-              color: 'rgba(255,255,255,.92)',
-              margin: 0,
+              background: 'var(--dark)',
+              padding: '3rem 2rem',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'space-between',
               position: 'relative',
+              minHeight: 480,
             }}
+            className="animate-fadeIn"
           >
-            "{currentProfile.medico} — {currentProfile.medicoRole}"
-          </p>
+            <div>
+              <h1 style={{ color: 'var(--white)', marginBottom: '1.5rem' }} className="animate-fadeUp">
+                <span style={{ display: 'block' }}>Plan</span>
+                <span className="serif" style={{ display: 'block', color: 'var(--ac-mid)', fontSize: '0.85em', paddingLeft: '1.5rem' }}>
+                  para
+                </span>
+                <span style={{ display: 'block' }}>cada mamá</span>
+              </h1>
+              <p
+                style={{
+                  color: 'rgba(255,255,255,.7)',
+                  fontWeight: 700,
+                  maxWidth: 320,
+                  marginTop: '2rem',
+                }}
+                className="animate-fadeUp delay-200"
+              >
+                {firstName && `${firstName}, `}recupera tu energía y tu cuerpo postparto con un{' '}
+                <strong style={{ color: '#fff' }}>protocolo médico real</strong>.
+              </p>
+            </div>
+
+            <a
+              href="#oferta"
+              className="arrow-link animate-fadeUp delay-300"
+              style={{ color: 'var(--white)', marginTop: '2rem' }}
+            >
+              EMPEZAR AHORA <span style={{ fontSize: '1.1rem' }}>→</span>
+            </a>
+
+            {/* Decorative dots */}
+            <div
+              className="deco-dots animate-float"
+              style={{ bottom: 30, left: '40%', opacity: 0.4 }}
+            />
+          </div>
+
+          {/* RIGHT — mamita photo on warm bg */}
+          <div
+            style={{
+              background: 'var(--bg-warm)',
+              padding: '2rem 1.5rem',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              position: 'relative',
+              overflow: 'hidden',
+            }}
+            className="animate-fadeIn delay-200"
+          >
+            {/* Decorative blobs */}
+            <div
+              className="deco-blob animate-floatBlob"
+              style={{
+                top: '-30px',
+                right: '-30px',
+                width: 180,
+                height: 180,
+                background: 'var(--ac)',
+                opacity: 0.18,
+              }}
+            />
+            <div
+              className="deco-blob animate-floatBlob"
+              style={{
+                bottom: '-50px',
+                left: '-30px',
+                width: 130,
+                height: 130,
+                background: 'var(--amber)',
+                opacity: 0.25,
+                animationDelay: '-3s',
+              }}
+            />
+
+            {/* Photo */}
+            <div
+              style={{
+                position: 'relative',
+                width: '100%',
+                aspectRatio: '3/4',
+                maxWidth: 320,
+                borderRadius: 'var(--radius-card)',
+                overflow: 'hidden',
+                boxShadow: 'var(--shadow-soft)',
+                zIndex: 2,
+              }}
+            >
+              <Image
+                src="/mamitas/mami-2.jpeg"
+                alt="Mamá con su bebé al atardecer"
+                fill
+                priority
+                sizes="(max-width: 768px) 100vw, 400px"
+                style={{ objectFit: 'cover' }}
+              />
+            </div>
+
+            {/* Floating "Take the quiz"-style pill */}
+            <a
+              href="#oferta"
+              className="floating-pill"
+              style={{
+                background: 'var(--ac)',
+                bottom: '8%',
+                right: '8%',
+              }}
+            >
+              EMPEZAR<br />MI PLAN ✨
+            </a>
+          </div>
+        </div>
+
+        {/* Social proof strip below hero */}
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            flexWrap: 'wrap',
+            gap: '1rem',
+            marginTop: '2rem',
+            padding: '1rem 0',
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: '.75rem' }}>
+            <span className="stars" style={{ fontSize: '1.05rem' }}>★★★★★</span>
+            <p style={{ fontSize: '.85rem', fontWeight: 700, margin: 0, color: 'var(--dark)' }}>
+              <strong>+200 mamás</strong> ya recuperaron su abdomen con este método
+            </p>
+          </div>
+          <a href="#programa" className="arrow-link">
+            VER CÓMO FUNCIONA <span>→</span>
+          </a>
         </div>
       </div>
+
+      <style jsx>{`
+        @media (max-width: 768px) {
+          .hero-grid {
+            grid-template-columns: 1fr !important;
+            min-height: auto !important;
+          }
+        }
+      `}</style>
     </section>
   )
 }

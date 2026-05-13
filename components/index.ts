@@ -10,6 +10,9 @@ export { WhatsAppButton } from './WhatsAppButton'
 
 // Section components
 export { HeroSection } from './sections/HeroSection'
+export { AboutSection } from './sections/AboutSection'
+export { ProgramCardsSection } from './sections/ProgramCardsSection'
+export { ImpactSection } from './sections/ImpactSection'
 export { ProblemaSection } from './sections/ProblemaSection'
 export { ProgramaSection } from './sections/ProgramaSection'
 export { ResultadosSection } from './sections/ResultadosSection'

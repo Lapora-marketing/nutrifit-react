@@ -10,25 +10,45 @@ export function CTASection() {
     <section
       id="cierre"
       style={{
-        padding: '5rem 0',
+        padding: '6rem 0',
         background: `linear-gradient(180deg, var(--white) 0%, var(--ac-light) 100%)`,
         textAlign: 'center',
+        position: 'relative',
+        overflow: 'hidden',
       }}
     >
-      <div className="container-nut">
-        <div className="tag">✨ Empieza hoy</div>
+      <div
+        className="deco-blob animate-floatBlob"
+        style={{
+          position: 'absolute',
+          top: '20%',
+          left: '8%',
+          width: 200,
+          height: 200,
+          background: 'var(--amber)',
+          opacity: 0.2,
+        }}
+      />
+      <div
+        className="deco-blob animate-floatBlob"
+        style={{
+          position: 'absolute',
+          bottom: '15%',
+          right: '10%',
+          width: 250,
+          height: 250,
+          background: 'var(--ac)',
+          opacity: 0.15,
+          animationDelay: '-4s',
+        }}
+      />
 
-        <h2 style={{ maxWidth: 500, margin: '0 auto 1.25rem' }}>
-          {currentProfile.ctaH2.split('<span>').map((part, i) => {
-            if (i === 0) return <span key={i}>{part}</span>
-            const [spanContent, rest] = part.split('</span>')
-            return (
-              <span key={i}>
-                <em className="hi">{spanContent}</em>
-                {rest}
-              </span>
-            )
-          })}
+      <div className="container-narrow" style={{ position: 'relative', zIndex: 2 }}>
+        <div className="tag" style={{ margin: '0 auto 1rem' }}>✨ Empieza hoy</div>
+
+        <h2 style={{ maxWidth: 600, margin: '0 auto 1.25rem' }}>
+          Tu mejor versión<br />
+          <span className="serif">empieza</span> hoy.
         </h2>
 
         <p

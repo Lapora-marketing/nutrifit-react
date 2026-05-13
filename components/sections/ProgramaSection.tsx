@@ -10,9 +10,21 @@ export function ProgramaSection() {
     <section
       id="programa"
       className="section"
-      style={{ background: 'var(--dark)' }}
+      style={{ background: 'var(--dark)', position: 'relative', overflow: 'hidden' }}
     >
-      <div className="container-nut">
+      {/* Dots */}
+      <div
+        className="deco-dots"
+        style={{
+          top: 40,
+          right: '5%',
+          width: 110,
+          height: 110,
+          backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.25) 2px, transparent 2.5px)',
+        }}
+      />
+
+      <div className="container-narrow">
         <div
           className="tag"
           style={{ background: `rgba(${currentProfile.colorRgb}, 0.2)`, color: '#f9a8d4' }}
@@ -20,17 +32,8 @@ export function ProgramaSection() {
           🎯 {currentProfile.progTag}
         </div>
 
-        <h2 style={{ color: '#fff' }}>
-          {currentProfile.progH2.split('<span>').map((part, i) => {
-            if (i === 0) return <span key={i}>{part}</span>
-            const [spanContent, rest] = part.split('</span>')
-            return (
-              <span key={i}>
-                <em className="hi" style={{ color: '#f9a8d4' }}>{spanContent}</em>
-                {rest}
-              </span>
-            )
-          })}
+        <h2 style={{ color: '#fff', marginBottom: '1.25rem' }}>
+          El <span className="serif" style={{ color: '#f9a8d4' }}>sistema</span> que funciona
         </h2>
 
         <p style={{ color: 'rgba(255,255,255,.65)', fontWeight: 700, marginTop: '.75rem' }}>

@@ -10,14 +10,27 @@ export function ResultadosSection() {
     <section
       id="resultados"
       className="section"
-      style={{ background: 'var(--bg)' }}
+      style={{ background: 'var(--bg)', position: 'relative', overflow: 'hidden' }}
     >
-      <div className="container-nut">
+      <div
+        className="deco-blob animate-floatBlob"
+        style={{
+          position: 'absolute',
+          bottom: '-100px',
+          right: '-80px',
+          width: 320,
+          height: 320,
+          background: 'var(--amber)',
+          opacity: 0.18,
+        }}
+      />
+
+      <div className="container-narrow" style={{ position: 'relative', zIndex: 2 }}>
         <div className="tag">💬 Resultados reales</div>
 
-        <h2>
-          Lo que dicen las{' '}
-          <em className="hi">pacientes que ya lo lograron</em>
+        <h2 style={{ marginBottom: '1.5rem' }}>
+          Pacientes que ya<br />
+          <span className="serif">transformaron</span> su vida.
         </h2>
 
         <p style={{ fontWeight: 700, marginTop: '.75rem' }}>

@@ -20,13 +20,18 @@ export function PlanesSection() {
     <section
       id="oferta"
       className="section"
-      style={{ background: 'var(--white)' }}
+      style={{ background: 'var(--white)', position: 'relative' }}
     >
-      <div className="container-nut">
+      <div
+        className="deco-dots"
+        style={{ top: 40, left: '5%', width: 90, height: 90, opacity: 0.6 }}
+      />
+      <div className="container-narrow" style={{ position: 'relative' }}>
         <div className="tag">💎 Tu inversión</div>
 
-        <h2>
-          Todo lo que necesitas en un <em className="hi">solo programa</em>
+        <h2 style={{ marginBottom: '1.25rem' }}>
+          Todo lo que necesitas<br />
+          en un <span className="serif">solo programa</span>.
         </h2>
 
         <p style={{ fontWeight: 700, marginTop: '.75rem' }}>

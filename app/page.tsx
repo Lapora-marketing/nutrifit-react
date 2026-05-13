@@ -5,6 +5,9 @@ import {
   Nav,
   FormularioOnboarding,
   HeroSection,
+  AboutSection,
+  ProgramCardsSection,
+  ImpactSection,
   ProblemaSection,
   ProgramaSection,
   ResultadosSection,
@@ -12,7 +15,6 @@ import {
   CTASection,
   Footer,
   Reveal,
-  TrustBar,
   UrgencyBar,
   WhatsAppButton,
   useUser,
@@ -43,7 +45,15 @@ export default function Home() {
       <Nav />
       <main>
         <HeroSection />
-        <TrustBar />
+        <Reveal>
+          <AboutSection />
+        </Reveal>
+        <Reveal>
+          <ProgramCardsSection />
+        </Reveal>
+        <Reveal>
+          <ImpactSection />
+        </Reveal>
         <Reveal>
           <ProblemaSection />
         </Reveal>
