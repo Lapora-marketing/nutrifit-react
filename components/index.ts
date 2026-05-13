@@ -5,6 +5,8 @@ export { FormularioOnboarding } from './FormularioOnboarding'
 export { Footer } from './Footer'
 export { Reveal } from './Reveal'
 export { TrustBar } from './TrustBar'
+export { UrgencyBar } from './UrgencyBar'
+export { WhatsAppButton } from './WhatsAppButton'
 
 // Section components
 export { HeroSection } from './sections/HeroSection'

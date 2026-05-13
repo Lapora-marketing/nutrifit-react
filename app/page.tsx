@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react'
 import {
   Nav,
-  Onboarding,
   FormularioOnboarding,
   HeroSection,
   ProblemaSection,
@@ -14,6 +13,8 @@ import {
   Footer,
   Reveal,
   TrustBar,
+  UrgencyBar,
+  WhatsAppButton,
   useUser,
 } from '@/components'
 import { type UserPreferences } from '@/lib/userPreferences'
@@ -38,15 +39,15 @@ export default function Home() {
 
   return (
     <>
+      <UrgencyBar />
       <Nav />
-      <Onboarding />
       <main>
         <HeroSection />
         <TrustBar />
         <Reveal>
           <ProblemaSection />
         </Reveal>
-        <Reveal delay={50}>
+        <Reveal>
           <ProgramaSection />
         </Reveal>
         <Reveal>
@@ -60,6 +61,7 @@ export default function Home() {
         </Reveal>
       </main>
       <Footer />
+      <WhatsAppButton />
     </>
   )
 }

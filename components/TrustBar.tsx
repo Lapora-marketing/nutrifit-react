@@ -6,39 +6,58 @@ export function TrustBar() {
   const { currentProfile } = useProfile()
   if (!currentProfile) return null
 
-  const stats = [
-    { value: '2,847+', label: 'Pacientes' },
-    { value: '4.9★', label: 'Calificación' },
-    { value: '92%', label: 'Resultados' },
-    { value: '3', label: 'Especialistas' },
-  ]
-
   return (
-    <section
-      className="py-8 md:py-10 px-5 sm:px-8 relative"
+    <div
       style={{
-        background: 'rgba(255,255,255,0.015)',
-        borderTop: '1px solid rgba(255,255,255,0.04)',
-        borderBottom: '1px solid rgba(255,255,255,0.04)',
+        padding: '1.5rem 0',
+        background: 'var(--white)',
+        borderBottom: '1px solid var(--border)',
       }}
     >
-      <div className="max-w-5xl mx-auto">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
-          {stats.map((stat, i) => (
-            <div key={i} className="text-center">
-              <div
-                className="text-2xl md:text-3xl font-black mb-1 tabular-nums"
-                style={{ color: currentProfile.color }}
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-around',
+          alignItems: 'center',
+          maxWidth: 680,
+          margin: '0 auto',
+          padding: '0 1.25rem',
+        }}
+      >
+        {currentProfile.stats.map((stat, i, arr) => (
+          <div key={i} style={{ display: 'contents' }}>
+            <div style={{ textAlign: 'center' }}>
+              <span
+                style={{
+                  fontSize: '1.6rem',
+                  fontWeight: 900,
+                  color: 'var(--dark)',
+                  display: 'block',
+                  lineHeight: 1,
+                }}
               >
-                {stat.value}
-              </div>
-              <div className="text-xs uppercase tracking-widest text-[rgba(255,255,255,0.4)]">
+                {stat.num}
+              </span>
+              <span
+                style={{
+                  fontSize: '.68rem',
+                  fontWeight: 800,
+                  color: 'var(--gray)',
+                  textTransform: 'uppercase',
+                  letterSpacing: '.05em',
+                  display: 'block',
+                  marginTop: '.25rem',
+                }}
+              >
                 {stat.label}
-              </div>
+              </span>
             </div>
-          ))}
-        </div>
+            {i < arr.length - 1 && (
+              <div style={{ width: 1, height: '2.5rem', background: 'var(--border)' }} />
+            )}
+          </div>
+        ))}
       </div>
-    </section>
+    </div>
   )
 }

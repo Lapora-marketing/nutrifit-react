@@ -1,23 +1,23 @@
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
+import { Nunito } from 'next/font/google'
 import { ProfileProvider, UserProvider } from '@/components'
 import './globals.css'
 
-const inter = Inter({
+const nunito = Nunito({
   subsets: ['latin'],
-  weight: ['400', '500', '600', '700', '800', '900'],
-  variable: '--font-inter',
+  weight: ['400', '600', '700', '800', '900'],
+  variable: '--font-nunito',
   display: 'swap',
 })
 
 export const metadata: Metadata = {
-  title: 'Nutrifit App — Tu plan de nutrición 100% personalizado',
-  description: 'Academia Médica especializada en transformación corporal. Diagnóstico personalizado, plan de alimentación a tu medida y resultados garantizados.',
-  keywords: 'nutrición, coaching, transformación corporal, nutricionista online, plan alimentario',
-  authors: [{ name: 'Nutrifit' }],
+  title: 'Nutrifit — Academia Médica de Nutrición',
+  description: 'Programa médico-nutricional personalizado. Recupera tu cuerpo y tu energía con un sistema diseñado por especialistas.',
+  keywords: 'nutrición, transformación corporal, mamá rap, kids, fit, nutricionista, Colombia',
+  authors: [{ name: 'Nutrifit Academia' }],
   openGraph: {
-    title: 'Nutrifit App — Tu plan de nutrición personalizado',
-    description: 'Más de 2,847 transformaciones reales con nuestro programa médico-nutricional.',
+    title: 'Nutrifit — Tu transformación empieza hoy',
+    description: 'Sistema médico-nutricional con más de 200 pacientes transformadas.',
     type: 'website',
   },
   robots: { index: true, follow: true },
@@ -29,19 +29,12 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="es" suppressHydrationWarning className={inter.variable}>
+    <html lang="es" suppressHydrationWarning className={nunito.variable}>
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
-        <meta name="theme-color" content="#080E1A" />
+        <meta name="theme-color" content="#be185d" />
       </head>
-      <body className={`${inter.className} bg-[#080E1A] text-white antialiased`}>
-        <style>{`
-          :root {
-            --ac: #be185d;
-            --ac-rgb: 190, 24, 93;
-            --ac-ll: 245, 114, 175;
-          }
-        `}</style>
+      <body className={nunito.className}>
         <UserProvider>
           <ProfileProvider>
             {children}

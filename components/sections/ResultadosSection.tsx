@@ -4,121 +4,163 @@ import { useProfile } from '@/components/ProfileContext'
 
 export function ResultadosSection() {
   const { currentProfile } = useProfile()
-
   if (!currentProfile) return null
 
   return (
     <section
       id="resultados"
-      className="py-16 md:py-24 px-5 sm:px-8"
-      style={{ background: 'linear-gradient(180deg, #0D1425 0%, #060C17 100%)' }}
+      className="section"
+      style={{ background: 'var(--bg)' }}
     >
-      <div className="max-w-5xl mx-auto w-full">
-        {/* Section header */}
-        <div className="max-w-2xl mb-10 md:mb-14">
-          <span
-            className="inline-block text-xs font-bold uppercase tracking-widest mb-3"
-            style={{ color: currentProfile.color }}
-          >
-            Resultados reales
-          </span>
+      <div className="container-nut">
+        <div className="tag">💬 Resultados reales</div>
 
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-black mb-4 leading-tight">
-            Pacientes que ya{' '}
-            <span style={{ color: currentProfile.color }}>transformaron su vida</span>
-          </h2>
+        <h2>
+          Lo que dicen las{' '}
+          <em className="hi">pacientes que ya lo lograron</em>
+        </h2>
 
-          <p className="text-base md:text-lg text-[rgba(255,255,255,0.55)] leading-relaxed">
-            {currentProfile.resSub}
-          </p>
-        </div>
+        <p style={{ fontWeight: 700, marginTop: '.75rem' }}>
+          {currentProfile.resSub}
+        </p>
 
-        {/* Results grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-5 mb-12 md:mb-16">
+        {/* Resultados stats */}
+        <div style={{ display: 'grid', gap: '1.1rem', marginTop: '2rem' }}>
           {currentProfile.resultados.map((result, i) => (
             <div
               key={i}
-              className="rounded-2xl p-5 md:p-6 border hover-lift transition-all duration-300"
+              className="card"
               style={{
-                background: `linear-gradient(135deg, rgba(${currentProfile.colorRgb}, 0.1), rgba(${currentProfile.colorRgb}, 0.02))`,
-                borderColor: `rgba(${currentProfile.colorRgb}, 0.22)`,
+                padding: '1.4rem',
+                position: 'relative',
               }}
             >
-              <span
-                className="inline-block text-xs font-bold uppercase tracking-wider mb-3"
-                style={{ color: currentProfile.color }}
+              <div
+                style={{
+                  fontSize: '.72rem',
+                  fontWeight: 900,
+                  color: 'var(--ac)',
+                  textTransform: 'uppercase',
+                  letterSpacing: '.06em',
+                  marginBottom: '.5rem',
+                }}
               >
                 {result.tag}
-              </span>
-
-              <h3 className="font-bold text-base text-white mb-4 leading-snug">
-                {result.title}
-              </h3>
-
-              <div className="space-y-3 mb-4">
-                {result.stats.map((stat, j) => (
-                  <div key={j} className="flex items-start gap-3">
-                    <span className="text-xl md:text-2xl font-black tabular-nums" style={{ color: '#10b981', minWidth: '70px' }}>
-                      {stat.value}
-                    </span>
-                    <span className="text-xs text-[rgba(255,255,255,0.5)] leading-snug pt-1">
-                      {stat.description}
-                    </span>
-                  </div>
-                ))}
               </div>
+              <h3 style={{ marginBottom: '.85rem' }}>{result.title}</h3>
 
-              <div
-                className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold"
-                style={{ background: 'rgba(16,185,129,0.12)', color: '#10b981' }}
+              {result.stats.map((stat, j) => (
+                <div
+                  key={j}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '.85rem',
+                    marginBottom: '.65rem',
+                  }}
+                >
+                  <span
+                    style={{
+                      fontSize: '1.4rem',
+                      fontWeight: 900,
+                      color: 'var(--green)',
+                      minWidth: '70px',
+                      fontVariantNumeric: 'tabular-nums',
+                    }}
+                  >
+                    {stat.value}
+                  </span>
+                  <span style={{ fontSize: '.85rem', color: 'var(--gray)', fontWeight: 700 }}>
+                    {stat.description}
+                  </span>
+                </div>
+              ))}
+
+              <span
+                style={{
+                  display: 'inline-block',
+                  marginTop: '.85rem',
+                  background: 'rgba(16,185,129,.12)',
+                  border: '1px solid rgba(16,185,129,.25)',
+                  color: 'var(--green)',
+                  padding: '.35rem .85rem',
+                  borderRadius: 999,
+                  fontSize: '.75rem',
+                  fontWeight: 900,
+                }}
               >
                 ✓ {result.badge}
-              </div>
+              </span>
             </div>
           ))}
         </div>
 
-        {/* Divider */}
-        <div className="flex items-center gap-4 mb-10">
-          <div className="flex-1 h-px bg-[rgba(255,255,255,0.07)]" />
-          <span className="text-xs font-bold uppercase tracking-widest text-[rgba(255,255,255,0.3)]">
-            Lo que dicen nuestras pacientes
-          </span>
-          <div className="flex-1 h-px bg-[rgba(255,255,255,0.07)]" />
-        </div>
-
-        {/* Testimonials */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-5">
+        {/* Testimonios con quote mark */}
+        <div style={{ display: 'grid', gap: '1.1rem', marginTop: '2rem' }}>
           {currentProfile.testimonios.map((testi, i) => (
             <div
               key={i}
-              className="rounded-2xl p-5 md:p-6 border hover-lift transition-all duration-300 flex flex-col"
+              className="card"
               style={{
-                background: 'rgba(255,255,255,0.03)',
-                borderColor: 'rgba(255,255,255,0.07)',
+                padding: '1.4rem',
+                position: 'relative',
               }}
             >
-              {/* Stars */}
-              <div className="flex gap-0.5 mb-3">
-                {[1,2,3,4,5].map(s => (
-                  <span key={s} className="text-yellow-400 text-sm">★</span>
-                ))}
+              {/* Big quote mark */}
+              <span
+                style={{
+                  content: '\\201C',
+                  fontSize: '4rem',
+                  color: 'var(--ac-light)',
+                  position: 'absolute',
+                  top: '-.4rem',
+                  left: '.9rem',
+                  lineHeight: 1,
+                  fontWeight: 900,
+                }}
+              >
+                {'“'}
+              </span>
+
+              <div className="stars" style={{ fontSize: '.9rem', marginBottom: '.75rem' }}>
+                ★★★★★
               </div>
 
-              <p className="text-sm text-[rgba(255,255,255,0.65)] leading-relaxed italic flex-1 mb-4">
-                "{testi.text}"
+              <p
+                style={{
+                  fontSize: '.92rem',
+                  fontWeight: 800,
+                  color: 'var(--dark)',
+                  marginBottom: '1rem',
+                  lineHeight: 1.5,
+                }}
+              >
+                {testi.text}
               </p>
 
-              <div className="flex items-center gap-3 pt-3 border-t border-[rgba(255,255,255,0.06)]">
+              <div style={{ display: 'flex', alignItems: 'center', gap: '.7rem' }}>
                 <div
-                  className="w-9 h-9 rounded-full flex items-center justify-center text-base shrink-0"
-                  style={{ background: `rgba(${currentProfile.colorRgb}, 0.18)` }}
+                  style={{
+                    width: 40,
+                    height: 40,
+                    borderRadius: '50%',
+                    background: 'var(--ac-light)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontSize: '1.2rem',
+                    flexShrink: 0,
+                  }}
                 >
                   {testi.emoji}
                 </div>
                 <div>
-                  <p className="text-sm font-bold text-white">{testi.name}</p>
-                  <p className="text-xs text-[rgba(255,255,255,0.4)]">{testi.program}</p>
+                  <div style={{ fontSize: '.85rem', fontWeight: 900, color: 'var(--dark)' }}>
+                    {testi.name}
+                  </div>
+                  <div style={{ fontSize: '.72rem', fontWeight: 700, color: 'var(--gray)' }}>
+                    {testi.program}
+                  </div>
                 </div>
               </div>
             </div>

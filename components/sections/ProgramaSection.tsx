@@ -4,76 +4,119 @@ import { useProfile } from '@/components/ProfileContext'
 
 export function ProgramaSection() {
   const { currentProfile } = useProfile()
-
   if (!currentProfile) return null
 
   return (
     <section
       id="programa"
-      className="py-16 md:py-24 px-5 sm:px-8"
-      style={{ background: 'linear-gradient(180deg, #080E1A 0%, #0D1425 100%)' }}
+      className="section"
+      style={{ background: 'var(--dark)' }}
     >
-      <div className="max-w-5xl mx-auto w-full">
-        {/* Section header */}
-        <div className="max-w-2xl mb-10 md:mb-14">
-          <span
-            className="inline-block text-xs font-bold uppercase tracking-widest mb-3"
-            style={{ color: currentProfile.color }}
-          >
-            {currentProfile.progTag}
-          </span>
-
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-black mb-4 leading-tight">
-            {currentProfile.progH2.split('<span>').map((part, i) => {
-              if (i === 0) return <span key={i}>{part}</span>
-              const [spanContent, rest] = part.split('</span>')
-              return (
-                <span key={i}>
-                  <span style={{ color: currentProfile.color }}>{spanContent}</span>
-                  {rest}
-                </span>
-              )
-            })}
-          </h2>
-
-          <p className="text-base md:text-lg text-[rgba(255,255,255,0.55)] leading-relaxed">
-            {currentProfile.progSub}
-          </p>
+      <div className="container-nut">
+        <div
+          className="tag"
+          style={{ background: `rgba(${currentProfile.colorRgb}, 0.2)`, color: '#f9a8d4' }}
+        >
+          🎯 {currentProfile.progTag}
         </div>
 
-        {/* Phases grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-5">
+        <h2 style={{ color: '#fff' }}>
+          {currentProfile.progH2.split('<span>').map((part, i) => {
+            if (i === 0) return <span key={i}>{part}</span>
+            const [spanContent, rest] = part.split('</span>')
+            return (
+              <span key={i}>
+                <em className="hi" style={{ color: '#f9a8d4' }}>{spanContent}</em>
+                {rest}
+              </span>
+            )
+          })}
+        </h2>
+
+        <p style={{ color: 'rgba(255,255,255,.65)', fontWeight: 700, marginTop: '.75rem' }}>
+          {currentProfile.progSub}
+        </p>
+
+        {/* Step cards */}
+        <div style={{ display: 'grid', gap: '1.25rem', marginTop: '2rem' }}>
           {currentProfile.programa.map((prog, i) => (
             <div
               key={i}
-              className="rounded-2xl p-5 md:p-6 border hover-lift transition-all duration-300"
               style={{
-                background: `linear-gradient(135deg, rgba(${currentProfile.colorRgb}, 0.08), rgba(${currentProfile.colorRgb}, 0.02))`,
-                borderColor: `rgba(${currentProfile.colorRgb}, 0.18)`,
+                background: 'rgba(255,255,255,.05)',
+                border: '1px solid rgba(255,255,255,.09)',
+                borderRadius: 'var(--radius-lg)',
+                padding: '1.5rem',
+                position: 'relative',
+                overflow: 'hidden',
               }}
             >
-              <div className="flex items-center gap-3 mb-4">
-                <div
-                  className="w-10 h-10 rounded-xl flex items-center justify-center text-xl shrink-0"
-                  style={{ background: `rgba(${currentProfile.colorRgb}, 0.15)` }}
-                >
-                  {prog.icon}
-                </div>
-                <span
-                  className="text-xs font-bold uppercase tracking-wider"
-                  style={{ color: currentProfile.color }}
-                >
-                  Fase {i + 1}
-                </span>
-              </div>
-              <h3 className="font-bold text-base md:text-lg text-white mb-2">
-                {prog.title}
-              </h3>
-              <p className="text-sm text-[rgba(255,255,255,0.5)] leading-relaxed">
+              {/* Big background number */}
+              <span
+                style={{
+                  position: 'absolute',
+                  top: -20,
+                  right: '.75rem',
+                  fontSize: '5.5rem',
+                  fontWeight: 900,
+                  color: 'rgba(255,255,255,.04)',
+                  lineHeight: 1,
+                  pointerEvents: 'none',
+                }}
+              >
+                {String(i + 1).padStart(2, '0')}
+              </span>
+
+              <span style={{ fontSize: '2.2rem', display: 'block', marginBottom: '.85rem' }}>
+                {prog.icon}
+              </span>
+              <h3 style={{ color: '#fff', marginBottom: '.3rem' }}>{prog.title}</h3>
+              <p
+                style={{
+                  color: '#f9a8d4',
+                  fontSize: '.85rem',
+                  fontWeight: 800,
+                  marginBottom: '.5rem',
+                }}
+              >
+                Fase {i + 1} del Sistema
+              </p>
+              <p style={{ color: 'rgba(255,255,255,.6)', fontSize: '.85rem', margin: '0 0 .85rem' }}>
                 {prog.description}
               </p>
+              <div
+                style={{
+                  background: 'rgba(16,185,129,.12)',
+                  border: '1px solid rgba(16,185,129,.25)',
+                  color: '#6ee7b7',
+                  padding: '.5rem .9rem',
+                  borderRadius: '.75rem',
+                  fontSize: '.78rem',
+                  fontWeight: 900,
+                  display: 'inline-block',
+                }}
+              >
+                ✓ Resultado medible al final de la fase
+              </div>
             </div>
           ))}
+        </div>
+
+        {/* Medico badge */}
+        <div
+          style={{
+            marginTop: '2rem',
+            background: 'rgba(14,165,233,.1)',
+            border: '1px solid rgba(14,165,233,.25)',
+            borderRadius: 'var(--radius)',
+            padding: '1.25rem 1.5rem',
+            textAlign: 'center',
+          }}
+        >
+          <p style={{ color: 'rgba(255,255,255,.85)', fontSize: '.88rem', fontWeight: 700, margin: 0 }}>
+            🩺 Diseñado por <strong style={{ color: '#7dd3fc' }}>{currentProfile.medico}</strong>{' '}
+            — {currentProfile.medicoRole}
+          </p>
         </div>
       </div>
     </section>

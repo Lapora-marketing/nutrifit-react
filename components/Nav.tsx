@@ -7,44 +7,38 @@ export function Nav() {
 
   return (
     <nav
-      className="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl border-b transition-colors duration-300 px-5 sm:px-8 py-3.5"
       style={{
-        background: 'rgba(8,14,26,0.96)',
-        borderColor: `rgba(${currentProfile?.colorRgb || '255,255,255'}, 0.15)`,
+        position: 'sticky',
+        top: 0,
+        zIndex: 99,
+        background: 'rgba(255,255,255,0.95)',
+        backdropFilter: 'blur(12px)',
+        WebkitBackdropFilter: 'blur(12px)',
+        borderBottom: '1px solid var(--border)',
+        padding: '.85rem 1.25rem',
       }}
     >
-      <div className="max-w-5xl mx-auto flex items-center justify-between">
-        <div className="font-black text-base tracking-wide flex items-center gap-1.5">
-          Nutrifit
-          <span style={{ color: currentProfile?.color }}>App</span>
-        </div>
-
-        <ul className="hidden md:flex gap-6 list-none">
-          {[
-            { label: 'El Problema', href: '#problema' },
-            { label: 'El Programa', href: '#programa' },
-            { label: 'Resultados', href: '#resultados' },
-            { label: 'Planes', href: '#planes' },
-          ].map(link => (
-            <li key={link.href}>
-              <a
-                href={link.href}
-                className="text-xs font-bold uppercase tracking-wider text-[rgba(255,255,255,0.5)] hover:text-white transition-colors duration-200"
-              >
-                {link.label}
-              </a>
-            </li>
-          ))}
-        </ul>
+      <div
+        style={{
+          maxWidth: 680,
+          margin: '0 auto',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+        }}
+      >
+        <a href="#hero" style={{ display: 'flex', alignItems: 'center', gap: '.3rem', fontWeight: 900, color: 'var(--dark)' }}>
+          <span style={{ fontSize: '1.1rem' }}>🥗</span>
+          <span style={{ fontSize: '1rem' }}>Nutrifit</span>
+          <span style={{ color: 'var(--ac)', fontSize: '1rem' }}>App</span>
+        </a>
 
         <a
-          href="#planes"
-          className="btn-ripple px-4 py-2 rounded-lg text-xs font-bold text-white transition-all duration-300 hover:scale-105"
-          style={{
-            background: `linear-gradient(135deg, ${currentProfile?.color || '#be185d'}, rgba(${currentProfile?.colorRgb || '190,24,93'}, 0.75))`,
-          }}
+          href="#oferta"
+          className="btn btn-rap"
+          style={{ padding: '.5rem 1.1rem', fontSize: '.78rem' }}
         >
-          Unirme ahora
+          Empezar
         </a>
       </div>
     </nav>
