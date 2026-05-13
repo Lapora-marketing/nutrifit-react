@@ -9,7 +9,7 @@ export function ProgramaSection() {
   if (!currentProfile) return null
 
   return (
-    <section className="min-h-screen flex items-center justify-center py-20 px-6 md:px-10" style={{ background: 'linear-gradient(180deg,#080E1A 0%,#0D1425 100%)' }}>
+    <section id="programa" className="min-h-screen flex items-center justify-center py-20 px-5 md:px-10" style={{ background: 'linear-gradient(180deg,#080E1A 0%,#0D1425 100%)' }}>
       <div className="max-w-4xl w-full">
         <div className="text-sm font-bold letter-spacing-0.8px text-transform-uppercase mb-3" style={{ color: currentProfile.color }}>
           {currentProfile.progTag}

@@ -15,7 +15,7 @@ export function PlanesSection() {
   ]
 
   return (
-    <section className="min-h-screen flex items-center justify-center py-20 px-6 md:px-10" style={{ background: '#040A13' }}>
+    <section id="planes" className="min-h-screen flex items-center justify-center py-20 px-5 md:px-10" style={{ background: '#040A13' }}>
       <div className="max-w-5xl w-full">
         <div className="text-sm font-bold letter-spacing-0.8px text-transform-uppercase mb-3" style={{ color: currentProfile.color }}>
           Inversión
