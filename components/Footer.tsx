@@ -1,168 +1,133 @@
 'use client'
 
+import { useProfile } from '@/components/ProfileContext'
+
 export function Footer() {
+  const { currentProfile } = useProfile()
+
   return (
     <footer
       style={{
-        background: 'var(--ac-dark, #9d1550)',
-        color: 'rgba(255,255,255,.7)',
-        padding: '4rem 1.5rem 2rem',
-        position: 'relative',
-        overflow: 'hidden',
+        background: 'var(--dark)',
+        color: 'rgba(255,255,255,.55)',
+        padding: '3rem 1.25rem 2rem',
       }}
     >
-      {/* Decorative dots */}
-      <div
-        className="deco-dots"
-        style={{
-          top: 30,
-          right: '8%',
-          width: 90,
-          height: 90,
-          backgroundImage: 'radial-gradient(circle, rgba(245,158,11,.7) 2.5px, transparent 3px)',
-        }}
-      />
-
       <div style={{ maxWidth: 1100, margin: '0 auto' }}>
-        {/* Big editorial heading */}
-        <div style={{ marginBottom: '3rem' }}>
-          <h2
+        {/* Top: logo + tagline */}
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '.6rem',
+            marginBottom: '1rem',
+          }}
+        >
+          <span
             style={{
-              fontSize: 'clamp(3rem, 10vw, 6rem)',
-              color: 'rgba(255,255,255,0.95)',
-              lineHeight: 0.9,
-              fontFamily: 'var(--font-playfair), Playfair Display, Georgia, serif',
-              fontStyle: 'italic',
-              fontWeight: 400,
-              letterSpacing: '-0.02em',
+              width: '2rem',
+              height: '2rem',
+              borderRadius: '.6rem',
+              background: 'var(--bg-elevated)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: '1rem',
             }}
           >
-            Nutrifit.
-          </h2>
+            🥗
+          </span>
+          <span style={{ fontSize: '1rem', fontWeight: 900, color: '#fff' }}>
+            Nutrifit
+            <span style={{ color: currentProfile?.color }}>App</span>
+          </span>
         </div>
+        <p style={{ fontSize: '.85rem', maxWidth: 380, marginBottom: '2rem', color: 'rgba(255,255,255,.45)' }}>
+          Academia médica especializada en nutrición y transformación corporal.
+        </p>
 
-        {/* Links grid */}
+        {/* Links */}
         <div
           style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(4, 1fr)',
-            gap: '2rem',
-            marginBottom: '3rem',
+            gridTemplateColumns: 'repeat(3, 1fr)',
+            gap: '1.5rem',
+            marginBottom: '2rem',
           }}
           className="footer-grid"
         >
-          <div>
-            <h4
-              style={{
-                color: 'rgba(255,255,255,0.95)',
-                fontSize: '.78rem',
-                textTransform: 'uppercase',
-                letterSpacing: '.12em',
-                marginBottom: '1rem',
-              }}
-            >
-              Programa
-            </h4>
-            <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '.6rem' }}>
-              <li><a href="#programa">El sistema</a></li>
-              <li><a href="#oferta">Planes</a></li>
-              <li><a href="#resultados">Resultados</a></li>
-            </ul>
-          </div>
-
-          <div>
-            <h4
-              style={{
-                color: 'rgba(255,255,255,0.95)',
-                fontSize: '.78rem',
-                textTransform: 'uppercase',
-                letterSpacing: '.12em',
-                marginBottom: '1rem',
-              }}
-            >
-              Contacto
-            </h4>
-            <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '.6rem' }}>
-              <li><a href="mailto:hola@nutrifit.app">Email</a></li>
-              <li><a href="https://wa.me/573001234567">WhatsApp</a></li>
-              <li><a href="https://instagram.com">Instagram</a></li>
-            </ul>
-          </div>
-
-          <div>
-            <h4
-              style={{
-                color: 'rgba(255,255,255,0.95)',
-                fontSize: '.78rem',
-                textTransform: 'uppercase',
-                letterSpacing: '.12em',
-                marginBottom: '1rem',
-              }}
-            >
-              Equipo
-            </h4>
-            <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '.6rem' }}>
-              <li><a href="#">Nuestros médicos</a></li>
-              <li><a href="#">Filosofía</a></li>
-              <li><a href="#">Blog</a></li>
-            </ul>
-          </div>
-
-          <div>
-            <h4
-              style={{
-                color: 'rgba(255,255,255,0.95)',
-                fontSize: '.78rem',
-                textTransform: 'uppercase',
-                letterSpacing: '.12em',
-                marginBottom: '1rem',
-              }}
-            >
-              Legal
-            </h4>
-            <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '.6rem' }}>
-              <li><a href="#">Términos</a></li>
-              <li><a href="#">Privacidad</a></li>
-              <li><a href="#">Cookies</a></li>
-            </ul>
-          </div>
+          {[
+            { title: 'Producto', links: [['#programa', 'El sistema'], ['#oferta', 'Planes'], ['#resultados', 'Resultados']] },
+            { title: 'Contacto', links: [['mailto:hola@nutrifit.app', 'Email'], ['https://wa.me/573001234567', 'WhatsApp'], ['https://instagram.com', 'Instagram']] },
+            { title: 'Legal', links: [['#', 'Términos'], ['#', 'Privacidad'], ['#', 'Cookies']] },
+          ].map((col) => (
+            <div key={col.title}>
+              <h4
+                style={{
+                  color: '#fff',
+                  fontSize: '.72rem',
+                  textTransform: 'uppercase',
+                  letterSpacing: '.1em',
+                  marginBottom: '.85rem',
+                }}
+              >
+                {col.title}
+              </h4>
+              <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '.55rem' }}>
+                {col.links.map(([href, label]) => (
+                  <li key={label}>
+                    <a
+                      href={href}
+                      className="footer-link"
+                      style={{ fontSize: '.82rem', color: 'rgba(255,255,255,.55)' }}
+                    >
+                      {label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
         </div>
 
         {/* Bottom */}
         <div
           style={{
+            paddingTop: '1.5rem',
+            borderTop: '1px solid rgba(255,255,255,.1)',
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
-            paddingTop: '2rem',
-            borderTop: '1px solid rgba(255,255,255,.15)',
-            fontSize: '.78rem',
             flexWrap: 'wrap',
-            gap: '1rem',
+            gap: '.75rem',
+            fontSize: '.72rem',
+            color: 'rgba(255,255,255,.4)',
           }}
         >
-          <p style={{ color: 'rgba(255,255,255,.6)', margin: 0 }}>
-            © 2026 Nutrifit. Hecho con ♥ por{' '}
+          <p style={{ margin: 0 }}>© 2026 Nutrifit. Todos los derechos reservados.</p>
+          <p style={{ margin: 0 }}>
+            Hecho por{' '}
             <a
               href="https://lapora.co"
-              style={{ color: 'rgba(255,255,255,0.9)', textDecoration: 'underline' }}
+              className="footer-link"
+              style={{ color: 'rgba(255,255,255,.7)' }}
             >
               Lapora Marketing Digital
             </a>
-          </p>
-          <p style={{ color: 'rgba(255,255,255,.5)', fontStyle: 'italic', margin: 0 }}>
-            Establecido 2023
           </p>
         </div>
       </div>
 
       <style jsx>{`
-        a { color: rgba(255,255,255,0.7); transition: color .2s; }
-        a:hover { color: rgba(255,255,255,0.95); }
-        @media (max-width: 768px) {
+        :global(.footer-link) {
+          transition: color .2s;
+        }
+        :global(.footer-link:hover) {
+          color: rgba(255,255,255,.9);
+        }
+        @media (max-width: 540px) {
           :global(.footer-grid) {
-            grid-template-columns: 1fr 1fr !important;
-            gap: 1.5rem !important;
+            grid-template-columns: repeat(2, 1fr) !important;
           }
         }
       `}</style>

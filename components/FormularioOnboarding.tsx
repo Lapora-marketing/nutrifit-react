@@ -8,21 +8,21 @@ interface FormularioOnboardingProps {
 }
 
 const OBJETIVOS = [
-  { value: 'bajar-peso', label: 'Bajar de peso', emoji: '🔥' },
-  { value: 'ganar-masa', label: 'Ganar masa muscular', emoji: '💪' },
-  { value: 'mejorar-salud', label: 'Mejorar mi salud', emoji: '❤️' },
-  { value: 'otro', label: 'Otro objetivo', emoji: '🎯' },
+  { value: 'bajar-peso', label: 'Bajar de peso', emoji: '🔥', bg: '#fee2e2' },
+  { value: 'ganar-masa', label: 'Ganar masa muscular', emoji: '💪', bg: '#fef3c7' },
+  { value: 'mejorar-salud', label: 'Mejorar mi salud', emoji: '❤️', bg: '#fce7f3' },
+  { value: 'otro', label: 'Otro objetivo', emoji: '🎯', bg: '#e0f2fe' },
 ]
 const ACTIVIDADES = [
-  { value: 'sedentario', label: 'Sedentario', emoji: '🪑' },
-  { value: 'leve', label: 'Leve (1-2 días)', emoji: '🚶' },
-  { value: 'moderado', label: 'Moderado (3-4 días)', emoji: '🏃' },
-  { value: 'intenso', label: 'Intenso (5+ días)', emoji: '⚡' },
+  { value: 'sedentario', label: 'Sedentario', emoji: '🪑', bg: '#f1f5f9' },
+  { value: 'leve', label: 'Leve (1-2 días)', emoji: '🚶', bg: '#dbeafe' },
+  { value: 'moderado', label: 'Moderado (3-4 días)', emoji: '🏃', bg: '#d1fae5' },
+  { value: 'intenso', label: 'Intenso (5+ días)', emoji: '⚡', bg: '#fef3c7' },
 ]
 const HORARIOS = [
-  { value: 'mañana', label: 'Mañana (6am – 12pm)', emoji: '🌅' },
-  { value: 'tarde', label: 'Tarde (12pm – 6pm)', emoji: '☀️' },
-  { value: 'noche', label: 'Noche (6pm – 10pm)', emoji: '🌙' },
+  { value: 'mañana', label: 'Mañana (6am – 12pm)', emoji: '🌅', bg: '#fef3c7' },
+  { value: 'tarde', label: 'Tarde (12pm – 6pm)', emoji: '☀️', bg: '#ffedd5' },
+  { value: 'noche', label: 'Noche (6pm – 10pm)', emoji: '🌙', bg: '#e0e7ff' },
 ]
 const QUESTIONS = [
   '¿Cómo te llamas?',
@@ -36,7 +36,8 @@ export function FormularioOnboarding({ onComplete }: FormularioOnboardingProps) 
   const [step, setStep] = useState(0)
   const [data, setData] = useState<Partial<UserPreferences>>({})
 
-  const set = (field: keyof UserPreferences, value: string) => setData(p => ({ ...p, [field]: value }))
+  const set = (field: keyof UserPreferences, value: string) =>
+    setData(p => ({ ...p, [field]: value }))
 
   const next = () => {
     if (step === 0) { setStep(1); return }
@@ -71,22 +72,35 @@ export function FormularioOnboarding({ onComplete }: FormularioOnboardingProps) 
         padding: '1.5rem 1.25rem',
       }}
     >
-      <div style={{ width: '100%', maxWidth: 480 }}>
-
+      <div style={{ width: '100%', maxWidth: 460 }}>
         {/* INTRO */}
         {step === 0 && (
-          <div className="animate-popIn" style={{ textAlign: 'center' }}>
-            <div className="tag" style={{ margin: '0 auto 1rem' }}>🎯 Tu diagnóstico personalizado</div>
+          <div className="anim-pop" style={{ textAlign: 'center' }}>
+            <div
+              style={{
+                width: '4rem',
+                height: '4rem',
+                borderRadius: '1rem',
+                background: 'var(--dark)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: '2rem',
+                margin: '0 auto 1.25rem',
+                boxShadow: 'var(--shadow-soft)',
+              }}
+            >
+              🥗
+            </div>
 
-            <h1 style={{ marginBottom: '.6rem' }}>
-              Tu plan de nutrición <em className="hi">100% personalizado</em>
+            <h1 style={{ marginBottom: '.4rem', fontSize: '1.65rem' }}>
+              Tu plan <span style={{ color: 'var(--ac)' }}>100% personalizado</span>
             </h1>
 
-            <p style={{ marginTop: '.6rem', marginBottom: '1.5rem', fontWeight: 700 }}>
-              Responde 5 preguntas rápidas y obtén tu diagnóstico nutricional gratuito
+            <p style={{ marginBottom: '1.5rem', fontWeight: 700, fontSize: '.9rem' }}>
+              Responde 5 preguntas rápidas y obtén tu diagnóstico nutricional gratuito.
             </p>
 
-            {/* Stars + social proof */}
             <div
               style={{
                 display: 'flex',
@@ -96,42 +110,33 @@ export function FormularioOnboarding({ onComplete }: FormularioOnboardingProps) 
                 marginBottom: '1.5rem',
               }}
             >
-              <span className="stars" style={{ fontSize: '1rem' }}>★★★★★</span>
-              <p style={{ fontSize: '.82rem', fontWeight: 700, margin: 0 }}>
-                +200 personas ya lo completaron
+              <span style={{ color: 'var(--amber)', fontSize: '1rem', letterSpacing: '-.04em' }}>★★★★★</span>
+              <p style={{ fontSize: '.78rem', fontWeight: 800, margin: 0 }}>
+                +500 personas ya lo completaron
               </p>
             </div>
 
-            {/* What you'll get */}
-            <div className="card" style={{ textAlign: 'left', marginBottom: '1.5rem' }}>
+            <div className="app-card" style={{ padding: '1.15rem', textAlign: 'left', marginBottom: '1.5rem' }}>
               <p
                 style={{
-                  fontSize: '.7rem',
+                  fontSize: '.65rem',
                   fontWeight: 900,
                   color: 'var(--ac)',
                   textTransform: 'uppercase',
-                  letterSpacing: '.06em',
-                  marginBottom: '.85rem',
+                  letterSpacing: '.08em',
+                  marginBottom: '.75rem',
                 }}
               >
-                ✨ Vas a obtener:
+                ✨ Vas a obtener
               </p>
               {[
                 { ico: '🎯', text: 'Diagnóstico nutricional personalizado' },
                 { ico: '📋', text: 'Plan de alimentación para tu objetivo' },
                 { ico: '⚡', text: 'Rutina adaptada a tu ritmo de vida' },
               ].map((it, i) => (
-                <div
-                  key={i}
-                  style={{
-                    display: 'flex',
-                    gap: '.7rem',
-                    alignItems: 'center',
-                    marginBottom: '.5rem',
-                  }}
-                >
-                  <span style={{ fontSize: '1.1rem' }}>{it.ico}</span>
-                  <span style={{ fontSize: '.88rem', fontWeight: 800, color: 'var(--dark)' }}>
+                <div key={i} style={{ display: 'flex', gap: '.6rem', alignItems: 'center', marginBottom: '.5rem' }}>
+                  <span style={{ fontSize: '1rem' }}>{it.ico}</span>
+                  <span style={{ fontSize: '.85rem', fontWeight: 800, color: 'var(--dark)' }}>
                     {it.text}
                   </span>
                 </div>
@@ -139,19 +144,19 @@ export function FormularioOnboarding({ onComplete }: FormularioOnboardingProps) 
             </div>
 
             <button onClick={next} className="btn btn-rap btn-xl btn-full">
-              Comenzar mi diagnóstico →
+              Comenzar diagnóstico →
             </button>
-            <p style={{ fontSize: '.78rem', fontWeight: 700, marginTop: '.6rem' }}>
-              Gratis · Solo toma 2 minutos
+            <p style={{ fontSize: '.75rem', fontWeight: 700, marginTop: '.65rem' }}>
+              Gratis · Solo 2 minutos
             </p>
           </div>
         )}
 
-        {/* QUIZ STEPS */}
+        {/* QUIZ */}
         {step >= 1 && (
-          <div className="animate-fadeUp">
-            {/* Progress dots */}
-            <div style={{ display: 'flex', gap: '.5rem', marginBottom: '1.5rem' }}>
+          <div className="anim-fade-up">
+            {/* Progress */}
+            <div style={{ display: 'flex', gap: '.4rem', marginBottom: '1.25rem' }}>
               {[1, 2, 3, 4, 5].map(n => (
                 <div
                   key={n}
@@ -159,43 +164,34 @@ export function FormularioOnboarding({ onComplete }: FormularioOnboardingProps) 
                     flex: 1,
                     height: 5,
                     borderRadius: 5,
-                    background: n <= step ? 'var(--ac)' : 'var(--border)',
+                    background: n <= step ? 'var(--ac)' : 'var(--border-strong)',
                     transition: 'background .35s',
                   }}
                 />
               ))}
             </div>
 
-            <div className="card" style={{ padding: '1.75rem 1.5rem' }}>
-              <div
+            <div className="app-card" style={{ padding: '1.5rem' }}>
+              <span
                 style={{
-                  fontSize: '.72rem',
+                  fontSize: '.62rem',
                   fontWeight: 900,
                   color: 'var(--ac)',
                   textTransform: 'uppercase',
-                  letterSpacing: '.06em',
-                  marginBottom: '.5rem',
+                  letterSpacing: '.08em',
                 }}
               >
                 Pregunta {step} de 5
-              </div>
-              <div
-                style={{
-                  fontSize: '1.15rem',
-                  fontWeight: 900,
-                  color: 'var(--dark)',
-                  marginBottom: '1.25rem',
-                  lineHeight: 1.3,
-                }}
-              >
+              </span>
+              <h3 style={{ fontSize: '1.1rem', marginTop: '.35rem', marginBottom: '1.15rem' }}>
                 {QUESTIONS[step - 1]}
-              </div>
+              </h3>
 
-              {/* Step 1: Nombre */}
+              {/* Step 1 */}
               {step === 1 && (
                 <input
                   type="text"
-                  placeholder="Tu nombre o apodo..."
+                  placeholder="Tu nombre..."
                   value={data.nombre || ''}
                   onChange={e => set('nombre', e.target.value)}
                   onKeyDown={e => e.key === 'Enter' && canContinue() && next()}
@@ -203,54 +199,37 @@ export function FormularioOnboarding({ onComplete }: FormularioOnboardingProps) 
                   style={{
                     width: '100%',
                     padding: '.9rem 1.1rem',
-                    border: `2px solid ${data.nombre ? 'var(--ac)' : 'var(--border)'}`,
-                    borderRadius: 'var(--radius)',
+                    border: `2px solid ${data.nombre ? 'var(--ac)' : 'var(--border-strong)'}`,
+                    borderRadius: '.85rem',
                     fontSize: '1rem',
                     fontWeight: 700,
                     fontFamily: 'inherit',
                     color: 'var(--dark)',
                     outline: 'none',
-                    transition: 'all .2s',
+                    transition: 'border .2s',
                   }}
                 />
               )}
 
-              {/* Step 2: Objetivo */}
               {step === 2 && OBJETIVOS.map(opt => (
-                <QuizOption
-                  key={opt.value}
-                  emoji={opt.emoji}
-                  label={opt.label}
-                  selected={data.objetivo === opt.value}
-                  onClick={() => set('objetivo', opt.value)}
-                />
+                <QuizOption key={opt.value} {...opt} selected={data.objetivo === opt.value} onClick={() => set('objetivo', opt.value)} />
               ))}
-
-              {/* Step 3: Actividad */}
               {step === 3 && ACTIVIDADES.map(opt => (
-                <QuizOption
-                  key={opt.value}
-                  emoji={opt.emoji}
-                  label={opt.label}
-                  selected={data.nivelActividad === opt.value}
-                  onClick={() => set('nivelActividad', opt.value)}
-                />
+                <QuizOption key={opt.value} {...opt} selected={data.nivelActividad === opt.value} onClick={() => set('nivelActividad', opt.value)} />
               ))}
-
-              {/* Step 4: Alergias */}
               {step === 4 && (
                 <div>
                   <textarea
-                    placeholder="Ej: intolerancia a la lactosa, alergia al maní, vegano... (opcional)"
+                    placeholder="Ej: lactosa, vegano... (opcional)"
                     value={data.alergias || ''}
                     onChange={e => set('alergias', e.target.value)}
                     rows={3}
                     style={{
                       width: '100%',
                       padding: '.9rem 1.1rem',
-                      border: '2px solid var(--border)',
-                      borderRadius: 'var(--radius)',
-                      fontSize: '.92rem',
+                      border: '2px solid var(--border-strong)',
+                      borderRadius: '.85rem',
+                      fontSize: '.95rem',
                       fontFamily: 'inherit',
                       fontWeight: 700,
                       color: 'var(--dark)',
@@ -258,31 +237,18 @@ export function FormularioOnboarding({ onComplete }: FormularioOnboardingProps) 
                       resize: 'none',
                     }}
                   />
-                  <p style={{ fontSize: '.78rem', marginTop: '.5rem' }}>
-                    ✓ Puedes continuar sin completar este campo
+                  <p style={{ fontSize: '.72rem', marginTop: '.5rem' }}>
+                    ✓ Opcional — puedes saltar
                   </p>
                 </div>
               )}
-
-              {/* Step 5: Disponibilidad */}
               {step === 5 && HORARIOS.map(opt => (
-                <QuizOption
-                  key={opt.value}
-                  emoji={opt.emoji}
-                  label={opt.label}
-                  selected={data.disponibilidad === opt.value}
-                  onClick={() => set('disponibilidad', opt.value)}
-                />
+                <QuizOption key={opt.value} {...opt} selected={data.disponibilidad === opt.value} onClick={() => set('disponibilidad', opt.value)} />
               ))}
             </div>
 
-            {/* Buttons */}
             <div style={{ display: 'flex', gap: '.7rem', marginTop: '1rem' }}>
-              <button
-                onClick={back}
-                className="btn btn-ghost"
-                style={{ flexShrink: 0 }}
-              >
+              <button onClick={back} className="btn btn-outline" style={{ padding: '.85rem 1.25rem', fontSize: '.85rem' }}>
                 ← Atrás
               </button>
               <button
@@ -304,11 +270,13 @@ export function FormularioOnboarding({ onComplete }: FormularioOnboardingProps) 
 function QuizOption({
   emoji,
   label,
+  bg,
   selected,
   onClick,
 }: {
   emoji: string
   label: string
+  bg: string
   selected: boolean
   onClick: () => void
 }) {
@@ -318,27 +286,27 @@ function QuizOption({
       style={{
         display: 'flex',
         alignItems: 'center',
-        gap: '.9rem',
-        padding: '.9rem 1.1rem',
-        border: `2px solid ${selected ? 'var(--ac)' : 'var(--border)'}`,
-        borderRadius: 'var(--radius)',
-        cursor: 'pointer',
-        transition: 'all .2s',
-        marginBottom: '.65rem',
-        background: selected ? 'var(--ac-light)' : 'var(--white)',
+        gap: '.85rem',
+        padding: '.85rem 1rem',
+        border: `2px solid ${selected ? 'var(--ac)' : 'var(--border-strong)'}`,
+        borderRadius: '.85rem',
+        marginBottom: '.55rem',
+        background: selected ? 'var(--ac-light)' : 'var(--bg-elevated)',
         width: '100%',
         fontFamily: 'inherit',
         textAlign: 'left',
+        transition: 'all .2s',
+        cursor: 'pointer',
       }}
     >
-      <span style={{ fontSize: '1.35rem', flexShrink: 0 }}>{emoji}</span>
-      <span style={{ fontSize: '.88rem', fontWeight: 800, color: 'var(--dark)', lineHeight: 1.3 }}>
+      <div className="habit-icon" style={{ background: bg, width: '2.25rem', height: '2.25rem' }}>
+        {emoji}
+      </div>
+      <span style={{ fontSize: '.88rem', fontWeight: 800, color: 'var(--dark)', flex: 1 }}>
         {label}
       </span>
       {selected && (
-        <span style={{ marginLeft: 'auto', color: 'var(--ac)', fontSize: '1.1rem', fontWeight: 900 }}>
-          ✓
-        </span>
+        <span style={{ color: 'var(--ac)', fontSize: '1.1rem', fontWeight: 900 }}>✓</span>
       )}
     </button>
   )

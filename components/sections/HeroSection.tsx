@@ -12,179 +12,167 @@ export function HeroSection() {
   const firstName = userPreferences?.nombre?.split(' ')[0] || ''
 
   return (
-    <section id="hero" style={{ background: 'var(--bg)', padding: '2rem 0 4rem' }}>
-      <div className="container-nut">
-        {/* HERO — Aisle-style two-column color block */}
+    <section id="hero" style={{ background: 'var(--bg)', padding: '1.5rem 0 3rem' }}>
+      <div className="container-app">
+
+        {/* Top greeting */}
         <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'minmax(0,1fr) minmax(0,1fr)',
-            gap: 0,
-            borderRadius: 'var(--radius-card)',
-            overflow: 'hidden',
-            position: 'relative',
-            minHeight: '520px',
-          }}
-          className="hero-grid"
+          className="anim-fade-up"
+          style={{ display: 'flex', alignItems: 'center', gap: '.75rem', marginBottom: '1.25rem' }}
         >
-          {/* LEFT — green editorial block */}
-          <div
-            style={{
-              background: 'var(--dark)',
-              padding: '3rem 2rem',
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'space-between',
-              position: 'relative',
-              minHeight: 480,
-            }}
-            className="animate-fadeIn"
-          >
-            <div>
-              <h1 style={{ color: 'var(--white)', marginBottom: '1.5rem' }} className="animate-fadeUp">
-                <span style={{ display: 'block' }}>Plan</span>
-                <span className="serif" style={{ display: 'block', color: 'var(--ac-mid)', fontSize: '0.85em', paddingLeft: '1.5rem' }}>
-                  para
-                </span>
-                <span style={{ display: 'block' }}>cada mamá</span>
-              </h1>
-              <p
-                style={{
-                  color: 'rgba(255,255,255,.7)',
-                  fontWeight: 700,
-                  maxWidth: 320,
-                  marginTop: '2rem',
-                }}
-                className="animate-fadeUp delay-200"
-              >
-                {firstName && `${firstName}, `}recupera tu energía y tu cuerpo postparto con un{' '}
-                <strong style={{ color: '#fff' }}>protocolo médico real</strong>.
-              </p>
-            </div>
-
-            <a
-              href="#oferta"
-              className="arrow-link animate-fadeUp delay-300"
-              style={{ color: 'var(--white)', marginTop: '2rem' }}
+          <span style={{ fontSize: '1.75rem' }}>👋</span>
+          <div>
+            <p
+              style={{
+                fontSize: '.7rem',
+                fontWeight: 900,
+                color: 'var(--gray)',
+                letterSpacing: '.1em',
+                textTransform: 'uppercase',
+                margin: 0,
+                lineHeight: 1,
+              }}
             >
-              EMPEZAR AHORA <span style={{ fontSize: '1.1rem' }}>→</span>
-            </a>
+              Hola{firstName && `, ${firstName}`}
+            </p>
+            <p style={{ fontSize: '.9rem', fontWeight: 800, color: 'var(--dark)', margin: '.2rem 0 0', lineHeight: 1 }}>
+              Tu transformación empieza aquí
+            </p>
+          </div>
+        </div>
 
-            {/* Decorative dots */}
-            <div
-              className="deco-dots animate-float"
-              style={{ bottom: 30, left: '40%', opacity: 0.4 }}
-            />
+        {/* APP-STYLE HERO BANNER */}
+        <div
+          className="hero-banner-app anim-pop"
+          style={{ padding: '1.75rem', marginBottom: '1rem' }}
+        >
+          <div style={{ position: 'relative', zIndex: 2, maxWidth: '75%' }}>
+            <span
+              style={{
+                fontSize: '.65rem',
+                fontWeight: 900,
+                background: 'rgba(255,255,255,0.2)',
+                backdropFilter: 'blur(4px)',
+                padding: '.3rem .7rem',
+                borderRadius: '.5rem',
+                textTransform: 'uppercase',
+                letterSpacing: '.08em',
+                display: 'inline-block',
+                marginBottom: '.6rem',
+                color: '#fff',
+              }}
+            >
+              {currentProfile.heroBadge}
+            </span>
+
+            <h1 style={{ color: '#fff', fontSize: '1.65rem', lineHeight: 1.15, marginBottom: '.4rem' }}>
+              {currentProfile.heroH1.replace(/<\/?span>/g, '')}
+            </h1>
+
+            <p style={{ fontSize: '.85rem', fontWeight: 700, color: 'rgba(255,255,255,0.85)', marginBottom: '1rem', lineHeight: 1.45 }}>
+              {currentProfile.heroSub}
+            </p>
+
+            {/* Progress bar */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '.75rem' }}>
+              <div className="app-progress" style={{ flex: 1 }}>
+                <div className="app-progress-fill" style={{ width: '35%' }} />
+              </div>
+              <span style={{ fontSize: '.75rem', fontWeight: 900, color: '#fff' }}>35%</span>
+            </div>
           </div>
 
-          {/* RIGHT — mamita photo on warm bg */}
+          {/* Floating decorative emoji */}
+          <div className="hero-banner-emoji anim-float">{currentProfile.emoji}</div>
+        </div>
+
+        {/* Stats Strip (matches app exactly) */}
+        <div
+          className="app-card-flat anim-fade-up delay-200"
+          style={{
+            display: 'flex',
+            overflow: 'hidden',
+            background: 'var(--bg-elevated)',
+            marginBottom: '1.25rem',
+          }}
+        >
+          {currentProfile.stats.map((stat, i, arr) => (
+            <div
+              key={i}
+              style={{
+                flex: 1,
+                padding: '1rem .5rem',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                borderRight: i < arr.length - 1 ? '1px solid var(--border)' : 'none',
+              }}
+            >
+              <span style={{ fontSize: '1.4rem', fontWeight: 900, color: 'var(--dark)', lineHeight: 1 }}>
+                {stat.num}
+              </span>
+              <span
+                style={{
+                  fontSize: '.62rem',
+                  fontWeight: 800,
+                  color: 'var(--gray-light)',
+                  textAlign: 'center',
+                  lineHeight: 1.25,
+                  marginTop: '.3rem',
+                  textTransform: 'uppercase',
+                  letterSpacing: '.04em',
+                }}
+              >
+                {stat.label}
+              </span>
+            </div>
+          ))}
+        </div>
+
+        {/* CTA + social proof */}
+        <div
+          className="anim-fade-up delay-300"
+          style={{ display: 'flex', flexDirection: 'column', gap: '.75rem', marginBottom: '1.25rem' }}
+        >
+          <a href="#oferta" className="btn btn-rap btn-xl btn-full">
+            ✨ Empezar mi transformación
+          </a>
           <div
             style={{
-              background: 'var(--bg-warm)',
-              padding: '2rem 1.5rem',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              position: 'relative',
-              overflow: 'hidden',
+              gap: '.6rem',
             }}
-            className="animate-fadeIn delay-200"
           >
-            {/* Decorative blobs */}
-            <div
-              className="deco-blob animate-floatBlob"
-              style={{
-                top: '-30px',
-                right: '-30px',
-                width: 180,
-                height: 180,
-                background: 'var(--ac)',
-                opacity: 0.18,
-              }}
-            />
-            <div
-              className="deco-blob animate-floatBlob"
-              style={{
-                bottom: '-50px',
-                left: '-30px',
-                width: 130,
-                height: 130,
-                background: 'var(--amber)',
-                opacity: 0.25,
-                animationDelay: '-3s',
-              }}
-            />
-
-            {/* Photo */}
-            <div
-              style={{
-                position: 'relative',
-                width: '100%',
-                aspectRatio: '3/4',
-                maxWidth: 320,
-                borderRadius: 'var(--radius-card)',
-                overflow: 'hidden',
-                boxShadow: 'var(--shadow-soft)',
-                zIndex: 2,
-              }}
-            >
-              <Image
-                src="/mamitas/mami-2.jpeg"
-                alt="Mamá con su bebé al atardecer"
-                fill
-                priority
-                sizes="(max-width: 768px) 100vw, 400px"
-                style={{ objectFit: 'cover' }}
-              />
-            </div>
-
-            {/* Floating "Take the quiz"-style pill */}
-            <a
-              href="#oferta"
-              className="floating-pill"
-              style={{
-                background: 'var(--ac)',
-                bottom: '8%',
-                right: '8%',
-              }}
-            >
-              EMPEZAR<br />MI PLAN ✨
-            </a>
-          </div>
-        </div>
-
-        {/* Social proof strip below hero */}
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            flexWrap: 'wrap',
-            gap: '1rem',
-            marginTop: '2rem',
-            padding: '1rem 0',
-          }}
-        >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '.75rem' }}>
-            <span className="stars" style={{ fontSize: '1.05rem' }}>★★★★★</span>
-            <p style={{ fontSize: '.85rem', fontWeight: 700, margin: 0, color: 'var(--dark)' }}>
-              <strong>+200 mamás</strong> ya recuperaron su abdomen con este método
+            <span style={{ color: 'var(--amber)', fontSize: '.95rem', letterSpacing: '-.04em' }}>
+              ★★★★★
+            </span>
+            <p style={{ fontSize: '.78rem', fontWeight: 800, color: 'var(--gray)', margin: 0 }}>
+              <strong style={{ color: 'var(--dark)' }}>+500 pacientes</strong> activas en el programa
             </p>
           </div>
-          <a href="#programa" className="arrow-link">
-            VER CÓMO FUNCIONA <span>→</span>
-          </a>
+        </div>
+
+        {/* Scroll down hint */}
+        <div
+          className="anim-bounce-down anim-fade-in delay-700"
+          style={{
+            textAlign: 'center',
+            marginTop: '2rem',
+            cursor: 'pointer',
+            color: 'var(--gray-light)',
+            fontSize: '.7rem',
+            fontWeight: 900,
+            letterSpacing: '.12em',
+            textTransform: 'uppercase',
+          }}
+          onClick={() => document.getElementById('programa')?.scrollIntoView({ behavior: 'smooth' })}
+        >
+          <p style={{ margin: 0 }}>Ver cómo funciona</p>
+          <p style={{ margin: '.2rem 0 0', fontSize: '1.1rem' }}>↓</p>
         </div>
       </div>
-
-      <style jsx>{`
-        @media (max-width: 768px) {
-          .hero-grid {
-            grid-template-columns: 1fr !important;
-            min-height: auto !important;
-          }
-        }
-      `}</style>
     </section>
   )
 }

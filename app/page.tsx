@@ -6,8 +6,7 @@ import {
   FormularioOnboarding,
   HeroSection,
   AboutSection,
-  ProgramCardsSection,
-  ImpactSection,
+  AppPreviewSection,
   ProblemaSection,
   ProgramaSection,
   ResultadosSection,
@@ -49,16 +48,13 @@ export default function Home() {
           <AboutSection />
         </Reveal>
         <Reveal>
-          <ProgramCardsSection />
-        </Reveal>
-        <Reveal>
-          <ImpactSection />
-        </Reveal>
-        <Reveal>
           <ProblemaSection />
         </Reveal>
         <Reveal>
           <ProgramaSection />
+        </Reveal>
+        <Reveal>
+          <AppPreviewSection />
         </Reveal>
         <Reveal>
           <ResultadosSection />

@@ -10,61 +10,88 @@ export function Nav() {
       style={{
         position: 'sticky',
         top: 0,
-        zIndex: 99,
-        background: 'rgba(254,252,248,0.92)',
-        backdropFilter: 'blur(14px)',
-        WebkitBackdropFilter: 'blur(14px)',
+        zIndex: 50,
+        background: 'rgba(248, 250, 252, 0.92)',
+        backdropFilter: 'blur(20px)',
+        WebkitBackdropFilter: 'blur(20px)',
         borderBottom: '1px solid var(--border)',
-        padding: '1rem 1.5rem',
+        padding: '.85rem 1.25rem',
       }}
     >
       <div
         style={{
           maxWidth: 1100,
           margin: '0 auto',
-          display: 'grid',
-          gridTemplateColumns: '1fr auto 1fr',
+          display: 'flex',
           alignItems: 'center',
+          justifyContent: 'space-between',
           gap: '1rem',
         }}
       >
-        {/* Left links */}
-        <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center' }} className="nav-left">
-          <a href="#problema" className="arrow-link" style={{ fontSize: '.72rem' }}>
-            Problema
-          </a>
-          <a href="#programa" className="arrow-link" style={{ fontSize: '.72rem' }}>
-            Programa
-          </a>
-        </div>
-
-        {/* Center logo */}
+        {/* Logo */}
         <a
           href="#hero"
           style={{
             display: 'flex',
             alignItems: 'center',
-            gap: '.35rem',
+            gap: '.45rem',
             fontWeight: 900,
-            color: 'var(--dark)',
-            justifyContent: 'center',
           }}
         >
-          <span style={{ fontSize: '1.5rem' }} className="serif">nutrifit</span>
+          <span
+            style={{
+              width: '2rem',
+              height: '2rem',
+              borderRadius: '.6rem',
+              background: 'var(--dark)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: '1rem',
+            }}
+          >
+            🥗
+          </span>
+          <span style={{ fontSize: '1rem', color: 'var(--dark)' }}>
+            Nutrifit
+            <span style={{ color: 'var(--ac)' }}>App</span>
+          </span>
         </a>
 
         {/* Right links */}
-        <div
-          style={{ display: 'flex', gap: '1.25rem', alignItems: 'center', justifyContent: 'flex-end' }}
-          className="nav-right"
-        >
-          <a href="#resultados" className="arrow-link" style={{ fontSize: '.72rem' }} >
+        <div style={{ display: 'flex', alignItems: 'center', gap: '.6rem' }}>
+          <a
+            href="#programa"
+            className="nav-link"
+            style={{
+              fontSize: '.78rem',
+              fontWeight: 800,
+              color: 'var(--gray)',
+              padding: '.5rem .75rem',
+              borderRadius: '.6rem',
+              transition: 'background .2s',
+            }}
+          >
+            Programa
+          </a>
+          <a
+            href="#resultados"
+            className="nav-link"
+            style={{
+              fontSize: '.78rem',
+              fontWeight: 800,
+              color: 'var(--gray)',
+              padding: '.5rem .75rem',
+              borderRadius: '.6rem',
+              transition: 'background .2s',
+            }}
+          >
             Resultados
           </a>
           <a
             href="#oferta"
             className="btn btn-rap"
-            style={{ padding: '.55rem 1.2rem', fontSize: '.78rem' }}
+            style={{ padding: '.5rem 1.1rem', fontSize: '.78rem' }}
           >
             Empezar
           </a>
@@ -72,14 +99,12 @@ export function Nav() {
       </div>
 
       <style jsx>{`
-        @media (max-width: 768px) {
-          :global(.nav-left), :global(.nav-right) {
-            display: none !important;
-          }
-          :global(.nav-right) {
-            display: flex !important;
-            justify-content: flex-end !important;
-          }
+        :global(.nav-link:hover) {
+          background: var(--bg-soft);
+          color: var(--dark);
+        }
+        @media (max-width: 540px) {
+          :global(.nav-link) { display: none; }
         }
       `}</style>
     </nav>

@@ -10,116 +10,146 @@ export function ProgramaSection() {
     <section
       id="programa"
       className="section"
-      style={{ background: 'var(--dark)', position: 'relative', overflow: 'hidden' }}
+      style={{ background: 'var(--bg)' }}
     >
-      {/* Dots */}
-      <div
-        className="deco-dots"
-        style={{
-          top: 40,
-          right: '5%',
-          width: 110,
-          height: 110,
-          backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.25) 2px, transparent 2.5px)',
-        }}
-      />
+      <div className="container-tight">
+        <div className="app-tag">🎯 Sistema {currentProfile.label}</div>
 
-      <div className="container-narrow">
-        <div
-          className="tag"
-          style={{ background: `rgba(${currentProfile.colorRgb}, 0.2)`, color: '#f9a8d4' }}
-        >
-          🎯 {currentProfile.progTag}
-        </div>
-
-        <h2 style={{ color: '#fff', marginBottom: '1.25rem' }}>
-          El <span className="serif" style={{ color: '#f9a8d4' }}>sistema</span> que funciona
+        <h2 style={{ marginBottom: '.75rem' }}>
+          El método que <span style={{ color: 'var(--ac)' }}>realmente funciona</span>
         </h2>
 
-        <p style={{ color: 'rgba(255,255,255,.65)', fontWeight: 700, marginTop: '.75rem' }}>
+        <p style={{ marginBottom: '1.75rem', fontWeight: 700 }}>
           {currentProfile.progSub}
         </p>
 
-        {/* Step cards */}
-        <div style={{ display: 'grid', gap: '1.25rem', marginTop: '2rem' }}>
+        {/* Phase cards */}
+        <div style={{ display: 'grid', gap: '1rem' }}>
           {currentProfile.programa.map((prog, i) => (
             <div
               key={i}
+              className="app-card"
               style={{
-                background: 'rgba(255,255,255,.05)',
-                border: '1px solid rgba(255,255,255,.09)',
-                borderRadius: 'var(--radius-lg)',
-                padding: '1.5rem',
                 position: 'relative',
+                padding: '1.5rem',
                 overflow: 'hidden',
               }}
             >
-              {/* Big background number */}
+              {/* Big bg number */}
               <span
                 style={{
                   position: 'absolute',
-                  top: -20,
-                  right: '.75rem',
+                  top: '-10px',
+                  right: '12px',
                   fontSize: '5.5rem',
                   fontWeight: 900,
-                  color: 'rgba(255,255,255,.04)',
+                  color: 'var(--ac-light)',
                   lineHeight: 1,
                   pointerEvents: 'none',
+                  zIndex: 0,
+                  opacity: 0.5,
                 }}
               >
                 {String(i + 1).padStart(2, '0')}
               </span>
 
-              <span style={{ fontSize: '2.2rem', display: 'block', marginBottom: '.85rem' }}>
-                {prog.icon}
-              </span>
-              <h3 style={{ color: '#fff', marginBottom: '.3rem' }}>{prog.title}</h3>
-              <p
-                style={{
-                  color: '#f9a8d4',
-                  fontSize: '.85rem',
-                  fontWeight: 800,
-                  marginBottom: '.5rem',
-                }}
-              >
-                Fase {i + 1} del Sistema
-              </p>
-              <p style={{ color: 'rgba(255,255,255,.6)', fontSize: '.85rem', margin: '0 0 .85rem' }}>
-                {prog.description}
-              </p>
-              <div
-                style={{
-                  background: 'rgba(16,185,129,.12)',
-                  border: '1px solid rgba(16,185,129,.25)',
-                  color: '#6ee7b7',
-                  padding: '.5rem .9rem',
-                  borderRadius: '.75rem',
-                  fontSize: '.78rem',
-                  fontWeight: 900,
-                  display: 'inline-block',
-                }}
-              >
-                ✓ Resultado medible al final de la fase
+              <div style={{ position: 'relative', zIndex: 1 }}>
+                <span style={{ fontSize: '2rem', display: 'block', marginBottom: '.5rem' }}>
+                  {prog.icon}
+                </span>
+
+                <span
+                  style={{
+                    fontSize: '.65rem',
+                    fontWeight: 900,
+                    color: 'var(--ac)',
+                    textTransform: 'uppercase',
+                    letterSpacing: '.08em',
+                    display: 'block',
+                    marginBottom: '.3rem',
+                  }}
+                >
+                  Fase {i + 1} del Sistema
+                </span>
+
+                <h3 style={{ marginBottom: '.4rem', fontSize: '1.05rem' }}>{prog.title}</h3>
+                <p style={{ fontSize: '.88rem', marginBottom: '.85rem', lineHeight: 1.5 }}>
+                  {prog.description}
+                </p>
+
+                <div
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '.35rem',
+                    background: 'var(--green-light)',
+                    border: '1px solid #a7f3d0',
+                    color: 'var(--green)',
+                    padding: '.4rem .8rem',
+                    borderRadius: '.65rem',
+                    fontSize: '.72rem',
+                    fontWeight: 900,
+                  }}
+                >
+                  ✓ Resultado medible
+                </div>
               </div>
             </div>
           ))}
         </div>
 
-        {/* Medico badge */}
+        {/* Doctor badge (app-style) */}
         <div
+          className="app-card-flat"
           style={{
-            marginTop: '2rem',
-            background: 'rgba(14,165,233,.1)',
-            border: '1px solid rgba(14,165,233,.25)',
-            borderRadius: 'var(--radius)',
-            padding: '1.25rem 1.5rem',
-            textAlign: 'center',
+            marginTop: '1.5rem',
+            padding: '1.15rem 1.25rem',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '.85rem',
+            background: 'linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%)',
+            borderColor: '#bae6fd',
           }}
         >
-          <p style={{ color: 'rgba(255,255,255,.85)', fontSize: '.88rem', fontWeight: 700, margin: 0 }}>
-            🩺 Diseñado por <strong style={{ color: '#7dd3fc' }}>{currentProfile.medico}</strong>{' '}
-            — {currentProfile.medicoRole}
-          </p>
+          <div
+            style={{
+              width: '3rem',
+              height: '3rem',
+              borderRadius: '1rem',
+              background: '#0ea5e9',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: '1.4rem',
+              color: '#fff',
+              flexShrink: 0,
+            }}
+          >
+            🩺
+          </div>
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <p style={{ fontSize: '.85rem', fontWeight: 900, color: 'var(--dark)', margin: 0 }}>
+              {currentProfile.medico}
+            </p>
+            <p style={{ fontSize: '.72rem', fontWeight: 700, color: '#0284c7', margin: '.15rem 0 0' }}>
+              {currentProfile.medicoRole}
+            </p>
+          </div>
+          <span
+            style={{
+              fontSize: '.62rem',
+              fontWeight: 900,
+              background: '#dcfce7',
+              color: '#15803d',
+              padding: '.3rem .55rem',
+              borderRadius: '.5rem',
+              textTransform: 'uppercase',
+              letterSpacing: '.05em',
+              flexShrink: 0,
+            }}
+          >
+            ● En línea
+          </span>
         </div>
       </div>
     </section>

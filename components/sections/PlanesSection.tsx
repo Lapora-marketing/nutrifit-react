@@ -6,47 +6,41 @@ export function PlanesSection() {
   const { currentProfile } = useProfile()
   if (!currentProfile) return null
 
-  const incluye = [
-    { ico: '📱', text: 'Acceso completo a la App NutriFit' },
-    { ico: '🩺', text: '4 sesiones de consulta médica personalizadas' },
-    { ico: '📋', text: 'Plan alimentario diseñado para tu caso' },
-    { ico: '🎥', text: 'Biblioteca de clases grabadas (acceso de por vida)' },
-    { ico: '👥', text: 'Grupo privado de pacientes activas' },
-    { ico: '📊', text: 'Reporte mensual de tu progreso' },
-    { ico: '💬', text: 'Soporte directo por WhatsApp' },
+  const includes = [
+    { icon: '📱', text: 'Acceso completo a la app' },
+    { icon: '🩺', text: '4 sesiones de consulta médica' },
+    { icon: '📋', text: 'Plan alimentario personalizado' },
+    { icon: '🎥', text: 'Biblioteca de clases grabadas' },
+    { icon: '👥', text: 'Grupo privado de pacientes' },
+    { icon: '📊', text: 'Reporte mensual de progreso' },
+    { icon: '💬', text: 'Soporte por WhatsApp' },
   ]
 
   return (
     <section
       id="oferta"
       className="section"
-      style={{ background: 'var(--white)', position: 'relative' }}
+      style={{ background: 'var(--bg)' }}
     >
-      <div
-        className="deco-dots"
-        style={{ top: 40, left: '5%', width: 90, height: 90, opacity: 0.6 }}
-      />
-      <div className="container-narrow" style={{ position: 'relative' }}>
-        <div className="tag">💎 Tu inversión</div>
+      <div className="container-tight">
+        <div className="app-tag">💎 Tu inversión</div>
 
-        <h2 style={{ marginBottom: '1.25rem' }}>
-          Todo lo que necesitas<br />
-          en un <span className="serif">solo programa</span>.
+        <h2 style={{ marginBottom: '.75rem' }}>
+          Todo en un <span style={{ color: 'var(--ac)' }}>solo programa</span>
         </h2>
 
-        <p style={{ fontWeight: 700, marginTop: '.75rem' }}>
-          Sin contratos anuales, sin letra pequeña. Resultados o devolvemos tu dinero.
+        <p style={{ marginBottom: '1.75rem', fontWeight: 700 }}>
+          Sin contratos anuales. Sin letra pequeña. Resultados o devolvemos tu dinero.
         </p>
 
-        {/* Pricing box dark */}
+        {/* Pricing card */}
         <div
+          className="app-card"
           style={{
-            background: 'linear-gradient(145deg, var(--dark) 0%, #1e1b4b 100%)',
-            borderRadius: 'var(--radius-xl)',
-            padding: '2.25rem 1.75rem',
+            padding: '1.75rem 1.5rem',
+            background: 'linear-gradient(160deg, var(--dark) 0%, #1e1b4b 100%)',
+            border: 'none',
             color: '#fff',
-            textAlign: 'center',
-            margin: '1.75rem 0',
             position: 'relative',
             overflow: 'hidden',
           }}
@@ -55,127 +49,137 @@ export function PlanesSection() {
           <div
             style={{
               position: 'absolute',
-              top: -70,
-              right: -70,
-              width: 220,
-              height: 220,
+              top: -50,
+              right: -50,
+              width: 180,
+              height: 180,
               borderRadius: '50%',
-              background: `rgba(${currentProfile.colorRgb}, 0.12)`,
+              background: `rgba(${currentProfile.colorRgb}, 0.18)`,
               pointerEvents: 'none',
             }}
           />
           <div
             style={{
               position: 'absolute',
-              bottom: -50,
-              left: -50,
-              width: 160,
-              height: 160,
+              bottom: -40,
+              left: -40,
+              width: 140,
+              height: 140,
               borderRadius: '50%',
-              background: 'rgba(14,165,233,.08)',
+              background: 'rgba(14,165,233,.1)',
               pointerEvents: 'none',
             }}
           />
 
           <div style={{ position: 'relative', zIndex: 1 }}>
-            <div style={{ fontSize: '1rem', textDecoration: 'line-through', color: 'rgba(255,255,255,.35)', marginBottom: '.15rem' }}>
-              $890.000 COP
-            </div>
+            {/* Top badge */}
             <div
               style={{
-                fontSize: '3.2rem',
-                fontWeight: 900,
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '.4rem',
+                background: 'rgba(245,158,11,0.18)',
                 color: 'var(--amber)',
-                lineHeight: 1,
-                marginBottom: '.2rem',
-              }}
-            >
-              $490.000
-            </div>
-            <div style={{ fontSize: '.85rem', color: 'rgba(255,255,255,.5)', marginBottom: '1.1rem' }}>
-              COP · total 3 meses
-            </div>
-
-            <div
-              style={{
-                display: 'inline-block',
-                background: 'rgba(16,185,129,.18)',
-                border: '1px solid rgba(16,185,129,.35)',
-                color: '#6ee7b7',
-                padding: '.35rem 1rem',
-                borderRadius: 999,
-                fontSize: '.78rem',
+                padding: '.35rem .8rem',
+                borderRadius: '999px',
+                fontSize: '.65rem',
                 fontWeight: 900,
-                marginBottom: '1.5rem',
+                textTransform: 'uppercase',
+                letterSpacing: '.08em',
+                marginBottom: '1.25rem',
               }}
             >
-              ⚡ Ahorras $400.000 hoy
+              ⚡ Solo 4 cupos · Termina pronto
             </div>
 
-            {/* Includes list */}
-            <div
-              style={{
-                textAlign: 'left',
-                display: 'grid',
-                gap: '.7rem',
-                margin: '1.5rem 0',
-              }}
-            >
-              {incluye.map((inc, i) => (
-                <div
-                  key={i}
-                  style={{
-                    display: 'flex',
-                    gap: '.7rem',
-                    alignItems: 'flex-start',
-                    fontSize: '.85rem',
-                    color: 'rgba(255,255,255,.88)',
-                    fontWeight: 700,
-                  }}
-                >
-                  <span style={{ flexShrink: 0, marginTop: '.1rem', fontSize: '.95rem' }}>
-                    {inc.ico}
+            {/* Price */}
+            <div style={{ marginBottom: '1.5rem', textAlign: 'center' }}>
+              <p style={{ fontSize: '.95rem', textDecoration: 'line-through', color: 'rgba(255,255,255,0.35)', margin: 0 }}>
+                $890.000 COP
+              </p>
+              <p
+                style={{
+                  fontSize: '3rem',
+                  fontWeight: 900,
+                  color: 'var(--amber)',
+                  margin: '.1rem 0',
+                  lineHeight: 1,
+                }}
+              >
+                $490.000
+              </p>
+              <p style={{ fontSize: '.78rem', color: 'rgba(255,255,255,0.5)', margin: 0 }}>
+                COP · 3 meses · pago único
+              </p>
+            </div>
+
+            {/* Savings pill */}
+            <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
+              <span
+                style={{
+                  display: 'inline-block',
+                  background: 'rgba(16,185,129,0.18)',
+                  border: '1px solid rgba(16,185,129,0.35)',
+                  color: '#6ee7b7',
+                  padding: '.35rem 1rem',
+                  borderRadius: '999px',
+                  fontSize: '.75rem',
+                  fontWeight: 900,
+                }}
+              >
+                ✓ Ahorras $400.000 hoy
+              </span>
+            </div>
+
+            {/* Includes */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '.6rem', marginBottom: '1.5rem' }}>
+              {includes.map((item, i) => (
+                <div key={i} style={{ display: 'flex', gap: '.65rem', alignItems: 'center' }}>
+                  <span style={{ fontSize: '1rem', flexShrink: 0 }}>{item.icon}</span>
+                  <span style={{ fontSize: '.82rem', fontWeight: 700, color: 'rgba(255,255,255,0.88)', lineHeight: 1.4 }}>
+                    {item.text}
                   </span>
-                  <span>{inc.text}</span>
                 </div>
               ))}
             </div>
 
-            <a
-              href="#"
-              className="btn btn-rap btn-xl btn-full"
-              style={{ marginTop: '1rem' }}
-            >
-              🚀 Quiero mi programa — $490k
+            <a href="#" className="btn btn-rap btn-xl btn-full">
+              🚀 Quiero mi programa
             </a>
 
-            <p style={{ fontSize: '.75rem', color: 'rgba(255,255,255,.5)', marginTop: '.85rem' }}>
-              💳 Solo 4 cupos disponibles · Pago seguro
+            <p
+              style={{
+                fontSize: '.7rem',
+                color: 'rgba(255,255,255,0.5)',
+                marginTop: '.75rem',
+                textAlign: 'center',
+              }}
+            >
+              🔒 Pago seguro · 💳 Tarjetas, PSE, Nequi
             </p>
           </div>
         </div>
 
-        {/* Guarantee */}
+        {/* Guarantee card */}
         <div
+          className="app-card-flat"
           style={{
+            marginTop: '1.25rem',
+            padding: '1.15rem 1.25rem',
             background: 'var(--ac-light)',
-            border: '2px solid var(--ac-mid)',
-            borderRadius: 'var(--radius)',
-            padding: '1.25rem',
+            border: '2px solid var(--ac)',
             display: 'flex',
-            gap: '.9rem',
+            gap: '.85rem',
             alignItems: 'flex-start',
-            marginTop: '1.5rem',
           }}
         >
-          <span style={{ fontSize: '2rem', flexShrink: 0 }}>🛡️</span>
+          <span style={{ fontSize: '1.6rem', flexShrink: 0 }}>🛡️</span>
           <div>
-            <h4 style={{ fontSize: '.95rem', fontWeight: 900, color: 'var(--dark)', marginBottom: '.25rem' }}>
-              Garantía de resultados de 4 semanas
+            <h4 style={{ fontSize: '.9rem', color: 'var(--ac-dark)', margin: '0 0 .15rem' }}>
+              Garantía de 4 semanas
             </h4>
-            <p style={{ fontSize: '.82rem', margin: 0, fontWeight: 700 }}>
-              Si en las primeras 4 semanas no hay resultados medibles, revisamos el protocolo sin costo
-              adicional. Trabajamos con métricas claras desde el día 1.
+            <p style={{ fontSize: '.78rem', color: 'var(--ac-dark)', margin: 0, fontWeight: 700, lineHeight: 1.4 }}>
+              Si no hay resultados medibles en las primeras 4 semanas, revisamos el protocolo sin costo.
             </p>
           </div>
         </div>

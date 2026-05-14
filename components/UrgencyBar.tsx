@@ -3,21 +3,25 @@
 export function UrgencyBar() {
   return (
     <div
-      className="text-center text-white"
       style={{
         background: 'var(--dark)',
-        padding: '.6rem 1rem',
-        fontSize: '.8rem',
+        color: '#fff',
+        padding: '.55rem 1rem',
+        textAlign: 'center',
+        fontSize: '.75rem',
         fontWeight: 800,
-        letterSpacing: '.02em',
+        letterSpacing: '.01em',
         position: 'sticky',
         top: 0,
-        zIndex: 100,
+        zIndex: 60,
         borderBottom: '2px solid var(--ac)',
       }}
     >
-      ⚠️ Precio de lanzamiento — Solo quedan{' '}
-      <strong style={{ color: 'var(--amber)' }}>8 cupos</strong> · Termina pronto
+      <span style={{ marginRight: '.4rem' }}>⚡</span>
+      Precio de lanzamiento — Solo quedan{' '}
+      <strong style={{ color: 'var(--amber)' }}>8 cupos</strong>
+      <span style={{ opacity: 0.6, margin: '0 .5rem' }}>·</span>
+      <span style={{ opacity: 0.85 }}>Termina pronto</span>
     </div>
   )
 }

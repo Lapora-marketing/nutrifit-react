@@ -10,53 +10,57 @@ export function CTASection() {
     <section
       id="cierre"
       style={{
-        padding: '6rem 0',
-        background: `linear-gradient(180deg, var(--white) 0%, var(--ac-light) 100%)`,
-        textAlign: 'center',
+        padding: '4rem 0 5rem',
+        background: 'var(--bg-elevated)',
+        borderTop: '1px solid var(--border)',
         position: 'relative',
         overflow: 'hidden',
       }}
     >
+      {/* Decorative orbs */}
       <div
-        className="deco-blob animate-floatBlob"
         style={{
           position: 'absolute',
-          top: '20%',
-          left: '8%',
-          width: 200,
-          height: 200,
-          background: 'var(--amber)',
-          opacity: 0.2,
-        }}
-      />
-      <div
-        className="deco-blob animate-floatBlob"
-        style={{
-          position: 'absolute',
-          bottom: '15%',
-          right: '10%',
+          top: -100,
+          left: '15%',
           width: 250,
           height: 250,
-          background: 'var(--ac)',
-          opacity: 0.15,
-          animationDelay: '-4s',
+          borderRadius: '50%',
+          background: `rgba(${currentProfile.colorRgb}, 0.08)`,
+          filter: 'blur(40px)',
+          pointerEvents: 'none',
+        }}
+      />
+      <div
+        style={{
+          position: 'absolute',
+          bottom: -120,
+          right: '10%',
+          width: 280,
+          height: 280,
+          borderRadius: '50%',
+          background: 'rgba(14,165,233,0.06)',
+          filter: 'blur(50px)',
+          pointerEvents: 'none',
         }}
       />
 
-      <div className="container-narrow" style={{ position: 'relative', zIndex: 2 }}>
-        <div className="tag" style={{ margin: '0 auto 1rem' }}>✨ Empieza hoy</div>
+      <div className="container-tight" style={{ position: 'relative', zIndex: 2, textAlign: 'center' }}>
+        <div style={{ display: 'inline-block', marginBottom: '1rem' }} className="app-tag">
+          ✨ Empieza hoy
+        </div>
 
-        <h2 style={{ maxWidth: 600, margin: '0 auto 1.25rem' }}>
-          Tu mejor versión<br />
-          <span className="serif">empieza</span> hoy.
+        <h2 style={{ marginBottom: '.85rem', maxWidth: 480, margin: '0 auto .85rem' }}>
+          Tu mejor versión{' '}
+          <span style={{ color: 'var(--ac)' }}>empieza hoy</span>
         </h2>
 
         <p
           style={{
             maxWidth: 440,
             margin: '0 auto 2rem',
-            fontSize: '.95rem',
             fontWeight: 700,
+            fontSize: '.95rem',
           }}
         >
           {currentProfile.ctaSub}
@@ -66,22 +70,21 @@ export function CTASection() {
           style={{
             display: 'flex',
             flexDirection: 'column',
-            gap: '.85rem',
-            alignItems: 'center',
+            gap: '.7rem',
             maxWidth: 380,
             margin: '0 auto',
           }}
         >
           <a href="#oferta" className="btn btn-rap btn-xl btn-full">
-            ✨ Empezar mi programa hoy
+            ✨ Empezar mi programa
           </a>
           <a
             href="https://wa.me/573001234567"
             target="_blank"
             rel="noopener noreferrer"
-            className="btn btn-dark btn-full"
+            className="btn btn-wa btn-xl btn-full"
           >
-            💬 Hablar primero por WhatsApp
+            💬 Hablar por WhatsApp
           </a>
         </div>
 
@@ -90,21 +93,21 @@ export function CTASection() {
           style={{
             display: 'flex',
             justifyContent: 'center',
-            gap: '1.25rem',
+            gap: '1rem',
             flexWrap: 'wrap',
-            marginTop: '1.5rem',
+            marginTop: '2rem',
           }}
         >
           {[
             { ico: '🔒', text: 'Pago seguro' },
-            { ico: '🛡️', text: 'Garantía 4 semanas' },
+            { ico: '🛡️', text: 'Garantía 4 sem' },
             { ico: '📋', text: 'Sin contratos' },
-            { ico: '👨‍⚕️', text: 'Médicos avalados' },
+            { ico: '👨‍⚕️', text: 'Médicos reales' },
           ].map((item, i) => (
             <span
               key={i}
               style={{
-                fontSize: '.74rem',
+                fontSize: '.72rem',
                 fontWeight: 800,
                 color: 'var(--gray)',
                 display: 'flex',

@@ -10,174 +10,162 @@ export function ResultadosSection() {
     <section
       id="resultados"
       className="section"
-      style={{ background: 'var(--bg)', position: 'relative', overflow: 'hidden' }}
+      style={{ background: 'var(--bg-elevated)', borderTop: '1px solid var(--border)' }}
     >
-      <div
-        className="deco-blob animate-floatBlob"
-        style={{
-          position: 'absolute',
-          bottom: '-100px',
-          right: '-80px',
-          width: 320,
-          height: 320,
-          background: 'var(--amber)',
-          opacity: 0.18,
-        }}
-      />
+      <div className="container-tight">
+        <div className="app-tag">💬 Resultados</div>
 
-      <div className="container-narrow" style={{ position: 'relative', zIndex: 2 }}>
-        <div className="tag">💬 Resultados reales</div>
-
-        <h2 style={{ marginBottom: '1.5rem' }}>
-          Pacientes que ya<br />
-          <span className="serif">transformaron</span> su vida.
+        <h2 style={{ marginBottom: '.75rem' }}>
+          Pacientes que ya <span style={{ color: 'var(--ac)' }}>transformaron</span> su vida
         </h2>
 
-        <p style={{ fontWeight: 700, marginTop: '.75rem' }}>
+        <p style={{ marginBottom: '1.75rem', fontWeight: 700 }}>
           {currentProfile.resSub}
         </p>
 
-        {/* Resultados stats */}
-        <div style={{ display: 'grid', gap: '1.1rem', marginTop: '2rem' }}>
+        {/* Stats cards */}
+        <div style={{ display: 'grid', gap: '.85rem' }}>
           {currentProfile.resultados.map((result, i) => (
             <div
               key={i}
-              className="card"
-              style={{
-                padding: '1.4rem',
-                position: 'relative',
-              }}
+              className="app-card"
+              style={{ padding: '1.25rem 1.4rem' }}
             >
-              <div
-                style={{
-                  fontSize: '.72rem',
-                  fontWeight: 900,
-                  color: 'var(--ac)',
-                  textTransform: 'uppercase',
-                  letterSpacing: '.06em',
-                  marginBottom: '.5rem',
-                }}
-              >
-                {result.tag}
-              </div>
-              <h3 style={{ marginBottom: '.85rem' }}>{result.title}</h3>
-
-              {result.stats.map((stat, j) => (
-                <div
-                  key={j}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '.85rem',
-                    marginBottom: '.65rem',
-                  }}
-                >
+              <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '.75rem', marginBottom: '.85rem' }}>
+                <div>
                   <span
                     style={{
-                      fontSize: '1.4rem',
+                      fontSize: '.65rem',
                       fontWeight: 900,
-                      color: 'var(--green)',
-                      minWidth: '70px',
-                      fontVariantNumeric: 'tabular-nums',
+                      color: 'var(--ac)',
+                      textTransform: 'uppercase',
+                      letterSpacing: '.08em',
                     }}
                   >
-                    {stat.value}
+                    {result.tag}
                   </span>
-                  <span style={{ fontSize: '.85rem', color: 'var(--gray)', fontWeight: 700 }}>
-                    {stat.description}
-                  </span>
+                  <h3 style={{ fontSize: '.95rem', marginTop: '.2rem' }}>{result.title}</h3>
                 </div>
-              ))}
+                <span
+                  style={{
+                    flexShrink: 0,
+                    background: 'var(--green-light)',
+                    color: 'var(--green)',
+                    padding: '.3rem .6rem',
+                    borderRadius: '.55rem',
+                    fontSize: '.62rem',
+                    fontWeight: 900,
+                  }}
+                >
+                  ✓
+                </span>
+              </div>
 
-              <span
-                style={{
-                  display: 'inline-block',
-                  marginTop: '.85rem',
-                  background: 'rgba(16,185,129,.12)',
-                  border: '1px solid rgba(16,185,129,.25)',
-                  color: 'var(--green)',
-                  padding: '.35rem .85rem',
-                  borderRadius: 999,
-                  fontSize: '.75rem',
-                  fontWeight: 900,
-                }}
-              >
-                ✓ {result.badge}
-              </span>
-            </div>
-          ))}
-        </div>
-
-        {/* Testimonios con quote mark */}
-        <div style={{ display: 'grid', gap: '1.1rem', marginTop: '2rem' }}>
-          {currentProfile.testimonios.map((testi, i) => (
-            <div
-              key={i}
-              className="card"
-              style={{
-                padding: '1.4rem',
-                position: 'relative',
-              }}
-            >
-              {/* Big quote mark */}
-              <span
-                style={{
-                  content: '\\201C',
-                  fontSize: '4rem',
-                  color: 'var(--ac-light)',
-                  position: 'absolute',
-                  top: '-.4rem',
-                  left: '.9rem',
-                  lineHeight: 1,
-                  fontWeight: 900,
-                }}
-              >
-                {'“'}
-              </span>
-
-              <div className="stars" style={{ fontSize: '.9rem', marginBottom: '.75rem' }}>
-                ★★★★★
+              {/* Stats rows */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '.55rem' }}>
+                {result.stats.map((stat, j) => (
+                  <div
+                    key={j}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '.75rem',
+                      padding: '.5rem .85rem',
+                      background: 'var(--bg-soft)',
+                      borderRadius: '.65rem',
+                    }}
+                  >
+                    <span
+                      style={{
+                        fontSize: '1.05rem',
+                        fontWeight: 900,
+                        color: 'var(--green)',
+                        minWidth: '60px',
+                        fontVariantNumeric: 'tabular-nums',
+                      }}
+                    >
+                      {stat.value}
+                    </span>
+                    <span style={{ fontSize: '.78rem', color: 'var(--gray)', fontWeight: 700, lineHeight: 1.35 }}>
+                      {stat.description}
+                    </span>
+                  </div>
+                ))}
               </div>
 
               <p
                 style={{
-                  fontSize: '.92rem',
+                  fontSize: '.7rem',
                   fontWeight: 800,
-                  color: 'var(--dark)',
-                  marginBottom: '1rem',
-                  lineHeight: 1.5,
+                  color: 'var(--green)',
+                  margin: '.85rem 0 0',
                 }}
               >
-                {testi.text}
+                {result.badge}
               </p>
-
-              <div style={{ display: 'flex', alignItems: 'center', gap: '.7rem' }}>
-                <div
-                  style={{
-                    width: 40,
-                    height: 40,
-                    borderRadius: '50%',
-                    background: 'var(--ac-light)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    fontSize: '1.2rem',
-                    flexShrink: 0,
-                  }}
-                >
-                  {testi.emoji}
-                </div>
-                <div>
-                  <div style={{ fontSize: '.85rem', fontWeight: 900, color: 'var(--dark)' }}>
-                    {testi.name}
-                  </div>
-                  <div style={{ fontSize: '.72rem', fontWeight: 700, color: 'var(--gray)' }}>
-                    {testi.program}
-                  </div>
-                </div>
-              </div>
             </div>
           ))}
+        </div>
+
+        {/* Testimonios — horizontal scroll like app */}
+        <div style={{ marginTop: '2rem' }}>
+          <h3 style={{ fontSize: '1rem', marginBottom: '1rem' }}>
+            Lo que dicen ⭐ <span style={{ color: 'var(--amber)' }}>5.0</span>
+          </h3>
+
+          <div
+            className="ns"
+            style={{
+              display: 'flex',
+              overflowX: 'auto',
+              gap: '.75rem',
+              paddingBottom: '.5rem',
+              scrollSnapType: 'x mandatory',
+            }}
+          >
+            {currentProfile.testimonios.map((testi, i) => (
+              <div
+                key={i}
+                className="app-card"
+                style={{
+                  minWidth: '260px',
+                  maxWidth: '260px',
+                  padding: '1.1rem 1.25rem',
+                  scrollSnapAlign: 'start',
+                  flexShrink: 0,
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: '.65rem', marginBottom: '.75rem' }}>
+                  <div
+                    className="habit-icon"
+                    style={{
+                      background: 'var(--ac-light)',
+                      width: '2.5rem',
+                      height: '2.5rem',
+                    }}
+                  >
+                    {testi.emoji}
+                  </div>
+                  <div style={{ minWidth: 0 }}>
+                    <p style={{ fontSize: '.82rem', fontWeight: 900, color: 'var(--dark)', margin: 0 }}>
+                      {testi.name}
+                    </p>
+                    <p style={{ fontSize: '.66rem', fontWeight: 700, color: 'var(--gray-light)', margin: 0 }}>
+                      {testi.program}
+                    </p>
+                  </div>
+                </div>
+
+                <p style={{ color: 'var(--amber)', fontSize: '.8rem', margin: '0 0 .55rem', letterSpacing: '-.04em' }}>
+                  ★★★★★
+                </p>
+
+                <p style={{ fontSize: '.82rem', color: 'var(--dark)', fontWeight: 700, lineHeight: 1.45, margin: 0 }}>
+                  "{testi.text}"
+                </p>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </section>
