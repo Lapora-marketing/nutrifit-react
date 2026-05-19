@@ -55,7 +55,8 @@ export function AboutSection() {
             position: 'relative',
             borderRadius: 'var(--r-xl)',
             overflow: 'hidden',
-            minHeight: '13rem',
+            aspectRatio: '16 / 7',
+            minHeight: '11rem',
             background: `linear-gradient(135deg, var(--ac) 0%, var(--ac-dark) 100%)`,
             boxShadow: `0 12px 32px -8px rgba(${currentProfile.colorRgb}, 0.35)`,
             marginBottom: '1.5rem',
@@ -80,8 +81,8 @@ export function AboutSection() {
           {/* Left: text */}
           <div
             style={{
-              flex: '1 1 55%',
-              padding: '1.5rem 1.25rem 1.5rem 1.5rem',
+              flex: '1 1 58%',
+              padding: '1.25rem 1rem 1.25rem 1.35rem',
               display: 'flex',
               flexDirection: 'column',
               justifyContent: 'center',
@@ -160,10 +161,10 @@ export function AboutSection() {
           {/* Right: doctor photo */}
           <div
             style={{
-              flex: '1 1 45%',
+              flex: '1 1 42%',
               position: 'relative',
-              minHeight: '13rem',
               alignSelf: 'stretch',
+              overflow: 'hidden',
             }}
           >
             {doctor.photo ? (
@@ -172,19 +173,19 @@ export function AboutSection() {
                   src={doctor.photo}
                   alt={doctor.fullName}
                   fill
-                  sizes="(max-width: 768px) 50vw, 320px"
+                  sizes="(max-width: 768px) 45vw, 320px"
                   priority
                   style={{
                     objectFit: 'cover',
-                    objectPosition: 'center 25%',
+                    objectPosition: '72% 22%',
                   }}
                 />
-                {/* Soft left edge fade so photo blends with gradient */}
+                {/* Subtle left edge fade (5% only) so photo joins gradient cleanly */}
                 <div
                   style={{
                     position: 'absolute',
                     inset: 0,
-                    background: `linear-gradient(90deg, var(--ac) 0%, rgba(${currentProfile.colorRgb}, 0.25) 22%, transparent 50%)`,
+                    background: `linear-gradient(90deg, rgba(${currentProfile.colorRgb}, 0.65) 0%, rgba(${currentProfile.colorRgb}, 0.15) 8%, transparent 18%)`,
                     pointerEvents: 'none',
                   }}
                 />
