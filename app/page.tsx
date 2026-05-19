@@ -5,12 +5,14 @@ import {
   Nav,
   FormularioOnboarding,
   HeroSection,
-  AboutSection,
-  AppPreviewSection,
-  ProblemaSection,
+  EspejoSection,
   ProgramaSection,
+  AboutSection,
+  ExamenesSection,
+  AppPreviewSection,
   ResultadosSection,
   PlanesSection,
+  PagoSection,
   CTASection,
   Footer,
   Reveal,
@@ -43,25 +45,50 @@ export default function Home() {
       <UrgencyBar />
       <Nav />
       <main>
+        {/* 1. Hook emocional */}
         <HeroSection />
+
+        {/* 2. DOLORES PRIMERO — espejo emocional */}
         <Reveal>
-          <AboutSection />
+          <EspejoSection />
         </Reveal>
-        <Reveal>
-          <ProblemaSection />
-        </Reveal>
+
+        {/* 3. La solución (método) */}
         <Reveal>
           <ProgramaSection />
         </Reveal>
+
+        {/* 4. Confianza (médico) */}
+        <Reveal>
+          <AboutSection />
+        </Reveal>
+
+        {/* 5. Personalización médica (exámenes) */}
+        <Reveal>
+          <ExamenesSection />
+        </Reveal>
+
+        {/* 6. Compañero diario (app) */}
         <Reveal>
           <AppPreviewSection />
         </Reveal>
+
+        {/* 7. Prueba social (resultados) */}
         <Reveal>
           <ResultadosSection />
         </Reveal>
+
+        {/* 8. La oferta */}
         <Reveal>
           <PlanesSection />
         </Reveal>
+
+        {/* 9. Pago fácil — fricción cero */}
+        <Reveal>
+          <PagoSection />
+        </Reveal>
+
+        {/* 10. CTA final */}
         <Reveal>
           <CTASection />
         </Reveal>

@@ -1,0 +1,177 @@
+export interface Examen {
+  id: string
+  name: string
+  emoji: string
+  category: 'sangre' | 'hormonal' | 'imagen' | 'pelvico' | 'cardio' | 'metabolico'
+  why: string
+  required: boolean
+}
+
+export const EXAMENES_POSPARTO: Record<'rap' | 'kids' | 'fit', Examen[]> = {
+  rap: [
+    {
+      id: 'hemograma',
+      name: 'Hemograma completo',
+      emoji: '🩸',
+      category: 'sangre',
+      why: 'Detectamos anemia, común tras el parto y la lactancia. La anemia explica el cansancio crónico.',
+      required: true,
+    },
+    {
+      id: 'tsh-t4',
+      name: 'TSH + T4 libre',
+      emoji: '🦋',
+      category: 'hormonal',
+      why: 'Tu tiroides puede estar bloqueando la pérdida de peso. El 22% de las mamás postparto desarrolla tiroiditis.',
+      required: true,
+    },
+    {
+      id: 'ferritina',
+      name: 'Ferritina',
+      emoji: '⚡',
+      category: 'sangre',
+      why: 'Reservas de hierro reales. Una ferritina baja explica la caída de cabello y el agotamiento.',
+      required: true,
+    },
+    {
+      id: 'glicemia',
+      name: 'Glicemia en ayunas + HbA1c',
+      emoji: '🍯',
+      category: 'metabolico',
+      why: 'Descartamos diabetes gestacional persistente y resistencia a la insulina.',
+      required: true,
+    },
+    {
+      id: 'vit-d',
+      name: 'Vitamina D (25-OH)',
+      emoji: '☀️',
+      category: 'sangre',
+      why: 'Su deficiencia es epidémica en Colombia y afecta directamente tu energía y ánimo.',
+      required: false,
+    },
+    {
+      id: 'b12',
+      name: 'Vitamina B12',
+      emoji: '💊',
+      category: 'sangre',
+      why: 'Crítica si lactaste por meses. Su déficit imita la depresión postparto.',
+      required: false,
+    },
+    {
+      id: 'lipidos',
+      name: 'Perfil lipídico',
+      emoji: '🫀',
+      category: 'cardio',
+      why: 'Para diseñar un plan que cuide tu corazón a largo plazo.',
+      required: false,
+    },
+    {
+      id: 'eco-abdominal',
+      name: 'Ecografía abdominal',
+      emoji: '🔬',
+      category: 'imagen',
+      why: 'Evaluamos la diástasis abdominal con precisión médica, no a ojo.',
+      required: false,
+    },
+  ],
+  kids: [
+    {
+      id: 'hemograma-ped',
+      name: 'Hemograma pediátrico',
+      emoji: '🩸',
+      category: 'sangre',
+      why: 'Anemia infantil afecta el crecimiento, la concentración escolar y el ánimo.',
+      required: true,
+    },
+    {
+      id: 'ferritina-ped',
+      name: 'Ferritina infantil',
+      emoji: '⚡',
+      category: 'sangre',
+      why: 'Las reservas de hierro son críticas en etapa de crecimiento.',
+      required: true,
+    },
+    {
+      id: 'vit-d-ped',
+      name: 'Vitamina D (25-OH)',
+      emoji: '☀️',
+      category: 'sangre',
+      why: 'Esencial para el desarrollo óseo y el sistema inmune.',
+      required: true,
+    },
+    {
+      id: 'tsh-ped',
+      name: 'TSH (función tiroidea)',
+      emoji: '🦋',
+      category: 'hormonal',
+      why: 'Detecta hipotiroidismo subclínico que afecta el crecimiento.',
+      required: false,
+    },
+    {
+      id: 'glicemia-ped',
+      name: 'Glicemia',
+      emoji: '🍯',
+      category: 'metabolico',
+      why: 'Especialmente importante si hay antecedentes familiares de diabetes.',
+      required: false,
+    },
+    {
+      id: 'parasitos',
+      name: 'Coprológico + parásitos',
+      emoji: '🦠',
+      category: 'sangre',
+      why: 'Parásitos intestinales bloquean la absorción de nutrientes.',
+      required: false,
+    },
+  ],
+  fit: [
+    {
+      id: 'lipidos-fit',
+      name: 'Perfil lipídico completo',
+      emoji: '🫀',
+      category: 'cardio',
+      why: 'Colesterol total, HDL, LDL y triglicéridos. Mapa real de tu salud cardiovascular.',
+      required: true,
+    },
+    {
+      id: 'glicemia-fit',
+      name: 'Glicemia + HbA1c + Insulina',
+      emoji: '🍯',
+      category: 'metabolico',
+      why: 'Detecta resistencia a la insulina, la causa #1 de grasa abdominal después de los 35.',
+      required: true,
+    },
+    {
+      id: 'tsh-fit',
+      name: 'TSH + T4 libre',
+      emoji: '🦋',
+      category: 'hormonal',
+      why: 'La función tiroidea decae con la edad y afecta directamente el metabolismo.',
+      required: true,
+    },
+    {
+      id: 'testosterona',
+      name: 'Testosterona total y libre',
+      emoji: '💪',
+      category: 'hormonal',
+      why: 'Hombres: niveles bajos explican la pérdida de masa muscular y energía.',
+      required: false,
+    },
+    {
+      id: 'vit-d-fit',
+      name: 'Vitamina D (25-OH)',
+      emoji: '☀️',
+      category: 'sangre',
+      why: 'Su deficiencia reduce la fuerza, la recuperación muscular y la inmunidad.',
+      required: false,
+    },
+    {
+      id: 'pcr',
+      name: 'PCR ultrasensible',
+      emoji: '🔥',
+      category: 'sangre',
+      why: 'Inflamación silenciosa, predictor temprano de enfermedad cardiovascular.',
+      required: false,
+    },
+  ],
+}
