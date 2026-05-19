@@ -2,11 +2,19 @@
 
 import { useProfile } from '@/components/ProfileContext'
 import { useUser } from '@/components/UserContext'
+import Image from 'next/image'
 
 interface DolorItem {
   emoji: string
   quote: string
   context: string
+}
+
+// Optional emotional cover image per profile
+const COVER_IMG: Record<'rap' | 'kids' | 'fit', string | null> = {
+  rap: '/img/mamitas/closeup-sunset.jpeg',
+  kids: null,
+  fit: null,
 }
 
 const DOLORES: Record<'rap' | 'kids' | 'fit', DolorItem[]> = {
@@ -116,6 +124,7 @@ export function EspejoSection() {
 
   const dolores = DOLORES[currentProfile.id] || DOLORES.rap
   const greeting = userPreferences?.nombre ? `${userPreferences.nombre}, ` : ''
+  const coverImg = COVER_IMG[currentProfile.id]
 
   return (
     <section
@@ -163,9 +172,71 @@ export function EspejoSection() {
           <span style={{ color: 'var(--ac)' }}>lo que estás sintiendo</span>
         </h2>
 
-        <p style={{ fontWeight: 700, marginBottom: '2rem', color: 'var(--gray)' }}>
+        <p style={{ fontWeight: 700, marginBottom: '1.5rem', color: 'var(--gray)' }}>
           Si te identificas con al menos 3 de estas, sigue leyendo. Esto fue diseñado para ti.
         </p>
+
+        {/* Emotional cover image */}
+        {coverImg && (
+          <div
+            className="anim-pop"
+            style={{
+              position: 'relative',
+              width: '100%',
+              aspectRatio: '16 / 10',
+              borderRadius: 'var(--r-xl)',
+              overflow: 'hidden',
+              marginBottom: '2rem',
+              boxShadow: 'var(--shadow-hero)',
+            }}
+          >
+            <Image
+              src={coverImg}
+              alt="Mamita y bebé al atardecer"
+              fill
+              sizes="(max-width: 768px) 100vw, 680px"
+              style={{ objectFit: 'cover', objectPosition: 'center 30%' }}
+            />
+            {/* Bottom gradient with floating quote */}
+            <div
+              style={{
+                position: 'absolute',
+                inset: 0,
+                background: 'linear-gradient(180deg, transparent 40%, rgba(15,23,42,.85) 100%)',
+                display: 'flex',
+                alignItems: 'flex-end',
+                padding: '1.5rem',
+              }}
+            >
+              <div style={{ color: '#fff' }}>
+                <p
+                  style={{
+                    fontSize: '1rem',
+                    fontWeight: 800,
+                    fontStyle: 'italic',
+                    lineHeight: 1.4,
+                    color: '#fff',
+                    marginBottom: '.35rem',
+                    textShadow: '0 2px 8px rgba(0,0,0,.4)',
+                  }}
+                >
+                  "Quiero volver a sentirme yo misma…"
+                </p>
+                <p
+                  style={{
+                    fontSize: '.78rem',
+                    fontWeight: 700,
+                    color: 'rgba(255,255,255,.85)',
+                    margin: 0,
+                    textShadow: '0 1px 4px rgba(0,0,0,.4)',
+                  }}
+                >
+                  — Lo que todas piensan en silencio
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Mirror cards */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
