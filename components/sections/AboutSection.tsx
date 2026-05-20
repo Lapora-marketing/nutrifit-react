@@ -66,23 +66,23 @@ export function AboutSection() {
             isolation: 'isolate',
           }}
         >
-          {/* Border beam — premium animated edge */}
+          {/* Border beam — very subtle, only visible on left/text side */}
           <span
             aria-hidden
             style={{
               position: 'absolute',
               inset: 0,
               borderRadius: 'inherit',
-              padding: '1.5px',
-              background: `conic-gradient(from 0deg, transparent 0deg, transparent 280deg, rgba(255,255,255,0.6) 320deg, rgba(255,255,255,0.95) 340deg, rgba(255,255,255,0.6) 360deg)`,
+              padding: '1px',
+              background: `conic-gradient(from 200deg, transparent 0deg, transparent 90deg, rgba(255,255,255,0.4) 130deg, rgba(255,255,255,0.7) 150deg, rgba(255,255,255,0.4) 170deg, transparent 210deg, transparent 360deg)`,
               WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
               mask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
               WebkitMaskComposite: 'xor',
               maskComposite: 'exclude',
-              animation: 'doctorBeam 6s linear infinite',
+              animation: 'doctorBeam 8s linear infinite',
               pointerEvents: 'none',
               zIndex: 3,
-              opacity: 0.7,
+              opacity: 0.4,
             }}
           />
           {/* ===== FULL BACKGROUND PHOTO ===== */}
@@ -115,19 +115,20 @@ export function AboutSection() {
             </div>
           )}
 
-          {/* ===== PINK GRADIENT OVERLAY (smooth fade — keeps photo 100% clean) ===== */}
+          {/* ===== PINK GRADIENT OVERLAY (sharper cutoff — no pink bleed on photo) ===== */}
           <div
             style={{
               position: 'absolute',
               inset: 0,
               background: `linear-gradient(90deg,
                 var(--ac) 0%,
-                var(--ac) 38%,
-                rgba(${currentProfile.colorRgb}, 0.88) 44%,
-                rgba(${currentProfile.colorRgb}, 0.5) 49%,
-                rgba(${currentProfile.colorRgb}, 0.15) 53%,
-                transparent 57%)`,
+                var(--ac) 42%,
+                rgba(${currentProfile.colorRgb}, 0.95) 45%,
+                rgba(${currentProfile.colorRgb}, 0.55) 48%,
+                rgba(${currentProfile.colorRgb}, 0.1) 51%,
+                transparent 53%)`,
               pointerEvents: 'none',
+              zIndex: 1,
             }}
           />
 
