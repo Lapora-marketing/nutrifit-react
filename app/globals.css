@@ -231,11 +231,32 @@ p { color: var(--gray); font-size: 0.95rem; }
   }
 }
 
-/* Doctor banner aspect ratio adjusts per breakpoint */
-@media (min-width: 768px) {
+/* Doctor banner — fluid sizing so text never gets cut off */
+/* Mobile: drop strict aspect-ratio, let content drive height */
+.doctor-banner {
+  aspect-ratio: auto !important;
+  min-height: 15rem !important;
+}
+.doctor-banner h3 {
+  font-size: clamp(1.15rem, 4.5vw, 1.45rem) !important;
+}
+
+/* Tablet and up: restore aspect-ratio */
+@media (min-width: 640px) {
   .doctor-banner {
     aspect-ratio: 16 / 7 !important;
     min-height: 16rem !important;
+  }
+  .doctor-banner h3 {
+    font-size: clamp(1.4rem, 3.5vw, 2rem) !important;
+  }
+}
+
+/* Desktop: even larger */
+@media (min-width: 1024px) {
+  .doctor-banner {
+    aspect-ratio: 16 / 6 !important;
+    min-height: 18rem !important;
   }
   .doctor-banner h3 {
     font-size: clamp(1.75rem, 3vw, 2.5rem) !important;
@@ -603,12 +624,12 @@ p { color: var(--gray); font-size: 0.95rem; }
   animation: gradientShift 6s ease infinite;
 }
 
-/* Shimmer text effect (gradient-animated) */
+/* Shimmer text — light theme compatible (always readable) */
 .shimmer-text {
   background: linear-gradient(
     90deg,
     var(--ac) 0%,
-    rgba(255,255,255,0.85) 50%,
+    var(--ac-dark) 50%,
     var(--ac) 100%
   );
   background-size: 200% auto;
@@ -616,6 +637,8 @@ p { color: var(--gray); font-size: 0.95rem; }
   -webkit-text-fill-color: transparent;
   background-clip: text;
   animation: shimmerText 4s linear infinite;
+  /* Fallback if browser doesn't support background-clip text */
+  color: var(--ac);
 }
 
 /* Stagger children utility (works with delays 0..9) */
