@@ -50,7 +50,7 @@ export function AboutSection() {
 
         {/* ===== DOCTOR BANNER (photo full-width + pink gradient overlay fading) ===== */}
         <div
-          className="anim-pop"
+          className="anim-pop doctor-banner"
           style={{
             position: 'relative',
             borderRadius: 'var(--r-xl)',
@@ -225,8 +225,9 @@ export function AboutSection() {
           </div>
         )}
 
-        {/* ===== Features grid (2x2) ===== */}
+        {/* ===== Features grid (2x2 mobile, 4x1 desktop) ===== */}
         <div
+          className="features-grid-2x2"
           style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(2, 1fr)',

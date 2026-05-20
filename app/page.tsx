@@ -53,7 +53,7 @@ export default function Home() {
 
         {/* 1.5 Social proof — credenciales médicas */}
         <Reveal>
-          <TrustBadges columns={2} />
+          <TrustBadges columns={4} />
         </Reveal>
 
         {/* 2. DOLORES PRIMERO — espejo emocional */}

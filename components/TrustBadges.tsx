@@ -56,8 +56,9 @@ export function TrustBadges({ columns = 2 }: TrustBadgesProps) {
           </span>
         </div>
 
-        {/* Carousel grid */}
+        {/* Carousel grid — 2 cols mobile, 4 cols desktop */}
         <div
+          className="trust-badges-grid"
           style={{
             display: 'grid',
             gridTemplateColumns: `repeat(${columns}, 1fr)`,

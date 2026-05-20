@@ -81,8 +81,8 @@ export function ExamenesSection() {
           ))}
         </div>
 
-        {/* Exam grid */}
-        <div style={{ display: 'grid', gap: '.85rem' }}>
+        {/* Exam grid — 1 col mobile, 2 cols desktop */}
+        <div className="examen-grid" style={{ display: 'grid', gap: '.85rem' }}>
           {filteredExamenes.map((exam, i) => (
             <div
               key={exam.id}

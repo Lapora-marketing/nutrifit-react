@@ -69,10 +69,10 @@ export function PagoSection() {
           ))}
         </div>
 
-        {/* Payment Methods Grid */}
+        {/* Payment Methods Grid — 1 col mobile, 2 cols desktop */}
         <div
           key={region}
-          className="anim-fade-in"
+          className="anim-fade-in desktop-grid-2"
           style={{ display: 'grid', gap: '.85rem' }}
         >
           {methods.map((method, i) => (

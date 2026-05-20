@@ -238,8 +238,8 @@ export function EspejoSection() {
           </div>
         )}
 
-        {/* Mirror cards */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+        {/* Mirror cards — 1 column mobile, 2 columns desktop */}
+        <div className="desktop-grid-2" style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
           {dolores.map((d, i) => (
             <div
               key={i}

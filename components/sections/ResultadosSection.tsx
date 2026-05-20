@@ -23,8 +23,8 @@ export function ResultadosSection() {
           {currentProfile.resSub}
         </p>
 
-        {/* Stats cards */}
-        <div style={{ display: 'grid', gap: '.85rem' }}>
+        {/* Stats cards — 1 col mobile, 3 cols desktop */}
+        <div className="desktop-grid-3" style={{ display: 'grid', gap: '.85rem' }}>
           {currentProfile.resultados.map((result, i) => (
             <div
               key={i}
@@ -114,7 +114,7 @@ export function ResultadosSection() {
           </h3>
 
           <div
-            className="ns"
+            className="ns testimonio-scroll"
             style={{
               display: 'flex',
               overflowX: 'auto',

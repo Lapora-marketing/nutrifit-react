@@ -74,60 +74,27 @@ export function ProgramaSection() {
           ))}
         </div>
 
-        {/* Doctor badge */}
+        {/* Hint que el doctor viene a continuación */}
         <div
-          className="app-card-flat hover-magnetic anim-fade-up"
+          className="anim-fade-up"
           style={{
             marginTop: '1.5rem',
-            padding: '1.15rem 1.25rem',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '.85rem',
-            background: 'linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%)',
-            borderColor: '#bae6fd',
+            textAlign: 'center',
+            fontSize: '.78rem',
+            fontWeight: 700,
+            color: 'var(--gray)',
             animationDelay: `${currentProfile.programa.length * 120 + 100}ms`,
             opacity: 0,
           }}
         >
-          <div
-            style={{
-              width: '3rem',
-              height: '3rem',
-              borderRadius: '1rem',
-              background: '#0ea5e9',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontSize: '1.4rem',
-              color: '#fff',
-              flexShrink: 0,
-            }}
+          Diseñado por{' '}
+          <a
+            href="#medico"
+            style={{ color: 'var(--ac)', fontWeight: 900, textDecoration: 'underline' }}
           >
-            🩺
-          </div>
-          <div style={{ flex: 1, minWidth: 0 }}>
-            <p style={{ fontSize: '.85rem', fontWeight: 900, color: 'var(--dark)', margin: 0 }}>
-              {currentProfile.medico}
-            </p>
-            <p style={{ fontSize: '.72rem', fontWeight: 700, color: '#0284c7', margin: '.15rem 0 0' }}>
-              {currentProfile.medicoRole}
-            </p>
-          </div>
-          <span
-            style={{
-              fontSize: '.62rem',
-              fontWeight: 900,
-              background: '#dcfce7',
-              color: '#15803d',
-              padding: '.3rem .55rem',
-              borderRadius: '.5rem',
-              textTransform: 'uppercase',
-              letterSpacing: '.05em',
-              flexShrink: 0,
-            }}
-          >
-            ● En línea
-          </span>
+            {currentProfile.medico}
+          </a>
+          {' '}— conoce al equipo médico ↓
         </div>
       </div>
     </section>
