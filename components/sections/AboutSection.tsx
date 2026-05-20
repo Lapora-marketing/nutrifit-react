@@ -48,7 +48,7 @@ export function AboutSection() {
           especialistas que respeta tu cuerpo, tu lactancia y tu tiempo.
         </p>
 
-        {/* ===== DOCTOR BANNER (pink gradient + photo right) ===== */}
+        {/* ===== DOCTOR BANNER (photo full-width + pink gradient overlay fading) ===== */}
         <div
           className="anim-pop"
           style={{
@@ -60,11 +60,55 @@ export function AboutSection() {
             background: `linear-gradient(135deg, var(--ac) 0%, var(--ac-dark) 100%)`,
             boxShadow: `0 12px 32px -8px rgba(${currentProfile.colorRgb}, 0.35)`,
             marginBottom: '1.5rem',
-            display: 'flex',
-            alignItems: 'stretch',
           }}
         >
-          {/* Decorative gradient circle */}
+          {/* ===== FULL BACKGROUND PHOTO ===== */}
+          {doctor.photo ? (
+            <Image
+              src={doctor.photo}
+              alt={doctor.fullName}
+              fill
+              sizes="(max-width: 768px) 100vw, 680px"
+              priority
+              style={{
+                objectFit: 'cover',
+                objectPosition: '75% 25%',
+              }}
+            />
+          ) : (
+            <div
+              style={{
+                position: 'absolute',
+                inset: 0,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'flex-end',
+                paddingRight: '2rem',
+                fontSize: '6rem',
+                opacity: 0.35,
+              }}
+            >
+              {currentProfile.emoji}
+            </div>
+          )}
+
+          {/* ===== PINK GRADIENT OVERLAY (fading L→R) ===== */}
+          <div
+            style={{
+              position: 'absolute',
+              inset: 0,
+              background: `linear-gradient(90deg,
+                var(--ac) 0%,
+                var(--ac) 30%,
+                rgba(${currentProfile.colorRgb}, 0.92) 45%,
+                rgba(${currentProfile.colorRgb}, 0.6) 58%,
+                rgba(${currentProfile.colorRgb}, 0.2) 72%,
+                transparent 85%)`,
+              pointerEvents: 'none',
+            }}
+          />
+
+          {/* ===== Decorative top-left blob ===== */}
           <div
             style={{
               position: 'absolute',
@@ -73,45 +117,46 @@ export function AboutSection() {
               width: '10rem',
               height: '10rem',
               borderRadius: '50%',
-              background: 'rgba(255,255,255,.06)',
+              background: 'rgba(255,255,255,.07)',
               pointerEvents: 'none',
+              zIndex: 1,
             }}
           />
 
-          {/* Left: text */}
+          {/* ===== TEXT CONTENT (absolute, left side) ===== */}
           <div
             style={{
-              flex: '1 1 58%',
-              padding: '1.25rem 1rem 1.25rem 1.35rem',
+              position: 'absolute',
+              inset: 0,
+              padding: '1.35rem 1.25rem',
               display: 'flex',
               flexDirection: 'column',
               justifyContent: 'center',
-              position: 'relative',
               zIndex: 2,
-              minWidth: 0,
+              maxWidth: '60%',
             }}
           >
             <h3
               style={{
                 color: '#fff',
-                fontSize: 'clamp(1.25rem, 4.5vw, 1.75rem)',
+                fontSize: 'clamp(1.2rem, 4.8vw, 1.75rem)',
                 fontWeight: 900,
                 lineHeight: 1.05,
                 marginBottom: '.5rem',
                 letterSpacing: '-.02em',
-                textShadow: '0 2px 8px rgba(0,0,0,.18)',
+                textShadow: '0 2px 10px rgba(0,0,0,.25)',
               }}
             >
               {doctor.fullName}
             </h3>
             <p
               style={{
-                color: 'rgba(255,255,255,.92)',
+                color: 'rgba(255,255,255,.95)',
                 fontSize: '.85rem',
                 fontWeight: 700,
-                lineHeight: 1.45,
+                lineHeight: 1.4,
                 margin: 0,
-                textShadow: '0 1px 4px rgba(0,0,0,.15)',
+                textShadow: '0 1px 6px rgba(0,0,0,.2)',
               }}
             >
               {doctor.subtitle}
@@ -120,17 +165,17 @@ export function AboutSection() {
             {/* En línea pill */}
             <div
               style={{
-                marginTop: '.85rem',
+                marginTop: '.9rem',
                 display: 'inline-flex',
                 alignItems: 'center',
                 gap: '.4rem',
-                background: 'rgba(255,255,255,.18)',
+                background: 'rgba(255,255,255,.2)',
                 backdropFilter: 'blur(8px)',
                 WebkitBackdropFilter: 'blur(8px)',
-                padding: '.3rem .65rem',
+                padding: '.3rem .7rem',
                 borderRadius: 999,
                 width: 'fit-content',
-                border: '1px solid rgba(255,255,255,.18)',
+                border: '1px solid rgba(255,255,255,.22)',
               }}
             >
               <span
@@ -140,7 +185,7 @@ export function AboutSection() {
                   borderRadius: '50%',
                   background: '#22c55e',
                   display: 'inline-block',
-                  boxShadow: '0 0 0 3px rgba(34,197,94,.25)',
+                  boxShadow: '0 0 0 3px rgba(34,197,94,.3)',
                   animation: 'pulse-red 2s infinite',
                 }}
               />
@@ -156,56 +201,6 @@ export function AboutSection() {
                 En línea
               </span>
             </div>
-          </div>
-
-          {/* Right: doctor photo */}
-          <div
-            style={{
-              flex: '1 1 42%',
-              position: 'relative',
-              alignSelf: 'stretch',
-              overflow: 'hidden',
-            }}
-          >
-            {doctor.photo ? (
-              <>
-                <Image
-                  src={doctor.photo}
-                  alt={doctor.fullName}
-                  fill
-                  sizes="(max-width: 768px) 45vw, 320px"
-                  priority
-                  style={{
-                    objectFit: 'cover',
-                    objectPosition: '72% 22%',
-                  }}
-                />
-                {/* Subtle left edge fade (5% only) so photo joins gradient cleanly */}
-                <div
-                  style={{
-                    position: 'absolute',
-                    inset: 0,
-                    background: `linear-gradient(90deg, rgba(${currentProfile.colorRgb}, 0.65) 0%, rgba(${currentProfile.colorRgb}, 0.15) 8%, transparent 18%)`,
-                    pointerEvents: 'none',
-                  }}
-                />
-              </>
-            ) : (
-              <div
-                style={{
-                  position: 'absolute',
-                  inset: 0,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontSize: '6rem',
-                  opacity: 0.35,
-                  filter: 'drop-shadow(0 4px 12px rgba(0,0,0,.25))',
-                }}
-              >
-                {currentProfile.emoji}
-              </div>
-            )}
           </div>
         </div>
 
