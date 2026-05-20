@@ -66,25 +66,6 @@ export function AboutSection() {
             isolation: 'isolate',
           }}
         >
-          {/* Border beam — very subtle, only visible on left/text side */}
-          <span
-            aria-hidden
-            style={{
-              position: 'absolute',
-              inset: 0,
-              borderRadius: 'inherit',
-              padding: '1px',
-              background: `conic-gradient(from 200deg, transparent 0deg, transparent 90deg, rgba(255,255,255,0.4) 130deg, rgba(255,255,255,0.7) 150deg, rgba(255,255,255,0.4) 170deg, transparent 210deg, transparent 360deg)`,
-              WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
-              mask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
-              WebkitMaskComposite: 'xor',
-              maskComposite: 'exclude',
-              animation: 'doctorBeam 8s linear infinite',
-              pointerEvents: 'none',
-              zIndex: 3,
-              opacity: 0.4,
-            }}
-          />
           {/* ===== FULL BACKGROUND PHOTO ===== */}
           {doctor.photo ? (
             <Image
@@ -115,18 +96,17 @@ export function AboutSection() {
             </div>
           )}
 
-          {/* ===== PINK GRADIENT OVERLAY (sharper cutoff — no pink bleed on photo) ===== */}
+          {/* ===== PINK GRADIENT OVERLAY (clean cut matching reference) ===== */}
           <div
             style={{
               position: 'absolute',
               inset: 0,
               background: `linear-gradient(90deg,
                 var(--ac) 0%,
-                var(--ac) 42%,
-                rgba(${currentProfile.colorRgb}, 0.95) 45%,
-                rgba(${currentProfile.colorRgb}, 0.55) 48%,
-                rgba(${currentProfile.colorRgb}, 0.1) 51%,
-                transparent 53%)`,
+                var(--ac) 45%,
+                rgba(${currentProfile.colorRgb}, 0.85) 47%,
+                rgba(${currentProfile.colorRgb}, 0.35) 49%,
+                transparent 51%)`,
               pointerEvents: 'none',
               zIndex: 1,
             }}
