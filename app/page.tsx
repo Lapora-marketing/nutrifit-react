@@ -19,6 +19,7 @@ import {
   UrgencyBar,
   WhatsAppButton,
   ScrollProgress,
+  TrustBadges,
   useUser,
 } from '@/components'
 import { type UserPreferences } from '@/lib/userPreferences'
@@ -49,6 +50,11 @@ export default function Home() {
       <main>
         {/* 1. Hook emocional */}
         <HeroSection />
+
+        {/* 1.5 Social proof — credenciales médicas */}
+        <Reveal>
+          <TrustBadges columns={2} />
+        </Reveal>
 
         {/* 2. DOLORES PRIMERO — espejo emocional */}
         <Reveal>

@@ -1,6 +1,7 @@
 'use client'
 
 import { useProfile } from '@/components/ProfileContext'
+import { BorderBeamButton } from '@/components/BorderBeamButton'
 
 export function CTASection() {
   const { currentProfile } = useProfile()
@@ -75,9 +76,14 @@ export function CTASection() {
             margin: '0 auto',
           }}
         >
-          <a href="#oferta" className="btn btn-rap btn-xl btn-full">
+          <BorderBeamButton
+            href="#oferta"
+            size="xl"
+            bg="var(--dark)"
+            style={{ width: '100%' }}
+          >
             ✨ Empezar mi programa
-          </a>
+          </BorderBeamButton>
           <a
             href="https://wa.me/573001234567"
             target="_blank"

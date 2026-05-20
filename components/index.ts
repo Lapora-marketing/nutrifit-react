@@ -8,6 +8,8 @@ export { UrgencyBar } from './UrgencyBar'
 export { WhatsAppButton } from './WhatsAppButton'
 export { ScrollProgress } from './ScrollProgress'
 export { AnimatedNumber } from './AnimatedNumber'
+export { TrustBadges } from './TrustBadges'
+export { BorderBeamButton } from './BorderBeamButton'
 
 // Sections
 export { HeroSection } from './sections/HeroSection'

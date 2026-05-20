@@ -3,6 +3,7 @@
 import { useProfile } from '@/components/ProfileContext'
 import { useUser } from '@/components/UserContext'
 import { AnimatedNumber } from '@/components/AnimatedNumber'
+import { BorderBeamButton } from '@/components/BorderBeamButton'
 import Image from 'next/image'
 
 // Background images per profile
@@ -221,9 +222,14 @@ export function HeroSection() {
           className="anim-fade-up delay-300"
           style={{ display: 'flex', flexDirection: 'column', gap: '.75rem', marginBottom: '1.25rem' }}
         >
-          <a href="#oferta" className="btn btn-rap btn-xl btn-full">
+          <BorderBeamButton
+            href="#oferta"
+            size="xl"
+            bg="var(--dark)"
+            style={{ width: '100%' }}
+          >
             ✨ Empezar mi transformación
-          </a>
+          </BorderBeamButton>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '.6rem' }}>
             <span style={{ color: 'var(--amber)', fontSize: '.95rem', letterSpacing: '-.04em' }}>
               ★★★★★

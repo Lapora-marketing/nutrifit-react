@@ -1,6 +1,7 @@
 'use client'
 
 import { useProfile } from '@/components/ProfileContext'
+import { BorderBeamButton } from '@/components/BorderBeamButton'
 
 export function PlanesSection() {
   const { currentProfile } = useProfile()
@@ -145,9 +146,15 @@ export function PlanesSection() {
               ))}
             </div>
 
-            <a href="#" className="btn btn-rap btn-xl btn-full">
+            <BorderBeamButton
+              href="#"
+              size="xl"
+              bg="rgba(255,255,255,0.08)"
+              beamColor="#fff"
+              style={{ width: '100%', marginTop: '.5rem' }}
+            >
               🚀 Quiero mi programa
-            </a>
+            </BorderBeamButton>
 
             <p
               style={{
