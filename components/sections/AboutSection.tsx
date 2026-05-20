@@ -55,7 +55,7 @@ export function AboutSection() {
             position: 'relative',
             borderRadius: 'var(--r-xl)',
             overflow: 'hidden',
-            aspectRatio: '16 / 7',
+            aspectRatio: '16 / 6',
             minHeight: '11rem',
             background: `linear-gradient(135deg, var(--ac) 0%, var(--ac-dark) 100%)`,
             boxShadow: `0 12px 32px -8px rgba(${currentProfile.colorRgb}, 0.35)`,
@@ -72,7 +72,7 @@ export function AboutSection() {
               priority
               style={{
                 objectFit: 'cover',
-                objectPosition: '75% 25%',
+                objectPosition: '70% 35%',
               }}
             />
           ) : (
@@ -92,17 +92,18 @@ export function AboutSection() {
             </div>
           )}
 
-          {/* ===== PINK GRADIENT OVERLAY (sharp cutoff — no pink tint on doctor) ===== */}
+          {/* ===== PINK GRADIENT OVERLAY (smooth fade — keeps photo 100% clean) ===== */}
           <div
             style={{
               position: 'absolute',
               inset: 0,
               background: `linear-gradient(90deg,
                 var(--ac) 0%,
-                var(--ac) 40%,
-                rgba(${currentProfile.colorRgb}, 0.95) 45%,
-                rgba(${currentProfile.colorRgb}, 0.4) 50%,
-                transparent 55%)`,
+                var(--ac) 38%,
+                rgba(${currentProfile.colorRgb}, 0.88) 44%,
+                rgba(${currentProfile.colorRgb}, 0.5) 49%,
+                rgba(${currentProfile.colorRgb}, 0.15) 53%,
+                transparent 57%)`,
               pointerEvents: 'none',
             }}
           />
@@ -138,11 +139,11 @@ export function AboutSection() {
             <h3
               style={{
                 color: '#fff',
-                fontSize: 'clamp(1.2rem, 4.8vw, 1.75rem)',
+                fontSize: 'clamp(1.35rem, 5.5vw, 2.1rem)',
                 fontWeight: 900,
                 lineHeight: 1.05,
-                marginBottom: '.5rem',
-                letterSpacing: '-.02em',
+                marginBottom: '.55rem',
+                letterSpacing: '-.025em',
                 textShadow: '0 2px 10px rgba(0,0,0,.25)',
               }}
             >
