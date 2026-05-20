@@ -34,7 +34,7 @@ export function PlanesSection() {
           Sin contratos anuales. Sin letra pequeña. Resultados o devolvemos tu dinero.
         </p>
 
-        {/* Pricing card */}
+        {/* Pricing card — with animated aurora background */}
         <div
           className="app-card hover-glow anim-pop"
           style={{
@@ -46,8 +46,27 @@ export function PlanesSection() {
             overflow: 'hidden',
             boxShadow: `0 12px 40px -10px rgba(${currentProfile.colorRgb}, 0.45),
                         0 0 0 1px rgba(255,255,255,0.05) inset`,
+            isolation: 'isolate',
           }}
         >
+          {/* Animated aurora gradient mesh */}
+          <div
+            aria-hidden
+            style={{
+              position: 'absolute',
+              inset: 0,
+              opacity: 0.45,
+              background: `
+                radial-gradient(circle at 20% 30%, rgba(${currentProfile.colorRgb}, 0.35) 0%, transparent 40%),
+                radial-gradient(circle at 80% 70%, rgba(14, 165, 233, 0.25) 0%, transparent 45%),
+                radial-gradient(circle at 50% 100%, rgba(124, 58, 237, 0.2) 0%, transparent 50%)`,
+              backgroundSize: '200% 200%, 200% 200%, 200% 200%',
+              animation: 'auroraShift 14s ease-in-out infinite',
+              pointerEvents: 'none',
+              zIndex: 0,
+            }}
+          />
+
           {/* Decorative orbs */}
           <div
             style={{

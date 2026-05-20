@@ -41,27 +41,50 @@ export function AboutSection() {
         <div className="app-tag">🩺 Quién te acompaña</div>
         <h2 style={{ marginBottom: '0.75rem' }}>
           Un médico real,{' '}
-          <span style={{ color: 'var(--ac)' }}>contigo todos los días</span>
+          <span className="shimmer-text">contigo todos los días</span>
         </h2>
         <p style={{ marginBottom: '1.75rem', fontWeight: 700 }}>
           No es coaching genérico ni dietas restrictivas. Es un protocolo diseñado por
           especialistas que respeta tu cuerpo, tu lactancia y tu tiempo.
         </p>
 
-        {/* ===== DOCTOR BANNER (photo full-width + pink gradient overlay fading) ===== */}
+        {/* ===== DOCTOR BANNER (constrained to content width, no overflow) ===== */}
         <div
           className="anim-pop doctor-banner"
           style={{
             position: 'relative',
+            width: '100%',
+            maxWidth: '100%',
+            boxSizing: 'border-box',
             borderRadius: 'var(--r-xl)',
             overflow: 'hidden',
             aspectRatio: '16 / 6',
             minHeight: '11rem',
             background: `linear-gradient(135deg, var(--ac) 0%, var(--ac-dark) 100%)`,
-            boxShadow: `0 12px 32px -8px rgba(${currentProfile.colorRgb}, 0.35)`,
+            boxShadow: `0 8px 24px -8px rgba(${currentProfile.colorRgb}, 0.3)`,
             marginBottom: '1.5rem',
+            isolation: 'isolate',
           }}
         >
+          {/* Border beam — premium animated edge */}
+          <span
+            aria-hidden
+            style={{
+              position: 'absolute',
+              inset: 0,
+              borderRadius: 'inherit',
+              padding: '1.5px',
+              background: `conic-gradient(from 0deg, transparent 0deg, transparent 280deg, rgba(255,255,255,0.6) 320deg, rgba(255,255,255,0.95) 340deg, rgba(255,255,255,0.6) 360deg)`,
+              WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
+              mask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
+              WebkitMaskComposite: 'xor',
+              maskComposite: 'exclude',
+              animation: 'doctorBeam 6s linear infinite',
+              pointerEvents: 'none',
+              zIndex: 3,
+              opacity: 0.7,
+            }}
+          />
           {/* ===== FULL BACKGROUND PHOTO ===== */}
           {doctor.photo ? (
             <Image
@@ -162,33 +185,47 @@ export function AboutSection() {
               {doctor.subtitle}
             </p>
 
-            {/* En línea pill */}
+            {/* En línea pill — dynamic-island style breathing */}
             <div
               style={{
                 marginTop: '.9rem',
                 display: 'inline-flex',
                 alignItems: 'center',
-                gap: '.4rem',
-                background: 'rgba(255,255,255,.2)',
-                backdropFilter: 'blur(8px)',
-                WebkitBackdropFilter: 'blur(8px)',
-                padding: '.3rem .7rem',
+                gap: '.45rem',
+                background: 'rgba(0,0,0,.35)',
+                backdropFilter: 'blur(12px)',
+                WebkitBackdropFilter: 'blur(12px)',
+                padding: '.35rem .8rem',
                 borderRadius: 999,
                 width: 'fit-content',
-                border: '1px solid rgba(255,255,255,.22)',
+                border: '1px solid rgba(255,255,255,.18)',
+                animation: 'diBreathe 2.8s ease-in-out infinite',
               }}
             >
               <span
                 style={{
-                  width: 7,
-                  height: 7,
+                  position: 'relative',
+                  width: 8,
+                  height: 8,
                   borderRadius: '50%',
                   background: '#22c55e',
                   display: 'inline-block',
-                  boxShadow: '0 0 0 3px rgba(34,197,94,.3)',
-                  animation: 'pulse-red 2s infinite',
+                  boxShadow: '0 0 8px rgba(34,197,94,.7)',
                 }}
-              />
+              >
+                {/* Pulsing outer ring */}
+                <span
+                  aria-hidden
+                  style={{
+                    position: 'absolute',
+                    inset: -4,
+                    borderRadius: '50%',
+                    border: '2px solid #22c55e',
+                    animation: 'ringPulse 2s ease-out infinite',
+                    opacity: 0.6,
+                  }}
+                />
+              </span>
               <span
                 style={{
                   fontSize: '.65rem',
