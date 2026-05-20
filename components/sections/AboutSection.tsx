@@ -92,18 +92,17 @@ export function AboutSection() {
             </div>
           )}
 
-          {/* ===== PINK GRADIENT OVERLAY (fading L→R) ===== */}
+          {/* ===== PINK GRADIENT OVERLAY (sharp cutoff — no pink tint on doctor) ===== */}
           <div
             style={{
               position: 'absolute',
               inset: 0,
               background: `linear-gradient(90deg,
                 var(--ac) 0%,
-                var(--ac) 30%,
-                rgba(${currentProfile.colorRgb}, 0.92) 45%,
-                rgba(${currentProfile.colorRgb}, 0.6) 58%,
-                rgba(${currentProfile.colorRgb}, 0.2) 72%,
-                transparent 85%)`,
+                var(--ac) 40%,
+                rgba(${currentProfile.colorRgb}, 0.95) 45%,
+                rgba(${currentProfile.colorRgb}, 0.4) 50%,
+                transparent 55%)`,
               pointerEvents: 'none',
             }}
           />
