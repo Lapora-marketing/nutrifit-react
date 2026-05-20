@@ -28,11 +28,12 @@ export function ProgramaSection() {
           {currentProfile.programa.map((prog, i) => (
             <div
               key={i}
-              className="app-card"
+              className={`app-card hover-magnetic ${i % 2 === 0 ? 'anim-slide-left' : 'anim-slide-right'}`}
               style={{
                 position: 'relative',
                 padding: '1.5rem',
                 overflow: 'hidden',
+                animationDelay: `${i * 120}ms`,
               }}
             >
               {/* Big bg number */}
@@ -100,7 +101,7 @@ export function ProgramaSection() {
 
         {/* Doctor badge (app-style) */}
         <div
-          className="app-card-flat"
+          className="app-card-flat hover-magnetic anim-fade-up"
           style={{
             marginTop: '1.5rem',
             padding: '1.15rem 1.25rem',
@@ -109,6 +110,8 @@ export function ProgramaSection() {
             gap: '.85rem',
             background: 'linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%)',
             borderColor: '#bae6fd',
+            animationDelay: `${currentProfile.programa.length * 120 + 100}ms`,
+            opacity: 0,
           }}
         >
           <div

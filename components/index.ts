@@ -6,6 +6,8 @@ export { Footer } from './Footer'
 export { Reveal } from './Reveal'
 export { UrgencyBar } from './UrgencyBar'
 export { WhatsAppButton } from './WhatsAppButton'
+export { ScrollProgress } from './ScrollProgress'
+export { AnimatedNumber } from './AnimatedNumber'
 
 // Sections
 export { HeroSection } from './sections/HeroSection'

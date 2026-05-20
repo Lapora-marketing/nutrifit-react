@@ -18,6 +18,7 @@ import {
   Reveal,
   UrgencyBar,
   WhatsAppButton,
+  ScrollProgress,
   useUser,
 } from '@/components'
 import { type UserPreferences } from '@/lib/userPreferences'
@@ -42,6 +43,7 @@ export default function Home() {
 
   return (
     <>
+      <ScrollProgress />
       <UrgencyBar />
       <Nav />
       <main>

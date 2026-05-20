@@ -35,7 +35,7 @@ export function PlanesSection() {
 
         {/* Pricing card */}
         <div
-          className="app-card"
+          className="app-card hover-glow anim-pop"
           style={{
             padding: '1.75rem 1.5rem',
             background: 'linear-gradient(160deg, var(--dark) 0%, #1e1b4b 100%)',
@@ -43,6 +43,8 @@ export function PlanesSection() {
             color: '#fff',
             position: 'relative',
             overflow: 'hidden',
+            boxShadow: `0 12px 40px -10px rgba(${currentProfile.colorRgb}, 0.45),
+                        0 0 0 1px rgba(255,255,255,0.05) inset`,
           }}
         >
           {/* Decorative orbs */}

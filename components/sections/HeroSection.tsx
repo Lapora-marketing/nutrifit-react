@@ -2,6 +2,7 @@
 
 import { useProfile } from '@/components/ProfileContext'
 import { useUser } from '@/components/UserContext'
+import { AnimatedNumber } from '@/components/AnimatedNumber'
 import Image from 'next/image'
 
 // Background images per profile
@@ -192,9 +193,11 @@ export function HeroSection() {
                 borderRight: i < arr.length - 1 ? '1px solid var(--border)' : 'none',
               }}
             >
-              <span style={{ fontSize: '1.4rem', fontWeight: 900, color: 'var(--dark)', lineHeight: 1 }}>
-                {stat.num}
-              </span>
+              <AnimatedNumber
+                value={stat.num}
+                duration={1400 + i * 200}
+                style={{ fontSize: '1.4rem', fontWeight: 900, color: 'var(--dark)', lineHeight: 1 }}
+              />
               <span
                 style={{
                   fontSize: '.62rem',
