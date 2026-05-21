@@ -57,6 +57,20 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="es" suppressHydrationWarning className={nunito.variable}>
+      <head>
+        {/* Inline SW registration — ensures PWABuilder detects it synchronously */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              if ('serviceWorker' in navigator) {
+                window.addEventListener('load', function () {
+                  navigator.serviceWorker.register('/sw.js').catch(function(){});
+                });
+              }
+            `,
+          }}
+        />
+      </head>
       <body className={nunito.className}>
         <UserProvider>
           <ProfileProvider>
