@@ -89,6 +89,25 @@ export function Nav() {
             Resultados
           </a>
           <a
+            href="/app"
+            className="nav-link"
+            aria-label="Abrir la aplicación"
+            style={{
+              fontSize: '.78rem',
+              fontWeight: 800,
+              color: 'var(--gray)',
+              padding: '.5rem .75rem',
+              borderRadius: '.6rem',
+              transition: 'background .2s',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '.35rem',
+            }}
+          >
+            <span style={{ fontSize: '.9rem' }}>📱</span>
+            <span>App</span>
+          </a>
+          <a
             href="#oferta"
             className="btn btn-rap"
             style={{ padding: '.5rem 1.1rem', fontSize: '.78rem' }}

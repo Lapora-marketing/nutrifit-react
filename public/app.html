@@ -1,0 +1,1929 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Nutrifit">
+<meta name="theme-color" content="#ffffff">
+<title>Nutrifit App</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<script>
+tailwind.config = {
+  theme: { extend: {
+    fontFamily: { sans: ['Nunito','sans-serif'] },
+    colors: { brand: {
+      bg:'#f8fafc', dark:'#0f172a', gray:'#64748b',
+      rap:'#be185d', rapL:'#fce7f3',
+      kids:'#0ea5e9', kidsL:'#e0f2fe',
+      fit:'#ea580c',  fitL:'#ffedd5',
+      med:'#0d9488',  medL:'#ccfbf1',
+    }},
+    boxShadow: { card:'0 4px 20px -2px rgba(0,0,0,0.05)', nav:'0 -4px 20px rgba(0,0,0,0.05)', fab:'0 8px 24px rgba(250,204,21,.5)' }
+  }}
+}
+</script>
+<style>
+*,*::before,*::after{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+*{touch-action:manipulation}
+input,textarea,select{touch-action:auto;font-size:16px!important}
+body{margin:0;font-family:'Nunito',sans-serif;color:#0f172a;background:#e2e8f0;overflow:hidden;overscroll-behavior:none;display:flex;justify-content:center;align-items:center;min-height:100dvh;-webkit-font-smoothing:antialiased}
+#app{width:100%;height:100dvh;background:#fff;display:flex;flex-direction:column;position:relative;overflow:hidden}
+@media(min-width:640px){#app{max-width:430px;height:932px;max-height:95vh;border-radius:2.5rem;box-shadow:0 30px 60px rgba(0,0,0,.28);border:8px solid #fff}}
+.ns::-webkit-scrollbar{display:none}.ns{-ms-overflow-style:none;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+
+/* ─ VIEWS ─ */
+.view{display:none;flex:1;overflow-y:auto;width:100%;background:#f8fafc;padding-bottom:calc(90px + env(safe-area-inset-bottom))}
+.view.on{display:block;animation:vFade .25s ease-out}
+#view-medico{padding-bottom:0;background:#f8fafc;display:none;flex-direction:column}
+#view-medico.on{display:flex}
+
+/* ─ HEADER ─ */
+#hdr{background:#fff;border-bottom:1px solid #f1f5f9;z-index:40;padding:max(1rem,env(safe-area-inset-top)) 1.25rem .75rem;display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
+
+/* ─ BOTTOM NAV FIXED ─ */
+#bnav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;background:rgba(255,255,255,.97);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-top:1px solid rgba(0,0,0,.06);padding-top:.5rem;padding-bottom:max(.75rem,env(safe-area-inset-bottom));display:flex;justify-content:space-around;align-items:flex-start;z-index:50;transition:transform .3s ease;box-shadow:0 -4px 20px rgba(0,0,0,.04)}
+#bnav.hide{transform:translate(-50%,110%)}
+.nb{color:#94a3b8;font-weight:800;flex-direction:column;align-items:center;justify-content:center;width:4rem;min-height:44px;display:flex;gap:2px;border:none;background:none;cursor:pointer;transition:color .2s,transform .2s;padding:0;position:relative}
+.nb.active{color:var(--ac,#0f172a);transform:translateY(-2px)}
+.nb svg{width:24px;height:24px}
+.nb span{font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.04em}
+.nb .dot{width:4px;height:4px;background:var(--ac,#0f172a);border-radius:50%;margin-top:1px;opacity:0;transition:opacity .2s}
+.nb.active .dot{opacity:1}
+
+/* ─ FAB ─ */
+#fab{position:fixed;right:calc(1.25rem + max(0px,(100vw - 430px)/2));bottom:calc(90px + env(safe-area-inset-bottom));width:56px;height:56px;background:#facc15;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.6rem;border:4px solid #fff;box-shadow:var(--tw-shadow,0 8px 24px rgba(250,204,21,.5));z-index:49;cursor:pointer;transition:transform .2s}
+#fab:active{transform:scale(.92)}
+
+/* ─ OVERLAYS ─ */
+.ovr{position:absolute;top:0;left:0;width:100%;height:100%;background:#fff;z-index:80;transform:translateX(100%);transition:transform .4s cubic-bezier(.16,1,.3,1);overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:calc(3rem + env(safe-area-inset-bottom))}
+.ovr.on{transform:translateX(0)}
+
+/* ─ SHEET ─ */
+.sbg{position:absolute;inset:0;background:rgba(15,23,42,.5);z-index:90;opacity:0;pointer-events:none;transition:opacity .3s;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)}
+.sbg.on{opacity:1;pointer-events:auto}
+.sht{position:absolute;bottom:0;left:0;width:100%;background:#fff;border-radius:2rem 2rem 0 0;z-index:91;transform:translateY(100%);transition:transform .4s cubic-bezier(.16,1,.3,1);padding:1.75rem 1.5rem;padding-bottom:calc(1.75rem + env(safe-area-inset-bottom))}
+.sht.on{transform:translateY(0)}
+
+/* ─ HABIT CARD ─ */
+.hcard{background:#fff;border-radius:1.75rem;border:1px solid #f1f5f9;box-shadow:0 4px 20px -2px rgba(0,0,0,.05);padding:1.25rem}
+
+/* ─ WATER DROPS ─ */
+.wdrop{width:36px;height:36px;border-radius:50% 50% 50% 50% / 60% 60% 40% 40%;display:flex;align-items:center;justify-content:center;font-size:1.1rem;cursor:pointer;transition:all .2s;background:#f1f5f9;border:2px solid transparent}
+.wdrop.fill{background:#dbeafe;border-color:#93c5fd}
+.wdrop:active{transform:scale(.88)}
+
+/* ─ MOOD EMOJIS ─ */
+.mood-btn{width:44px;height:44px;border-radius:50%;font-size:1.5rem;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;background:transparent;border:2px solid transparent}
+.mood-btn.sel{background:#f0fdf4;border-color:#86efac;transform:scale(1.2)}
+.mood-btn:active{transform:scale(.9)}
+
+/* ─ BREATH RING ─ */
+#breath-ring{width:140px;height:140px;border-radius:50%;border:6px solid #e0f2fe;display:flex;align-items:center;justify-content:center;transition:all 1s ease-in-out;cursor:pointer;position:relative;margin:0 auto}
+#breath-ring.expand{width:180px;height:180px;background:rgba(14,165,233,.08);border-color:#0ea5e9}
+#breath-ring .inner{width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,#0ea5e9,#0d9488);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;font-size:.78rem;text-align:center;line-height:1.2;transition:all 1s ease}
+#breath-ring.expand .inner{width:100px;height:100px}
+
+/* ─ BRISTOL SCALE ─ */
+.bristol-btn{flex:1;padding:.5rem .25rem;border-radius:.75rem;font-size:.75rem;font-weight:800;cursor:pointer;border:2px solid transparent;transition:all .2s;background:#f1f5f9;color:#64748b;text-align:center}
+.bristol-btn.sel{background:#f0fdf4;border-color:#86efac;color:#166534}
+
+/* ─ CHAT ─ */
+.bbot{border-radius:1.5rem 1.5rem 1.5rem .25rem}
+.buser{border-radius:1.5rem 1.5rem .25rem 1.5rem}
+
+/* ─ SPLASH ─ */
+#splash{position:absolute;inset:0;background:#fff;z-index:200;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .5s}
+#splash.gone{opacity:0;pointer-events:none}
+@keyframes vFade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes popIn{from{transform:scale(.85);opacity:0}to{transform:scale(1);opacity:1}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes wave{0%,100%{transform:rotate(0deg)}50%{transform:rotate(15deg)}}
+.anim-pop{animation:popIn .3s cubic-bezier(.175,.885,.32,1.275) forwards}
+
+/* ─ BOUNCE DOTS CHAT ─ */
+@keyframes bounce3{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-6px)}}
+
+/* ─ LIVE BADGE ─ */
+@keyframes pulse-red{0%,100%{opacity:1}50%{opacity:.4}}
+.live-dot{width:7px;height:7px;background:#ef4444;border-radius:50%;animation:pulse-red 1.4s infinite;flex-shrink:0}
+
+/* ─ NUTRIPOINTS BADGE ─ */
+#pts-badge{display:flex;align-items:center;gap:.35rem;background:linear-gradient(135deg,#fef3c7,#fde68a);border:1.5px solid #fbbf24;border-radius:.875rem;padding:.3rem .65rem;cursor:pointer;transition:transform .15s}
+#pts-badge:active{transform:scale(.93)}
+
+/* ─ STAT STRIP ─ */
+.stat-col{flex:1;display:flex;flex-direction:column;align-items:center;padding:.9rem .5rem}
+
+/* ─ TALLER CARD ─ */
+.taller-card{min-width:232px;background:#fff;border-radius:1.5rem;border:1px solid #f1f5f9;box-shadow:0 4px 20px -2px rgba(0,0,0,.05);overflow:hidden;display:flex;flex-direction:column;flex-shrink:0}
+
+/* ─ TESTIMONIO CARD ─ */
+.test-card{min-width:228px;flex-shrink:0;background:#fff;border-radius:1.5rem;border:1px solid #f1f5f9;box-shadow:0 4px 16px -2px rgba(0,0,0,.05);padding:1.125rem}
+
+/* ─ RECETA CARD ─ */
+.receta-card{min-width:152px;flex-shrink:0;background:#fff;border-radius:1.25rem;border:1px solid #f1f5f9;box-shadow:0 4px 16px -2px rgba(0,0,0,.05);overflow:hidden;transition:transform .15s;cursor:pointer}
+.receta-card:active{transform:scale(.95)}
+
+/* ─ PROFILE OVERLAY ─ */
+#profile-ovr{background:#f8fafc}
+.prof-stat-cell{display:flex;flex-direction:column;align-items:center;padding:.65rem .5rem;background:#f8fafc;border-radius:1rem;border:1px solid #f1f5f9}
+
+/* ─ LOGIN METHOD BUTTON ─ */
+.login-method-btn.sel-method{border-color:#0d9488!important;background:#ccfbf1!important;color:#0d9488!important}
+
+/* ─ ACCOUNT ROW ─ */
+.acc-row{display:flex;align-items:center;gap:.75rem;padding:.1rem 0}
+.acc-row-icon{width:2.25rem;height:2.25rem;border-radius:.875rem;background:#f8fafc;border:1px solid #f1f5f9;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0}
+</style>
+</head>
+<body>
+<div id="app">
+
+<!-- ══ SPLASH ══ -->
+<div id="splash">
+  <div style="width:80px;height:80px;background:#0f172a;border-radius:1.5rem;display:flex;align-items:center;justify-content:center;font-size:2.5rem;margin-bottom:1.25rem;box-shadow:0 20px 40px rgba(0,0,0,.2)">🎒</div>
+  <h1 style="font-size:1.75rem;font-weight:900;letter-spacing:-.02em;margin:0">Nutrifit<span style="color:#be185d">App</span></h1>
+  <p style="font-size:.75rem;font-weight:700;color:#94a3b8;letter-spacing:.1em;text-transform:uppercase;margin:.5rem 0 2rem">Ecosistema Médico</p>
+  <div style="width:160px;height:4px;background:#f1f5f9;border-radius:99px;overflow:hidden">
+    <div id="splash-bar" style="height:100%;background:#be185d;border-radius:99px;width:0;transition:width 1.4s ease"></div>
+  </div>
+</div>
+
+<!-- ══ HEADER ══ -->
+<header id="hdr">
+  <button class="flex items-center gap-2 focus:outline-none active:opacity-75" onclick="toggleSheet()" aria-label="Perfil">
+    <div id="hdr-icon" class="w-8 h-8 rounded-lg bg-brand-rapL text-brand-rap flex items-center justify-center text-sm font-black">🤱</div>
+    <span id="hdr-title" class="text-lg font-black text-brand-dark">MamaRAP</span>
+    <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 9l-7 7-7-7"/></svg>
+  </button>
+  <div class="flex gap-2 items-center">
+    <div id="pts-badge" onclick="navTo('lab')" role="button" aria-label="NutriPoints">
+      <span style="font-size:1rem;line-height:1">🔥</span>
+      <div style="display:flex;flex-direction:column;line-height:1">
+        <span id="pts-val" style="font-size:.68rem;font-weight:900;color:#92400e">0 pts</span>
+        <span id="pts-streak-label" style="font-size:.6rem;font-weight:700;color:#b45309">Racha: 1d</span>
+      </div>
+    </div>
+    <button class="w-10 h-10 rounded-full bg-slate-50 flex items-center justify-center relative active:bg-slate-100 focus:outline-none">
+      <span class="text-lg">🔔</span>
+      <span class="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border border-white"></span>
+    </button>
+    <button onclick="openProfile()" class="w-10 h-10 rounded-full overflow-hidden bg-slate-100 border-2 border-white shadow-sm active:scale-90 transition-transform focus:outline-none" aria-label="Ver perfil">
+      <img id="hdr-avatar-img" src="https://api.dicebear.com/7.x/notionists/svg?seed=Mama&backgroundColor=fce7f3" alt="Avatar" class="w-full h-full object-cover">
+    </button>
+  </div>
+</header>
+
+<!-- ══════════════════════════════════════
+     VIEW 1 · INICIO / DASHBOARD
+══════════════════════════════════════ -->
+<main id="view-inicio" class="view on ns">
+
+  <!-- Hero Banner (dinámico) -->
+  <div class="px-5 mt-5">
+    <div id="hero-banner" onclick="navTo('academia')" class="rounded-[1.75rem] p-5 text-white relative overflow-hidden cursor-pointer active:scale-[.98] transition-transform bg-gradient-to-br from-brand-rap to-rose-700">
+      <div class="relative z-10 w-3/4">
+        <span id="hero-badge" class="text-[10px] font-black bg-white/20 backdrop-blur-sm px-2.5 py-1 rounded-md uppercase tracking-wider inline-block mb-2">Fase 1 Activa</span>
+        <h2 id="hero-title" class="font-black text-xl mb-1 leading-tight">Reconexión Abdominal</h2>
+        <p id="hero-desc" class="text-sm font-semibold text-white/85 leading-snug mb-3">Semana 3. Activa tu core y protege tu suelo pélvico.</p>
+        <div class="flex items-center gap-3">
+          <div class="flex-1 bg-black/20 rounded-full h-1.5">
+            <div id="hero-bar" class="bg-white h-1.5 rounded-full shadow-[0_0_8px_rgba(255,255,255,.8)]" style="width:35%"></div>
+          </div>
+          <span id="hero-pct" class="text-xs font-black">35%</span>
+        </div>
+      </div>
+      <div id="hero-icon" class="absolute -right-5 -bottom-5 text-[7rem] opacity-20 select-none">🫁</div>
+    </div>
+  </div>
+
+  <!-- Stats Strip -->
+  <div class="px-5 mt-4">
+    <div class="bg-white rounded-[1.5rem] border border-slate-100 shadow-card flex divide-x divide-slate-100 overflow-hidden">
+      <div class="stat-col">
+        <span class="text-xl font-black text-brand-dark">3</span>
+        <span class="text-[10px] font-bold text-slate-400 text-center leading-tight mt-0.5">Médicos<br>Especialistas</span>
+      </div>
+      <div class="stat-col">
+        <span class="text-xl font-black text-brand-dark">500+</span>
+        <span class="text-[10px] font-bold text-slate-400 text-center leading-tight mt-0.5">Pacientes<br>Activos</span>
+      </div>
+      <div class="stat-col">
+        <span class="text-xl font-black text-brand-dark">4</span>
+        <span class="text-[10px] font-bold text-slate-400 text-center leading-tight mt-0.5">Programas<br>Médicos</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Hábitos mini-tracker -->
+  <div class="px-5 mt-6">
+    <div class="flex justify-between items-center mb-3">
+      <h3 class="font-black text-brand-dark text-base">Hábitos de Hoy</h3>
+      <button onclick="navTo('lab')" class="text-xs font-black text-brand-kids active:opacity-60">Ver Lab →</button>
+    </div>
+    <div class="grid grid-cols-3 gap-2.5">
+      <button onclick="navTo('lab');setTimeout(()=>showHabitCard('water'),300)" class="bg-white rounded-2xl p-3 border border-slate-100 shadow-card flex flex-col items-center gap-1.5 active:scale-95 transition-transform focus:outline-none">
+        <div class="w-9 h-9 rounded-full bg-blue-50 flex items-center justify-center text-lg">💧</div>
+        <span class="text-xs font-black text-brand-dark">Agua</span>
+        <span id="mini-water" class="text-[10px] font-black text-blue-500">0/8 vasos</span>
+      </button>
+      <button onclick="navTo('lab');setTimeout(()=>showHabitCard('sleep'),300)" class="bg-white rounded-2xl p-3 border border-slate-100 shadow-card flex flex-col items-center gap-1.5 active:scale-95 transition-transform focus:outline-none">
+        <div class="w-9 h-9 rounded-full bg-purple-50 flex items-center justify-center text-lg">😴</div>
+        <span class="text-xs font-black text-brand-dark">Sueño</span>
+        <span id="mini-sleep" class="text-[10px] font-black text-purple-500">— hrs</span>
+      </button>
+      <button onclick="navTo('lab');setTimeout(()=>showHabitCard('mood'),300)" class="bg-white rounded-2xl p-3 border border-slate-100 shadow-card flex flex-col items-center gap-1.5 active:scale-95 transition-transform focus:outline-none">
+        <div class="w-9 h-9 rounded-full bg-yellow-50 flex items-center justify-center text-lg">🧠</div>
+        <span class="text-xs font-black text-brand-dark">Ánimo</span>
+        <span id="mini-mood" class="text-[10px] font-black text-yellow-500">Registrar</span>
+      </button>
+      <button onclick="navTo('lab');setTimeout(()=>showHabitCard('breath'),300)" class="bg-white rounded-2xl p-3 border border-slate-100 shadow-card flex flex-col items-center gap-1.5 active:scale-95 transition-transform focus:outline-none">
+        <div class="w-9 h-9 rounded-full bg-teal-50 flex items-center justify-center text-lg">🧘‍♀️</div>
+        <span class="text-xs font-black text-brand-dark">Respiración</span>
+        <span id="mini-breath" class="text-[10px] font-black text-teal-500">Ejercitar</span>
+      </button>
+      <button onclick="navTo('lab');setTimeout(()=>showHabitCard('digest'),300)" class="bg-white rounded-2xl p-3 border border-slate-100 shadow-card flex flex-col items-center gap-1.5 active:scale-95 transition-transform focus:outline-none">
+        <div class="w-9 h-9 rounded-full bg-orange-50 flex items-center justify-center text-lg">💩</div>
+        <span class="text-xs font-black text-brand-dark">Digestión</span>
+        <span id="mini-digest" class="text-[10px] font-black text-orange-500">Registrar</span>
+      </button>
+      <button onclick="navTo('lab');setTimeout(()=>showHabitCard('weight'),300)" class="bg-white rounded-2xl p-3 border border-slate-100 shadow-card flex flex-col items-center gap-1.5 active:scale-95 transition-transform focus:outline-none">
+        <div class="w-9 h-9 rounded-full bg-green-50 flex items-center justify-center text-lg">⚖️</div>
+        <span class="text-xs font-black text-brand-dark">Peso</span>
+        <span id="mini-weight" class="text-[10px] font-black text-green-500">— kg</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Recetas Rápidas -->
+  <div class="mt-6">
+    <div class="px-5 flex justify-between items-center mb-3">
+      <h3 class="font-black text-brand-dark text-base">Recetas Rápidas</h3>
+      <button onclick="navTo('lab')" class="text-xs font-black text-brand-kids active:opacity-60">Ver Lab →</button>
+    </div>
+    <div id="recetas-list" class="flex overflow-x-auto ns px-5 pb-3 gap-3 snap-x snap-mandatory"></div>
+  </div>
+
+  <!-- Carrusel de artículos -->
+  <div class="mt-6">
+    <div class="px-5 flex justify-between items-center mb-3">
+      <h3 class="font-black text-brand-dark text-base">Sabiduría Médica</h3>
+      <span class="text-xs font-black text-slate-400 uppercase tracking-wide">Ver Todo</span>
+    </div>
+    <div id="carousel" class="flex overflow-x-auto ns px-5 pb-4 gap-4 snap-x snap-mandatory"></div>
+  </div>
+
+  <!-- Próximos Talleres -->
+  <div class="mt-6">
+    <div class="px-5 flex justify-between items-center mb-3">
+      <h3 class="font-black text-brand-dark text-base">Próximos Talleres</h3>
+      <span class="text-xs font-black text-slate-400 uppercase tracking-wide">Ver Todos</span>
+    </div>
+    <div id="talleres-list" class="flex overflow-x-auto ns px-5 pb-3 gap-3 snap-x snap-mandatory"></div>
+  </div>
+
+  <!-- Testimonios -->
+  <div class="mt-6">
+    <div class="px-5 flex justify-between items-center mb-3">
+      <h3 class="font-black text-brand-dark text-base">Lo que dicen</h3>
+      <span class="text-[12px] font-black text-yellow-500">⭐ 5.0 · 3 reseñas</span>
+    </div>
+    <div id="test-list" class="flex overflow-x-auto ns px-5 pb-3 gap-3 snap-x snap-mandatory"></div>
+  </div>
+
+  <!-- Tu Escuadrón -->
+  <div class="px-5 mt-6 mb-4">
+    <h3 class="font-black text-brand-dark text-base mb-3">Tu Escuadrón Médico</h3>
+    <div class="bg-white rounded-[1.75rem] border border-slate-100 shadow-card divide-y divide-slate-50">
+      <div class="flex items-center gap-3 p-4">
+        <div class="w-12 h-12 rounded-2xl bg-brand-fitL flex items-center justify-center text-2xl">👨‍⚕️</div>
+        <div>
+          <p class="font-black text-sm text-brand-dark">Dr. Juan Pablo</p>
+          <p class="text-[11px] font-bold text-brand-fit">Nutriólogo · Postparto · Deportivo</p>
+        </div>
+        <a href="https://wa.me/573059330939?text=Hola%20%F0%9F%91%8B%20Quiero%20una%20consulta%20con%20el%20Dr.%20Juan%20Pablo%20(Nutri%C3%B3logo)%20de%20la%20Academia%20Nutrifit." target="_blank" rel="noopener" class="ml-auto flex items-center gap-1.5 bg-[#25D366] text-white text-[11px] font-black px-3 py-1.5 rounded-xl active:opacity-70 focus:outline-none no-underline" style="text-decoration:none">
+          <svg style="width:13px;height:13px;fill:white;flex-shrink:0" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347zM12 0C5.373 0 0 5.373 0 12c0 2.127.558 4.126 1.533 5.862L0 24l6.293-1.51A11.933 11.933 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 01-5.006-1.372l-.36-.213-3.732.895.951-3.622-.234-.372A9.818 9.818 0 012.182 12C2.182 6.58 6.58 2.182 12 2.182c5.42 0 9.818 4.398 9.818 9.818 0 5.42-4.398 9.818-9.818 9.818z"/></svg>
+          WhatsApp
+        </a>
+      </div>
+      <div class="flex items-center gap-3 p-4">
+        <div class="w-12 h-12 rounded-2xl bg-brand-kidsL flex items-center justify-center text-2xl">🩺</div>
+        <div>
+          <p class="font-black text-sm text-brand-dark">Dr. Pecue</p>
+          <p class="text-[11px] font-bold text-brand-kids">Pediatría Integral</p>
+        </div>
+        <a href="https://wa.me/573059330939?text=Hola%20%F0%9F%91%8B%20Quiero%20una%20consulta%20con%20el%20Dr.%20Pecue%20(Pediatra)%20de%20la%20Academia%20Nutrifit." target="_blank" rel="noopener" class="ml-auto flex items-center gap-1.5 bg-[#25D366] text-white text-[11px] font-black px-3 py-1.5 rounded-xl active:opacity-70 focus:outline-none" style="text-decoration:none">
+          <svg style="width:13px;height:13px;fill:white;flex-shrink:0" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347zM12 0C5.373 0 0 5.373 0 12c0 2.127.558 4.126 1.533 5.862L0 24l6.293-1.51A11.933 11.933 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 01-5.006-1.372l-.36-.213-3.732.895.951-3.622-.234-.372A9.818 9.818 0 012.182 12C2.182 6.58 6.58 2.182 12 2.182c5.42 0 9.818 4.398 9.818 9.818 0 5.42-4.398 9.818-9.818 9.818z"/></svg>
+          WhatsApp
+        </a>
+      </div>
+      <div class="flex items-center gap-3 p-4">
+        <div class="w-12 h-12 rounded-2xl bg-brand-rapL flex items-center justify-center text-2xl">💎</div>
+        <div>
+          <p class="font-black text-sm text-brand-dark">Mommy Makeover</p>
+          <p class="text-[11px] font-bold text-brand-rap">Cirugía Plástica · High Ticket</p>
+        </div>
+        <a href="https://wa.me/573059330939?text=Hola%20%F0%9F%91%8B%20Quiero%20informaci%C3%B3n%20sobre%20Mommy%20Makeover%20en%20la%20Academia%20Nutrifit." target="_blank" rel="noopener" class="ml-auto flex items-center gap-1.5 bg-[#25D366] text-white text-[11px] font-black px-3 py-1.5 rounded-xl active:opacity-70 focus:outline-none" style="text-decoration:none">
+          <svg style="width:13px;height:13px;fill:white;flex-shrink:0" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347zM12 0C5.373 0 0 5.373 0 12c0 2.127.558 4.126 1.533 5.862L0 24l6.293-1.51A11.933 11.933 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 01-5.006-1.372l-.36-.213-3.732.895.951-3.622-.234-.372A9.818 9.818 0 012.182 12C2.182 6.58 6.58 2.182 12 2.182c5.42 0 9.818 4.398 9.818 9.818 0 5.42-4.398 9.818-9.818 9.818z"/></svg>
+          WhatsApp
+        </a>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- ══════════════════════════════════════
+     VIEW 2 · ACADEMIA / CURSOS
+══════════════════════════════════════ -->
+<main id="view-academia" class="view ns">
+  <div class="px-5 mt-6 mb-4">
+    <h2 class="text-[26px] font-black text-brand-dark tracking-tight">Tus Programas</h2>
+    <p class="text-sm font-bold text-slate-500">Conocimiento médico aplicado a tu vida.</p>
+  </div>
+
+  <!-- Clase en Vivo Banner -->
+  <div class="px-5 mb-5">
+    <div class="bg-gradient-to-r from-slate-900 to-slate-700 rounded-[1.5rem] p-4 flex items-center gap-3">
+      <div class="w-12 h-12 rounded-xl bg-red-500 flex items-center justify-center text-2xl shrink-0 relative shadow-lg">
+        🎥
+        <span class="absolute -top-1 -right-1 w-3 h-3 bg-red-300 rounded-full border-2 border-slate-900" style="animation:pulse-red 1.4s infinite"></span>
+      </div>
+      <div class="flex-1 min-w-0">
+        <div class="flex items-center gap-1.5 mb-0.5">
+          <div class="live-dot"></div>
+          <span class="text-[10px] font-black uppercase tracking-wider text-red-400">Próximamente en Vivo</span>
+        </div>
+        <p class="font-black text-[14px] text-white leading-snug">Sáb 19 Abr · Cierre de Diástasis</p>
+        <p class="text-[11px] text-slate-400 font-bold mt-0.5">Dr. Juan Pablo · 10:00 AM · 8 cupos</p>
+      </div>
+      <button class="bg-white text-slate-900 font-black text-[12px] px-3 py-2 rounded-xl shrink-0 active:scale-95 transition-transform focus:outline-none shadow-sm">
+        Unirme
+      </button>
+    </div>
+  </div>
+
+  <div id="course-tabs" class="px-5 mb-5 flex gap-2 overflow-x-auto ns"></div>
+  <div id="course-list" class="px-5 space-y-4 pb-6"></div>
+</main>
+
+<!-- ══════════════════════════════════════
+     VIEW 3 · LAB / HERRAMIENTAS
+══════════════════════════════════════ -->
+<main id="view-lab" class="view ns">
+  <div class="px-5 mt-6 mb-5">
+    <h2 class="text-[26px] font-black text-brand-dark">Laboratorio</h2>
+    <p class="text-sm font-bold text-slate-500">Hábitos, simuladores y herramientas.</p>
+  </div>
+
+  <!-- Sección: HÁBITOS DEL DÍA -->
+  <div class="px-5 mb-6">
+    <h3 class="font-black text-brand-dark text-base mb-3">📋 Hábitos del Día</h3>
+
+    <!-- 💧 AGUA -->
+    <div id="habit-water" class="hcard mb-4">
+      <div class="flex items-center justify-between mb-3">
+        <div class="flex items-center gap-2">
+          <span class="w-9 h-9 rounded-xl bg-blue-50 flex items-center justify-center text-lg">💧</span>
+          <div>
+            <p class="font-black text-sm text-brand-dark">Hidratación</p>
+            <p class="text-[11px] font-bold text-slate-400">Meta: 2 litros · 8 vasos</p>
+          </div>
+        </div>
+        <span id="water-label" class="text-sm font-black text-blue-500">0/8</span>
+      </div>
+      <div id="water-drops" class="flex gap-2 flex-wrap mb-3"></div>
+      <div class="h-2 bg-slate-100 rounded-full overflow-hidden">
+        <div id="water-bar" class="h-full bg-blue-400 rounded-full transition-all duration-300" style="width:0%"></div>
+      </div>
+      <p id="water-tip" class="text-[11px] font-bold text-slate-400 mt-2">Toca cada gota al completar un vaso 💧</p>
+    </div>
+
+    <!-- 😴 SUEÑO -->
+    <div id="habit-sleep" class="hcard mb-4">
+      <div class="flex items-center gap-2 mb-4">
+        <span class="w-9 h-9 rounded-xl bg-purple-50 flex items-center justify-center text-lg">😴</span>
+        <div>
+          <p class="font-black text-sm text-brand-dark">Sueño de Anoche</p>
+          <p class="text-[11px] font-bold text-slate-400">Recomendado: 7-9 horas</p>
+        </div>
+      </div>
+      <div class="flex items-center justify-center gap-4 mb-4">
+        <button onclick="adjSleep(-0.5)" class="w-11 h-11 rounded-full bg-purple-50 text-purple-600 font-black text-xl flex items-center justify-center active:scale-90 focus:outline-none">−</button>
+        <div class="text-center">
+          <span id="sleep-val" class="text-4xl font-black text-brand-dark">7.5</span>
+          <span class="text-lg font-black text-slate-400"> hrs</span>
+        </div>
+        <button onclick="adjSleep(0.5)" class="w-11 h-11 rounded-full bg-purple-50 text-purple-600 font-black text-xl flex items-center justify-center active:scale-90 focus:outline-none">+</button>
+      </div>
+      <div id="sleep-msg" class="text-center text-[12px] font-black rounded-xl p-2.5 bg-purple-50 text-purple-700">Buen descanso 😊</div>
+    </div>
+
+    <!-- 🧠 ÁNIMO -->
+    <div id="habit-mood" class="hcard mb-4">
+      <div class="flex items-center gap-2 mb-4">
+        <span class="w-9 h-9 rounded-xl bg-yellow-50 flex items-center justify-center text-lg">🧠</span>
+        <div>
+          <p class="font-black text-sm text-brand-dark">¿Cómo te sientes hoy?</p>
+          <p class="text-[11px] font-bold text-slate-400">Tu estado emocional importa</p>
+        </div>
+      </div>
+      <div class="flex justify-center gap-3">
+        <button onclick="setMood('😔','Triste — está bien sentirlo')" class="mood-btn focus:outline-none" data-mood="😔">😔</button>
+        <button onclick="setMood('😐','Neutral — sigue adelante')" class="mood-btn focus:outline-none" data-mood="😐">😐</button>
+        <button onclick="setMood('🙂','Bien — ¡vas bien!')" class="mood-btn focus:outline-none" data-mood="🙂">🙂</button>
+        <button onclick="setMood('😄','Genial — ¡eso es!')" class="mood-btn focus:outline-none" data-mood="😄">😄</button>
+        <button onclick="setMood('🤩','Imparable — ¡enfrenta el día!')" class="mood-btn focus:outline-none" data-mood="🤩">🤩</button>
+      </div>
+      <p id="mood-msg" class="text-center text-[12px] font-black text-slate-400 mt-3">Selecciona tu ánimo de hoy</p>
+    </div>
+
+    <!-- 🧘‍♀️ RESPIRACIÓN MAMARAP -->
+    <div id="habit-breath" class="hcard mb-4">
+      <div class="flex items-center gap-2 mb-4">
+        <span class="w-9 h-9 rounded-xl bg-teal-50 flex items-center justify-center text-lg">🧘‍♀️</span>
+        <div>
+          <p class="font-black text-sm text-brand-dark">Respiración MamaRAP</p>
+          <p class="text-[11px] font-bold text-slate-400">4-1-6 seg · Diafragmática</p>
+        </div>
+        <span id="breath-count-label" class="ml-auto text-[11px] font-black text-teal-500">0 ciclos</span>
+      </div>
+      <div class="flex flex-col items-center gap-4">
+        <div id="breath-ring" onclick="toggleBreath()">
+          <div class="inner" id="breath-inner">Toca<br>para<br>iniciar</div>
+        </div>
+        <p id="breath-phase" class="text-[13px] font-black text-slate-400">Respiración consciente activa tu transverso</p>
+      </div>
+    </div>
+
+    <!-- 💩 DIGESTIÓN -->
+    <div id="habit-digest" class="hcard mb-4">
+      <div class="flex items-center gap-2 mb-4">
+        <span class="w-9 h-9 rounded-xl bg-orange-50 flex items-center justify-center text-lg">💩</span>
+        <div>
+          <p class="font-black text-sm text-brand-dark">Registro Digestivo</p>
+          <p class="text-[11px] font-bold text-slate-400">Escala Bristol simplificada</p>
+        </div>
+      </div>
+      <p class="text-[12px] font-bold text-slate-500 mb-2">¿Evacuaste hoy?</p>
+      <div class="flex gap-2 mb-4">
+        <button onclick="setDigestYN(true,this)" class="flex-1 py-2.5 rounded-xl font-black text-sm bg-green-50 text-green-700 border-2 border-transparent active:scale-95 focus:outline-none transition-all">✓ Sí</button>
+        <button onclick="setDigestYN(false,this)" class="flex-1 py-2.5 rounded-xl font-black text-sm bg-slate-100 text-slate-500 border-2 border-transparent active:scale-95 focus:outline-none transition-all">✗ No</button>
+      </div>
+      <div id="bristol-section" class="hidden">
+        <p class="text-[12px] font-bold text-slate-500 mb-2">Consistencia:</p>
+        <div class="flex gap-1.5" id="bristol-row">
+          <button onclick="setBristol(1,this)" class="bristol-btn focus:outline-none">💩1<br><span class="text-[9px]">Dura</span></button>
+          <button onclick="setBristol(2,this)" class="bristol-btn focus:outline-none">💩2<br><span class="text-[9px]">Grumos</span></button>
+          <button onclick="setBristol(3,this)" class="bristol-btn focus:outline-none">👍3<br><span class="text-[9px]">Normal</span></button>
+          <button onclick="setBristol(4,this)" class="bristol-btn focus:outline-none">✅4<br><span class="text-[9px]">Ideal</span></button>
+          <button onclick="setBristol(5,this)" class="bristol-btn focus:outline-none">⚠️5<br><span class="text-[9px]">Blanda</span></button>
+        </div>
+        <p id="bristol-msg" class="text-[11px] font-bold text-slate-400 mt-2 text-center">Selecciona la consistencia</p>
+      </div>
+    </div>
+
+    <!-- ⚖️ PESO -->
+    <div id="habit-weight" class="hcard mb-6">
+      <div class="flex items-center gap-2 mb-4">
+        <span class="w-9 h-9 rounded-xl bg-green-50 flex items-center justify-center text-lg">⚖️</span>
+        <div>
+          <p class="font-black text-sm text-brand-dark">Registro de Peso</p>
+          <p class="text-[11px] font-bold text-slate-400">Mide al despertar, en ayunas</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-3">
+        <input id="weight-input" type="number" min="30" max="200" step="0.1" placeholder="Ej: 65.5" class="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 font-black text-brand-dark focus:outline-none focus:border-green-400 focus:bg-white transition-colors" style="font-size:16px">
+        <span class="font-black text-slate-500">kg</span>
+        <button onclick="saveWeight()" class="bg-green-100 text-green-700 font-black px-4 py-3 rounded-xl active:scale-95 transition-transform focus:outline-none">Guardar</button>
+      </div>
+      <p id="weight-history" class="text-[11px] font-bold text-slate-400 mt-2"></p>
+    </div>
+  </div>
+
+  <!-- Sección: SIMULADORES -->
+  <div class="px-5 mb-6">
+    <h3 class="font-black text-brand-dark text-base mb-3">🔬 Simuladores Médicos</h3>
+    <div id="tool-core" class="hcard mb-4">
+      <div class="flex items-center gap-2 mb-1">
+        <span class="w-9 h-9 rounded-xl bg-brand-rapL text-brand-rap flex items-center justify-center">🩻</span>
+        <h4 class="font-black text-sm text-brand-dark">Simulador Abdominal</h4>
+      </div>
+      <p class="text-[11px] font-bold text-slate-400 mb-4">Impacto en tu core postparto.</p>
+      <div style="position:relative;width:100%;max-width:260px;margin:0 auto;height:190px"><canvas id="coreChart"></canvas></div>
+      <div class="grid grid-cols-2 gap-2 mt-4">
+        <button onclick="upChart('core','faja',this)" class="bg-slate-100 text-slate-500 text-xs font-black py-3 rounded-xl active:scale-95 focus:outline-none transition-all">Usar Faja</button>
+        <button onclick="upChart('core','crunch',this)" class="bg-slate-100 text-slate-500 text-xs font-black py-3 rounded-xl active:scale-95 focus:outline-none transition-all">Abdominales</button>
+        <button onclick="upChart('core','rap',this)" class="col-span-2 bg-brand-rap text-white text-xs font-black py-3 rounded-xl active:scale-95 focus:outline-none shadow-md transition-all">✓ Respiración MamaRAP</button>
+      </div>
+      <div id="core-tip" class="mt-3 p-3 bg-emerald-50 text-emerald-700 rounded-xl text-[11px] font-black text-center">Activa el transverso. Cierra la diástasis desde adentro.</div>
+    </div>
+    <div id="tool-lunch" class="hcard mb-4 hidden">
+      <div class="flex items-center gap-2 mb-1">
+        <span class="w-9 h-9 rounded-xl bg-brand-kidsL text-brand-kids flex items-center justify-center">🍱</span>
+        <h4 class="font-black text-sm text-brand-dark">Simulador Loncheras</h4>
+      </div>
+      <p class="text-[11px] font-bold text-slate-400 mb-4">Impacto metabólico en tu hijo.</p>
+      <div style="position:relative;width:100%;max-width:260px;margin:0 auto;height:190px"><canvas id="lunchChart"></canvas></div>
+      <div class="flex gap-2 mt-4">
+        <button onclick="upChart('lunch','bad',this)" class="flex-1 bg-slate-100 text-slate-500 text-xs font-black py-3 rounded-xl active:scale-95 focus:outline-none transition-all">Típica 👾</button>
+        <button onclick="upChart('lunch','good',this)" class="flex-1 bg-brand-kids text-white text-xs font-black py-3 rounded-xl active:scale-95 focus:outline-none shadow-md transition-all">Nutrifit 🦸‍♂️</button>
+      </div>
+      <div id="lunch-tip" class="mt-3 p-3 bg-blue-50 text-blue-700 rounded-xl text-[11px] font-black text-center">Grasas para el cerebro + proteína = enfoque en clase.</div>
+    </div>
+
+    <!-- ── HERRAMIENTA: CRECIMIENTO OMS ── -->
+    <div id="tool-growth" class="hcard mb-4 hidden">
+
+      <!-- Header -->
+      <div class="flex items-center justify-between mb-1">
+        <div class="flex items-center gap-2">
+          <span class="w-9 h-9 rounded-xl bg-brand-kidsL text-brand-kids flex items-center justify-center text-lg">📏</span>
+          <div>
+            <h4 class="font-black text-sm text-brand-dark">Curvas de Crecimiento OMS</h4>
+            <p class="text-[10px] font-bold text-brand-kids">Estándares OMS 2006 · 0-5 años</p>
+          </div>
+        </div>
+        <span class="text-[9px] font-black px-2 py-1 rounded-lg bg-blue-50 text-blue-600 border border-blue-100 shrink-0">OMS 2006</span>
+      </div>
+      <p class="text-[11px] font-bold text-slate-400 mb-4">Evalúa el crecimiento de tu bebé con percentiles internacionales.</p>
+
+      <!-- Inputs -->
+      <div class="grid grid-cols-2 gap-3 mb-3">
+        <div>
+          <label class="text-[10px] font-black text-slate-400 uppercase tracking-wide block mb-1">Edad (meses)</label>
+          <input id="grow-age" type="number" min="0" max="60" placeholder="0 – 60"
+            class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 font-bold text-brand-dark focus:outline-none focus:border-brand-kids transition-colors" style="font-size:16px">
+        </div>
+        <div>
+          <label class="text-[10px] font-black text-slate-400 uppercase tracking-wide block mb-1">Sexo</label>
+          <div class="flex gap-2 h-[46px]">
+            <button id="grow-btn-m" onclick="setGrowSex('m',this)" class="flex-1 rounded-xl font-black text-[12px] bg-brand-kids text-white focus:outline-none active:scale-95 transition-all">Niño</button>
+            <button id="grow-btn-f" onclick="setGrowSex('f',this)" class="flex-1 rounded-xl font-black text-[12px] bg-slate-100 text-slate-500 focus:outline-none active:scale-95 transition-all">Niña</button>
+          </div>
+        </div>
+        <div>
+          <label class="text-[10px] font-black text-slate-400 uppercase tracking-wide block mb-1">Peso (kg)</label>
+          <input id="grow-weight" type="number" min="1" max="30" step="0.1" placeholder="Ej: 10.5"
+            class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 font-bold text-brand-dark focus:outline-none focus:border-brand-kids transition-colors" style="font-size:16px">
+        </div>
+        <div>
+          <label class="text-[10px] font-black text-slate-400 uppercase tracking-wide block mb-1">Talla (cm)</label>
+          <input id="grow-height" type="number" min="40" max="130" step="0.1" placeholder="Ej: 75"
+            class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 font-bold text-brand-dark focus:outline-none focus:border-brand-kids transition-colors" style="font-size:16px">
+        </div>
+      </div>
+
+      <button onclick="calcGrowth()" class="w-full bg-brand-kids text-white font-black text-[13px] py-3 rounded-xl active:scale-95 focus:outline-none shadow-md transition-all">
+        Calcular Percentiles OMS →
+      </button>
+
+      <!-- ── RESULTADOS ── -->
+      <div id="grow-results" class="hidden mt-5">
+
+        <!-- Cards P/E y T/E -->
+        <div class="grid grid-cols-2 gap-2.5 mb-5">
+          <div id="grow-card-pe" class="rounded-2xl p-4 flex flex-col items-center text-center" style="background:#10b981">
+            <span class="text-2xl mb-1">⚖️</span>
+            <p class="text-[9px] font-black text-white/80 uppercase tracking-wider">Peso / Edad</p>
+            <p id="grow-pe-val" class="text-[13px] font-black text-white leading-tight mt-1">—</p>
+            <p id="grow-pe-label" class="text-[12px] font-black text-white/95 mt-0.5">—</p>
+          </div>
+          <div id="grow-card-te" class="rounded-2xl p-4 flex flex-col items-center text-center" style="background:#10b981">
+            <span class="text-2xl mb-1">📏</span>
+            <p class="text-[9px] font-black text-white/80 uppercase tracking-wider">Talla / Edad</p>
+            <p id="grow-te-val" class="text-[13px] font-black text-white leading-tight mt-1">—</p>
+            <p id="grow-te-label" class="text-[12px] font-black text-white/95 mt-0.5">—</p>
+          </div>
+        </div>
+
+        <!-- IMC Visual Bar (estilo OMS) -->
+        <div class="mb-5">
+          <div class="flex justify-between items-center mb-2">
+            <p class="text-[11px] font-black text-brand-dark">Índice de Masa Corporal</p>
+            <span id="grow-imc-display" class="text-[14px] font-black text-brand-dark">IMC: —</span>
+          </div>
+          <!-- Barra degradada -->
+          <div class="relative h-5 rounded-full overflow-visible mb-1">
+            <div class="absolute inset-0 rounded-full" style="background:linear-gradient(to right,#3b82f6 0%,#06b6d4 14%,#10b981 28%,#10b981 62%,#fbbf24 76%,#f97316 88%,#ef4444 100%)"></div>
+            <!-- Indicador (flecha) -->
+            <div id="grow-imc-indicator" class="absolute top-0 bottom-0 flex flex-col items-center" style="left:45%;transform:translateX(-50%)">
+              <div style="width:3px;height:28px;background:#0f172a;border-radius:2px;margin-top:-4px;box-shadow:0 2px 4px rgba(0,0,0,.3)"></div>
+            </div>
+          </div>
+          <!-- Escala numérica -->
+          <div class="flex justify-between text-[9px] font-black text-slate-400 px-0.5">
+            <span>10</span><span>12</span><span>14</span><span>16</span><span>18</span><span>20</span><span>22+</span>
+          </div>
+          <div class="flex text-[8px] font-bold text-slate-300 mt-0.5">
+            <span style="flex:2">Del.Severa</span><span style="flex:2">Delgadez</span><span style="flex:4;text-align:center">Normal ✓</span><span style="flex:2;text-align:right">Sobrepeso</span><span style="flex:2;text-align:right">Obeso</span>
+          </div>
+          <p id="grow-imc-class" class="text-center text-[11px] font-black mt-2 p-2 rounded-xl bg-slate-50 text-slate-500">—</p>
+        </div>
+
+        <!-- Chart: Peso para la Edad -->
+        <div class="mb-1">
+          <p class="text-[11px] font-black text-brand-dark mb-2">⚖️ Peso para la Edad · <span class="font-bold text-slate-400">OMS</span></p>
+          <div style="position:relative;height:210px;width:100%">
+            <canvas id="growthPeChart"></canvas>
+          </div>
+        </div>
+
+        <!-- Chart: Talla para la Edad -->
+        <div class="mb-1 mt-5">
+          <p class="text-[11px] font-black text-brand-dark mb-2">📏 Talla para la Edad · <span class="font-bold text-slate-400">OMS</span></p>
+          <div style="position:relative;height:210px;width:100%">
+            <canvas id="growthTeChart"></canvas>
+          </div>
+        </div>
+
+        <!-- Leyenda de percentiles -->
+        <div class="flex gap-3 flex-wrap justify-center mt-3 mb-4">
+          <span class="flex items-center gap-1 text-[9px] font-bold text-slate-500"><span style="display:inline-block;width:18px;border-top:2px dashed #ef4444"></span>P97 / P3</span>
+          <span class="flex items-center gap-1 text-[9px] font-bold text-slate-500"><span style="display:inline-block;width:18px;border-top:2px dashed #f97316"></span>P85 / P15</span>
+          <span class="flex items-center gap-1 text-[9px] font-bold text-slate-500"><span style="display:inline-block;width:18px;border-top:2px solid #0ea5e9"></span>P50</span>
+          <span class="flex items-center gap-1 text-[9px] font-bold text-slate-500"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#0f172a"></span>Tu bebé</span>
+        </div>
+
+        <!-- Consejo Dr. Pecue -->
+        <div id="grow-advice" class="p-4 rounded-2xl mb-3" style="background:#e0f2fe;border:1px solid #bae6fd"></div>
+
+        <!-- Atribución OMS -->
+        <p class="text-center text-[9px] font-bold text-slate-300 leading-snug">📋 Basado en los Estándares de Crecimiento OMS 2006<br>Organización Mundial de la Salud · who.int/childgrowth</p>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Sección: UTILIDADES RÁPIDAS -->
+  <div class="px-5 mb-6">
+    <h3 class="font-black text-brand-dark text-base mb-3">⚡ Utilidades Rápidas</h3>
+    <div class="grid grid-cols-4 gap-3">
+      <div class="flex flex-col items-center gap-1.5 cursor-pointer active:opacity-60">
+        <div class="w-14 h-14 rounded-[1.25rem] bg-slate-100 flex items-center justify-center text-2xl active:scale-95 transition-transform">🛒</div>
+        <span class="text-[10px] font-bold text-brand-gray text-center leading-tight">Lista<br>Súper</span>
+      </div>
+      <div class="flex flex-col items-center gap-1.5 cursor-pointer active:opacity-60">
+        <div class="w-14 h-14 rounded-[1.25rem] bg-slate-100 flex items-center justify-center text-2xl active:scale-95 transition-transform">🍽️</div>
+        <span class="text-[10px] font-bold text-brand-gray text-center leading-tight">Recetas<br>Express</span>
+      </div>
+      <div class="flex flex-col items-center gap-1.5 cursor-pointer active:opacity-60">
+        <div class="w-14 h-14 rounded-[1.25rem] bg-slate-100 flex items-center justify-center text-2xl active:scale-95 transition-transform">📊</div>
+        <span class="text-[10px] font-bold text-brand-gray text-center leading-tight">Mi<br>Progreso</span>
+      </div>
+      <div onclick="navTo('medico')" class="flex flex-col items-center gap-1.5 cursor-pointer active:opacity-60">
+        <div class="w-14 h-14 rounded-[1.25rem] bg-red-50 flex items-center justify-center text-2xl active:scale-95 transition-transform">🆘</div>
+        <span class="text-[10px] font-bold text-brand-gray text-center leading-tight">Mamá<br>SOS</span>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- ══════════════════════════════════════
+     VIEW 4 · MÉDICO / NUTRIBOT
+══════════════════════════════════════ -->
+<main id="view-medico" class="view ns">
+  <!-- Chat header -->
+  <div class="px-5 py-3 bg-white/95 backdrop-blur-md border-b border-slate-100 flex items-center gap-3 flex-shrink-0" style="padding-top:max(.75rem,env(safe-area-inset-top,0))">
+    <button onclick="navTo('inicio')" class="w-10 h-10 rounded-full bg-slate-50 flex items-center justify-center active:bg-slate-100 focus:outline-none">
+      <svg class="w-6 h-6 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M15 19l-7-7 7-7"/></svg>
+    </button>
+    <div id="chat-bot-av" class="w-11 h-11 rounded-full bg-brand-med flex items-center justify-center text-xl shadow-sm border-2 border-white relative shrink-0">🤖
+      <span class="absolute bottom-0 right-0 w-3 h-3 bg-green-400 border-2 border-white rounded-full"></span>
+    </div>
+    <div>
+      <h2 class="text-[17px] font-black text-brand-dark leading-tight">NutriBot IA</h2>
+      <p class="text-[11px] font-bold text-brand-med flex items-center gap-1"><span class="w-1.5 h-1.5 bg-brand-med rounded-full"></span> Entrenado por Doctores</p>
+    </div>
+  </div>
+  <!-- Historia -->
+  <div id="chat-history" class="flex-1 overflow-y-auto ns p-5 space-y-4 flex flex-col bg-brand-bg"></div>
+  <!-- Sugerencias -->
+  <div id="chat-sugg" class="flex gap-2 px-4 pt-3 pb-1 overflow-x-auto ns snap-x flex-shrink-0 bg-white border-t border-slate-100"></div>
+  <!-- Input -->
+  <div id="chat-bar" class="bg-white px-4 pt-2 flex-shrink-0" style="padding-bottom:max(1rem,env(safe-area-inset-bottom))">
+    <div class="flex items-end gap-3">
+      <div class="flex-1 bg-slate-50 rounded-[1.5rem] border border-slate-200 focus-within:border-brand-med focus-within:bg-white transition-colors flex items-center min-h-[50px] px-2 py-1">
+        <textarea id="chat-input" rows="1" placeholder="Escribe tu consulta…" autocomplete="off" class="w-full bg-transparent px-3 py-2 font-bold text-brand-dark focus:outline-none resize-none" style="font-size:16px;line-height:1.4;max-height:96px"></textarea>
+      </div>
+      <button onclick="sendChat()" id="chat-send" class="w-[50px] h-[50px] rounded-full bg-brand-med flex items-center justify-center active:scale-90 transition-transform shrink-0 focus:outline-none">
+        <svg class="w-6 h-6 ml-0.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </button>
+    </div>
+  </div>
+</main>
+
+<!-- ══════════════════════════════════════
+     OVERLAY · ARTICLE READER
+══════════════════════════════════════ -->
+<div id="art-ovr" class="ovr ns">
+  <div id="art-hero" class="relative flex justify-center items-center overflow-hidden rounded-b-[2.5rem]" style="height:260px">
+    <button onclick="closeArt()" class="absolute top-[max(1.25rem,env(safe-area-inset-top))] left-5 w-12 h-12 bg-white/30 backdrop-blur-md rounded-full flex items-center justify-center text-white z-20 active:scale-90 transition-transform focus:outline-none">
+      <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M15 19l-7-7 7-7"/></svg>
+    </button>
+    <div class="w-20 h-20 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center shadow-xl z-20 cursor-pointer active:scale-95 transition-transform">
+      <svg class="w-8 h-8 ml-1" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+    </div>
+    <span id="art-emoji" class="text-[12rem] opacity-15 absolute bottom-0 right-0 translate-x-4 translate-y-12 z-10 leading-none select-none">📖</span>
+    <div class="absolute bottom-4 left-5 flex gap-2 z-20">
+      <span id="art-cat" class="bg-black/40 backdrop-blur-sm text-white text-[10px] font-black px-2.5 py-1 rounded-md uppercase tracking-wider">Medicina</span>
+      <span id="art-time" class="bg-white/20 backdrop-blur-sm text-white text-[10px] font-black px-2.5 py-1 rounded-md uppercase">1 Min</span>
+    </div>
+  </div>
+  <div class="bg-white rounded-t-[2.5rem] -mt-6 relative z-30 px-6 pt-8 pb-10 shadow-[0_-10px_20px_rgba(0,0,0,.05)]">
+    <div id="art-author" class="flex items-center gap-3 mb-5 bg-slate-50 p-3 rounded-2xl border border-slate-100">
+      <div id="art-auth-icon" class="w-12 h-12 rounded-xl bg-white flex items-center justify-center text-2xl shadow-sm border border-slate-100">👨‍⚕️</div>
+      <div>
+        <p id="art-auth-name" class="font-black text-sm text-brand-dark">Dr. Juan Pablo Hernández</p>
+        <p id="art-auth-role" class="text-[11px] font-bold text-slate-400">Médico Nutriólogo</p>
+      </div>
+    </div>
+    <h1 id="art-title" class="text-2xl font-black text-brand-dark mb-6 leading-tight"></h1>
+    <div id="art-body" class="space-y-4 text-slate-700 text-[15px] font-semibold leading-relaxed"></div>
+    <button onclick="closeArt()" id="art-btn" class="w-full mt-10 bg-brand-dark text-white py-4 rounded-2xl font-black shadow-app text-sm active:scale-[.98] transition-transform uppercase tracking-wider">Entendido, Volver</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     BOTTOM SHEET · PERFIL
+══════════════════════════════════════ -->
+<div id="sbg" class="sbg" onclick="toggleSheet()"></div>
+<div id="sht" class="sht">
+  <div class="w-12 h-1.5 bg-slate-200 rounded-full mx-auto mb-5"></div>
+  <h2 class="text-xl font-black text-brand-dark mb-1">Cambiar Perfil</h2>
+  <p class="text-sm font-bold text-slate-400 mb-5">Adapta el contenido a tus objetivos.</p>
+  <div class="space-y-3">
+    <button onclick="switchProfile('rap')" class="w-full bg-brand-rapL rounded-[1.5rem] p-4 flex items-center gap-3 active:scale-[.98] transition-transform border-2 border-brand-rap/20 focus:outline-none">
+      <div class="w-14 h-14 bg-white rounded-xl flex items-center justify-center text-3xl shadow-sm shrink-0">🤰</div>
+      <div class="text-left flex-1"><h4 class="font-black text-brand-dark text-lg">MamaRAP</h4><p class="text-xs font-bold text-brand-rap">Recuperación Postparto</p></div>
+      <div id="chk-rap" class="w-6 h-6 rounded-full bg-brand-rap text-white flex items-center justify-center text-xs font-black shrink-0">✓</div>
+    </button>
+    <button onclick="switchProfile('kids')" class="w-full bg-brand-kidsL rounded-[1.5rem] p-4 flex items-center gap-3 active:scale-[.98] transition-transform border-2 border-brand-kids/20 focus:outline-none">
+      <div class="w-14 h-14 bg-white rounded-xl flex items-center justify-center text-3xl shadow-sm shrink-0">🦸‍♂️</div>
+      <div class="text-left flex-1"><h4 class="font-black text-brand-dark text-lg">Kids & Loncheras</h4><p class="text-xs font-bold text-brand-kids">Pediatría · Dr. Pecue</p></div>
+      <div id="chk-kids" class="w-6 h-6 rounded-full bg-slate-200 text-transparent flex items-center justify-center text-xs font-black shrink-0">✓</div>
+    </button>
+    <button onclick="switchProfile('fit')" class="w-full bg-brand-fitL rounded-[1.5rem] p-4 flex items-center gap-3 active:scale-[.98] transition-transform border-2 border-brand-fit/20 focus:outline-none">
+      <div class="w-14 h-14 bg-white rounded-xl flex items-center justify-center text-3xl shadow-sm shrink-0">💪</div>
+      <div class="text-left flex-1"><h4 class="font-black text-brand-dark text-lg">Cuchos Fit</h4><p class="text-xs font-bold text-brand-fit">Metabolismo +35</p></div>
+      <div id="chk-fit" class="w-6 h-6 rounded-full bg-slate-200 text-transparent flex items-center justify-center text-xs font-black shrink-0">✓</div>
+    </button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     OVERLAY · PERFIL DE USUARIO
+══════════════════════════════════════ -->
+<div id="profile-ovr" class="ovr ns">
+
+  <!-- HERO -->
+  <div id="prof-hero-bg" style="background:linear-gradient(135deg,#be185d,#7c0d33);position:relative;flex-shrink:0;padding-top:max(1.25rem,env(safe-area-inset-top))">
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:.75rem 1.25rem 3.5rem">
+      <button onclick="closeProfile()" class="w-11 h-11 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center active:scale-90 transition-transform focus:outline-none">
+        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M15 19l-7-7 7-7"/></svg>
+      </button>
+      <span class="text-white font-black text-base">Mi Perfil</span>
+      <button onclick="openEditProfile()" class="w-11 h-11 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center active:scale-90 transition-transform focus:outline-none text-lg">✏️</button>
+    </div>
+    <!-- Avatar centrado -->
+    <div style="position:absolute;bottom:0;left:50%;transform:translate(-50%,50%);z-index:10">
+      <div style="width:88px;height:88px;border-radius:50%;border:4px solid #fff;box-shadow:0 8px 24px rgba(0,0,0,.18);overflow:hidden;background:#f1f5f9">
+        <img id="prof-avatar-img" src="https://api.dicebear.com/7.x/notionists/svg?seed=User&backgroundColor=fce7f3" alt="Avatar" style="width:100%;height:100%;object-fit:cover">
+      </div>
+    </div>
+  </div>
+
+  <!-- BODY -->
+  <div style="background:#f8fafc;padding-top:4rem;padding-bottom:2.5rem;min-height:calc(100% - 160px)">
+
+    <!-- Nombre + badges -->
+    <div class="text-center px-5 mb-5">
+      <h2 id="prof-name-display" class="text-2xl font-black text-brand-dark">Tu Nombre</h2>
+      <p id="prof-sub-display" class="text-sm font-bold text-slate-400 mt-1">Toca ✏️ para completar tu perfil</p>
+      <div id="prof-badges" class="flex justify-center gap-2 mt-3 flex-wrap"></div>
+    </div>
+
+    <!-- Card: Resumen de Hoy -->
+    <div class="mx-5 mb-4 bg-white rounded-[1.5rem] border border-slate-100 shadow-card p-5">
+      <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">Resumen de Hoy</p>
+      <div class="grid grid-cols-3 gap-2" id="prof-stats"></div>
+      <!-- NutriPoints bar -->
+      <div class="mt-4">
+        <div class="flex justify-between items-center mb-1.5">
+          <span class="text-[11px] font-black text-slate-500">🔥 NutriPoints</span>
+          <span id="prof-pts-display" class="text-[11px] font-black text-amber-600">0 / 100</span>
+        </div>
+        <div class="h-2.5 bg-slate-100 rounded-full overflow-hidden">
+          <div id="prof-pts-bar" class="h-full rounded-full transition-all duration-600" style="width:0%;background:linear-gradient(90deg,#fbbf24,#f97316)"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card: Mi Progreso -->
+    <div class="mx-5 mb-4 bg-white rounded-[1.5rem] border border-slate-100 shadow-card p-5">
+      <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">Mi Progreso</p>
+      <div id="prof-progress"></div>
+    </div>
+
+    <!-- Card: Mi Cuenta -->
+    <div class="mx-5 mb-4 bg-white rounded-[1.5rem] border border-slate-100 shadow-card p-5">
+      <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4">Mi Cuenta</p>
+      <div id="prof-account" class="space-y-3"></div>
+    </div>
+
+    <!-- Cerrar sesión -->
+    <div class="px-5">
+      <button onclick="closeProfile();clickSnd()" class="w-full py-3.5 rounded-[1.25rem] font-black text-sm text-slate-400 border-2 border-slate-200 active:bg-slate-100 transition-colors focus:outline-none">
+        Cerrar Sesión
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     SHEET · EDITAR PERFIL
+══════════════════════════════════════ -->
+<div id="edit-sbg" class="sbg" onclick="closeEditProfile()"></div>
+<div id="edit-sht" class="sht ns" style="max-height:92dvh;overflow-y:auto;padding-bottom:calc(2rem + env(safe-area-inset-bottom))">
+  <div class="w-12 h-1.5 bg-slate-200 rounded-full mx-auto mb-5"></div>
+  <h2 class="text-xl font-black text-brand-dark mb-1">Editar Perfil</h2>
+  <p class="text-sm font-bold text-slate-400 mb-5">Tu información es privada y segura 🔒</p>
+
+  <div class="space-y-4">
+    <div>
+      <label class="text-[10px] font-black text-slate-400 uppercase tracking-wider block mb-1.5">Nombre completo</label>
+      <input id="edit-name" type="text" placeholder="Ej: María García" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 font-bold text-brand-dark focus:outline-none focus:border-brand-med transition-colors" style="font-size:16px">
+    </div>
+    <div>
+      <label class="text-[10px] font-black text-slate-400 uppercase tracking-wider block mb-1.5">Correo electrónico</label>
+      <input id="edit-email" type="email" placeholder="tu@correo.com" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 font-bold text-brand-dark focus:outline-none focus:border-brand-med transition-colors" style="font-size:16px">
+    </div>
+    <div>
+      <label class="text-[10px] font-black text-slate-400 uppercase tracking-wider block mb-1.5">Celular (WhatsApp)</label>
+      <input id="edit-phone" type="tel" placeholder="+57 300 000 0000" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 font-bold text-brand-dark focus:outline-none focus:border-brand-med transition-colors" style="font-size:16px">
+    </div>
+    <div>
+      <label class="text-[10px] font-black text-slate-400 uppercase tracking-wider block mb-1.5">Ciudad</label>
+      <input id="edit-city" type="text" placeholder="Ej: Bogotá, Medellín…" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 font-bold text-brand-dark focus:outline-none focus:border-brand-med transition-colors" style="font-size:16px">
+    </div>
+    <div>
+      <label class="text-[10px] font-black text-slate-400 uppercase tracking-wider block mb-1.5">Edad</label>
+      <input id="edit-age" type="number" min="18" max="90" placeholder="Ej: 32" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 font-bold text-brand-dark focus:outline-none focus:border-brand-med transition-colors" style="font-size:16px">
+    </div>
+    <div>
+      <label class="text-[10px] font-black text-slate-400 uppercase tracking-wider block mb-2">Inicio de sesión</label>
+      <div class="grid grid-cols-3 gap-2">
+        <button onclick="selectLoginMethod('google',this)" class="login-method-btn flex flex-col items-center gap-1.5 py-3 rounded-xl border-2 border-slate-200 bg-slate-50 active:scale-95 transition-all focus:outline-none font-black text-slate-500 text-[11px]">
+          <span class="text-2xl">🌐</span>Google
+        </button>
+        <button onclick="selectLoginMethod('email',this)" class="login-method-btn flex flex-col items-center gap-1.5 py-3 rounded-xl border-2 border-slate-200 bg-slate-50 active:scale-95 transition-all focus:outline-none font-black text-slate-500 text-[11px]">
+          <span class="text-2xl">📧</span>Correo
+        </button>
+        <button onclick="selectLoginMethod('phone',this)" class="login-method-btn flex flex-col items-center gap-1.5 py-3 rounded-xl border-2 border-slate-200 bg-slate-50 active:scale-95 transition-all focus:outline-none font-black text-slate-500 text-[11px]">
+          <span class="text-2xl">📱</span>Celular
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <button onclick="saveProfileData()" class="w-full mt-6 bg-brand-dark text-white py-4 rounded-2xl font-black text-sm active:scale-[.98] transition-transform focus:outline-none shadow-md">
+    Guardar Cambios ✓
+  </button>
+</div>
+
+<!-- FAB -->
+<div id="fab" onclick="navTo('medico')" role="button" aria-label="NutriBot">🤖</div>
+
+<!-- NAV -->
+<nav id="bnav">
+  <button id="nb-inicio" class="nb active focus:outline-none" style="--ac:#be185d" onclick="navTo('inicio')">
+    <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+    <span>Inicio</span><div class="dot"></div>
+  </button>
+  <button id="nb-academia" class="nb focus:outline-none" style="--ac:#be185d" onclick="navTo('academia')">
+    <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+    <span>Clases</span><div class="dot"></div>
+  </button>
+  <button id="nb-lab" class="nb focus:outline-none" style="--ac:#0d9488" onclick="navTo('lab')">
+    <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/></svg>
+    <span>Lab</span><div class="dot"></div>
+  </button>
+  <button id="nb-medico" class="nb focus:outline-none" style="--ac:#0d9488" onclick="navTo('medico')">
+    <div class="relative">
+      <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/></svg>
+      <span class="absolute -top-1.5 -right-1.5 w-3 h-3 bg-red-500 rounded-full border-2 border-white"></span>
+    </div>
+    <span>Médico</span><div class="dot"></div>
+  </button>
+</nav>
+
+</div><!-- #app -->
+
+<!-- ══════════════════════════════════════
+     JAVASCRIPT
+══════════════════════════════════════ -->
+<script>
+// ─────────────────────────────────────
+// DB
+// ─────────────────────────────────────
+const DB = {
+  articles: {
+    avena:{ title:"Deja de comer avena (El mito revelado)", emoji:"🥣", color:"bg-orange-500", cat:"Metabolismo", time:"1 Min", author:"Dr. Juan Pablo", role:"Médico Nutriólogo", icon:"👨‍⚕️",
+      body:`<p>Si quieres perder grasa abdominal, la avena instantánea puede ser tu peor enemigo.</p><p><strong>¿El problema?</strong> Tiene un índice glucémico de 79. Casi igual que pan blanco.</p><div class="bg-orange-50 p-4 rounded-2xl border-l-4 border-orange-500 my-4"><strong class="text-orange-800 block mb-1">LA SOLUCIÓN:</strong><p class="text-orange-900 text-sm">Cambia a avena en hojuelas REAL (Rolled Oats) con proteína, nueces y canela para controlar la glucosa.</p></div>`},
+    fajas:{ title:"Por qué las fajas destruyen tu suelo pélvico", emoji:"🩻", color:"bg-pink-600", cat:"Postparto", time:"2 Min", author:"Dr. Juan Pablo", role:"Nutrición y Postparto", icon:"🫁",
+      body:`<p>La faja inmoviliza tu pared abdominal → <strong>atrofia muscular severa y aumento de la diástasis.</strong></p><p>Toda esa presión intra-abdominal va directo hacia abajo, empujando tu vejiga y recto.</p><div class="bg-red-50 p-4 rounded-2xl border-l-4 border-red-500 my-4"><strong class="text-red-800 block mb-1">ADVERTENCIA CLÍNICA:</strong><p class="text-red-900 text-sm">El exceso de presión causa prolapsos e incontinencia. Tira la faja y rehabilita tu core con MamaRAP.</p></div>`},
+    jugo:{ title:"El jugo de naranja es peor que la Coca-Cola", emoji:"🍊", color:"bg-yellow-500", cat:"Pediatría", time:"1 Min", author:"Dr. Pecue", role:"Pediatría Integral", icon:"🩺",
+      body:`<p>Un vaso de jugo de naranja tiene <strong>26g de azúcar</strong>. Una soda tiene 39g. Peligrosamente cerca.</p><p>Es fructosa líquida directo al hígado de tu hijo → pico de insulina → "crash" en el colegio.</p><div class="bg-yellow-50 p-4 rounded-2xl border-l-4 border-yellow-500 my-4"><strong class="text-yellow-800 block mb-1">REGLA DE ORO:</strong><p class="text-yellow-900 text-sm">Come la fruta, NO la bebas. La fibra de la naranja entera controla la absorción.</p></div>`},
+    cardio:{ title:"El Cardio NO quema grasa a los 40", emoji:"🏃‍♂️", color:"bg-orange-600", cat:"Cuchos Fit", time:"2 Min", author:"Dr. Juan Pablo", role:"Nutrición Deportiva", icon:"💪",
+      body:`<p>Cardio constante eleva el <strong>cortisol</strong>. Cortisol alto frena el metabolismo y destruye masa muscular.</p><div class="bg-orange-50 p-4 rounded-2xl border-l-4 border-orange-500 my-4"><strong class="text-orange-800 block mb-1">ESTRATEGIA 35+:</strong><p class="text-orange-900 text-sm">Levanta pesas pesadas 3-4x semana. HIIT 2x. Camina 10,000 pasos. La fuerza es longevidad.</p></div>`},
+    respiracion:{ title:"Respira y quema 300 cal extra al día", emoji:"🧘‍♀️", color:"bg-teal-500", cat:"Salud", time:"1 Min", author:"Dr. Juan Pablo", role:"Médico Nutriólogo", icon:"🫁",
+      body:`<p>La respiración superficial eleva el cortisol 24/7. Activa el sistema parasimpático con respiración diafragmática.</p><p><strong>Técnica 4-1-6:</strong> Inhala 4 seg (abdomen expande) → Retén 1 seg → Exhala 6 seg lento.</p><p>10 ciclos al día activa el transverso abdominal y reduce cortisol.</p>`},
+    sueno:{ title:"El sueño destruye músculo si duermes mal", emoji:"😴", color:"bg-indigo-500", cat:"Recuperación", time:"1 Min", author:"Dr. Juan Pablo", role:"Nutrición Deportiva", icon:"💪",
+      body:`<p>Con menos de 7 horas tu cuerpo eleva el cortisol y la grelina (hormona del hambre). Come más, pierde músculo.</p><div class="bg-indigo-50 p-4 rounded-2xl border-l-4 border-indigo-500 my-4"><strong class="text-indigo-800 block mb-1">PROTOCOLO:</strong><p class="text-indigo-900 text-sm">Sin pantallas 60 min antes. Cuarto frío (18-20°C). Magnesio glicinato en la noche. 7-9 hrs mínimo.</p></div>`},
+    ozempic:{ title:"La verdad oscura del Ozempic", emoji:"💉", color:"bg-slate-700", cat:"Tendencias", time:"2 Min", author:"Dr. Juan Pablo", role:"Médico Nutriólogo", icon:"👨‍⚕️",
+      body:`<p>Pierdes peso. SÍ. Pero hasta el <strong>40% del peso perdido es MÚSCULO</strong>, no grasa. Masa muscular que nunca recuperas fácilmente.</p><p>Debe usarse con protocolo estricto de pesas (3x semana mínimo) y proteína alta (1.6-2g/kg).</p>`},
+  },
+  courses: {
+    rap:[
+      {title:"Fase 1: Reconexión & Desinflamación", status:"activo", pct:25, color:"bg-brand-rap", classes:["El mito de la faja postparto","Respiración Diafragmática Core","Alimentación Anti-inflamatoria","Postura al amamantar"]},
+      {title:"Fase 2: Cierre Estructural Diástasis", status:"bloqueado", pct:0, color:"bg-brand-rap", classes:["Manejo de presión intraabdominal","Aproximación de rectos","Activación de Piso Pélvico","Errores al cargar al bebé"]},
+      {title:"Fase 3: Fuerza Funcional & Glúteos", status:"bloqueado", pct:0, color:"bg-brand-rap", classes:["Volviendo a levantar peso","Cadena posterior","Prevención de hernias"]}
+    ],
+    kids:[
+      {title:"Módulo 1: Fundamentos de Lonchera", status:"activo", pct:10, color:"bg-brand-kids", classes:["¿Qué es un snack balanceado?","Grasas: El motor del cerebro","Proteína y concentración","Taller práctico: La base"]},
+      {title:"Módulo 2: Creatividad en 10 min", status:"bloqueado", pct:0, color:"bg-brand-kids", classes:["Adiós a los ultraprocesados","Guerra de texturas","Prep-cooking del domingo"]},
+      {title:"Módulo 3: Psicología en la Mesa", status:"bloqueado", pct:0, color:"bg-brand-kids", classes:["El drama de la lonchera devuelta","Autonomía controlada","Presión social escolar"]}
+    ],
+    fit:[
+      {title:"Mod 1: Diagnóstico Corporal", status:"activo", pct:50, color:"bg-brand-fit", classes:["El error de la báscula","Peso vs Masa Miofibrilar","Hormonas según edad"]},
+      {title:"Mod 2: Anabolismo sin Grasa", status:"bloqueado", pct:0, color:"bg-brand-fit", classes:["Superávit calórico controlado","Miedo a los carbohidratos","Timing nutricional"]},
+      {title:"Mod 3: Reset Hormonal & Cortisol", status:"bloqueado", pct:0, color:"bg-brand-fit", classes:["El sueño destruye-músculo","Magnesio y relajación","Catabolismo +40"]},
+      {title:"Mod 4: Sobrecarga Progresiva", status:"bloqueado", pct:0, color:"bg-brand-fit", classes:["Menos días, más tensión","Multiarticulares rey","Ajustes semana 6"]}
+    ]
+  },
+  talleres:[
+    {date:"Sáb 19 Abr", hora:"10:00 AM", tema:"Cierre de Diástasis en Casa", doc:"Dr. Juan Pablo", color:"#be185d", colorL:"#fce7f3", icon:"🫁", cupos:"8 cupos restantes"},
+    {date:"Mar 22 Abr", hora:"7:00 PM",  tema:"Loncheras Inteligentes sin Estrés", doc:"Dr. Pecue",      color:"#0ea5e9", colorL:"#e0f2fe", icon:"🍱", cupos:"12 cupos"},
+    {date:"Jue 24 Abr", hora:"6:00 PM",  tema:"Reset Metabólico 35+",            doc:"Dr. Juan Pablo", color:"#ea580c", colorL:"#ffedd5", icon:"💪", cupos:"¡Último lugar!"},
+  ],
+  testimonios:[
+    {nombre:"María F.",  programa:"MamaRAP",       stars:5, texto:"Cerré mi diástasis en 6 semanas. El Dr. JP sabe exactamente qué decirte. ¡Increíble!",                       emoji:"🤱"},
+    {nombre:"Carlos M.", programa:"Cuchos Fit",     stars:5, texto:"Perdí 8 kg de grasa y gané músculo a los 42. El enfoque hormonal es completamente diferente.",               emoji:"💪"},
+    {nombre:"Ana R.",    programa:"Kids & Loncheras",stars:5, texto:"Mi hijo mejoró su concentración desde la semana 2. El Dr. Pecue explica todo de forma práctica.",           emoji:"🦸‍♂️"},
+  ],
+  recetas:[
+    {emoji:"🥚", nombre:"Bowl Proteico",       tiempo:"8 min",  cals:"380 kcal", tags:["Proteína","Postparto"], color:"#be185d", colorL:"#fce7f3"},
+    {emoji:"🫐", nombre:"Smoothie Anti-inflam",tiempo:"5 min",  cals:"220 kcal", tags:["Antioxidante","Rápido"], color:"#0ea5e9", colorL:"#e0f2fe"},
+    {emoji:"🥑", nombre:"Lonchera Fit",        tiempo:"10 min", cals:"310 kcal", tags:["Cerebro","Kids"],        color:"#0d9488", colorL:"#ccfbf1"},
+    {emoji:"🍗", nombre:"Pollo Teriyaki Light", tiempo:"15 min", cals:"430 kcal", tags:["Fit","Proteína"],        color:"#ea580c", colorL:"#ffedd5"},
+  ],
+  profiles:{
+    rap:{ icon:"🤱", label:"MamaRAP",    ac:"#be185d", iconCls:"bg-brand-rapL text-brand-rap",
+          hero:{badge:"Fase 1 Activa", title:"Reconexión Abdominal", desc:"Semana 3. Activa tu core y protege tu suelo pélvico.", pct:35, grad:"from-brand-rap to-rose-700", icon:"🫁"},
+          videos:['fajas','avena','respiracion','sueno','ozempic'],
+          sugg:["🎈 Parezco de 4 meses","🔙 Dolor de espalda","😢 Estrés postparto","💊 ¿Puedo tomar esto?","👨‍⚕️ Hablar con Doctor"] },
+    kids:{ icon:"🦸‍♂️", label:"Kids & Loncheras", ac:"#0ea5e9", iconCls:"bg-brand-kidsL text-brand-kids",
+          hero:{badge:"Módulo 1", title:"Cerebros Brillantes", desc:"Loncheras que mejoran la atención de tu hijo.", pct:10, grad:"from-brand-kids to-blue-700", icon:"🦸‍♂️"},
+          videos:['jugo','avena','sueno','respiracion'],
+          sugg:["🥦 Rechaza verduras","🧃 ¿Jugo de caja?","⏱️ Snack 5 min","🤒 Fiebre y dieta","👨‍⚕️ Hablar con Doctor"] },
+    fit:{ icon:"💪", label:"Cuchos Fit",   ac:"#ea580c", iconCls:"bg-brand-fitL text-brand-fit",
+          hero:{badge:"Semana 2", title:"Metabolismo 35+", desc:"Frena la pérdida muscular. Eleva testosterona.", pct:50, grad:"from-brand-fit to-red-700", icon:"💪"},
+          videos:['cardio','avena','sueno','ozempic','respiracion'],
+          sugg:["🏋️ No gano músculo","😴 Duermo mal","🍔 Superávit","📉 Estancamiento","👨‍⚕️ Hablar con Doctor"] },
+  }
+};
+
+// ─────────────────────────────────────
+// ESTADO GLOBAL
+// ─────────────────────────────────────
+let curView = 'inicio';
+let curProfile = 'rap';
+const state = JSON.parse(localStorage.getItem('nf_state') || '{}');
+const today = new Date().toDateString();
+if(state.date !== today){ Object.assign(state,{date:today, water:0, sleep:null, mood:null, breathCycles:0, digestYN:null, bristol:null, weight:state.weight||null}); }
+
+function saveState(){ localStorage.setItem('nf_state', JSON.stringify(state)); updatePointsBadge(); }
+
+// ─────────────────────────────────────
+// AUDIO / HAPTIC
+// ─────────────────────────────────────
+let _ac;
+function tone(freq, dur=0.06, vol=0.04, type='sine'){
+  try{
+    if(!_ac) _ac = new(window.AudioContext||window.webkitAudioContext)();
+    if(_ac.state==='suspended') _ac.resume();
+    const o=_ac.createOscillator(), g=_ac.createGain();
+    o.connect(g); g.connect(_ac.destination);
+    o.type=type; o.frequency.setValueAtTime(freq,_ac.currentTime);
+    g.gain.setValueAtTime(vol,_ac.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001,_ac.currentTime+dur);
+    o.start(); o.stop(_ac.currentTime+dur);
+  }catch(e){}
+}
+function clickSnd(){ tone(700,.05,.03); if(navigator.vibrate)navigator.vibrate(8); }
+function successSnd(){ tone(523,.09,.035); setTimeout(()=>tone(659,.09,.035),90); setTimeout(()=>tone(784,.2,.035),180); if(navigator.vibrate)navigator.vibrate([15,20,15]); }
+
+// ─────────────────────────────────────
+// NAVEGACIÓN
+// ─────────────────────────────────────
+const bnav = document.getElementById('bnav');
+const fab  = document.getElementById('fab');
+
+function navTo(viewId){
+  if(curView===viewId) return;
+  curView = viewId;
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('on'));
+  document.getElementById('view-'+viewId).classList.add('on');
+  document.querySelectorAll('.nb').forEach(b=>b.classList.remove('active'));
+  const nb = document.getElementById('nb-'+viewId);
+  if(nb) nb.classList.add('active');
+  if(viewId==='medico'){
+    bnav.classList.add('hide'); fab.style.display='none';
+    setTimeout(()=>{ const ch=document.getElementById('chat-history'); ch.scrollTop=ch.scrollHeight; setTimeout(()=>document.getElementById('chat-input').focus(),300); },250);
+  } else { bnav.classList.remove('hide'); fab.style.display='flex'; }
+  if(viewId==='lab'){ setTimeout(()=>{ coreChart&&coreChart.resize(); lunchChart&&lunchChart.resize(); growPeChart&&growPeChart.resize(); growTeChart&&growTeChart.resize(); },100); }
+  if(viewId==='academia'&&!document.getElementById('course-list').innerHTML) renderCourses(curProfile);
+  clickSnd();
+}
+
+// Scroll a un habit card específico
+function showHabitCard(id){
+  const el=document.getElementById('habit-'+id);
+  if(el) el.scrollIntoView({behavior:'smooth', block:'center'});
+}
+
+// ─────────────────────────────────────
+// SHEET + PERFIL
+// ─────────────────────────────────────
+function toggleSheet(){ document.getElementById('sht').classList.toggle('on'); document.getElementById('sbg').classList.toggle('on'); clickSnd(); }
+
+function switchProfile(pid){
+  curProfile=pid;
+  const p=DB.profiles[pid];
+  // Header
+  const hi=document.getElementById('hdr-icon');
+  hi.textContent=p.icon; hi.className=`w-8 h-8 rounded-lg flex items-center justify-center text-sm font-black ${p.iconCls}`;
+  document.getElementById('hdr-title').textContent=p.label;
+  // Hero
+  const hb=document.getElementById('hero-banner');
+  hb.className=`rounded-[1.75rem] p-5 text-white relative overflow-hidden cursor-pointer active:scale-[.98] transition-transform bg-gradient-to-br ${p.hero.grad}`;
+  document.getElementById('hero-badge').textContent=p.hero.badge;
+  document.getElementById('hero-title').textContent=p.hero.title;
+  document.getElementById('hero-desc').textContent=p.hero.desc;
+  document.getElementById('hero-bar').style.width=p.hero.pct+'%';
+  document.getElementById('hero-pct').textContent=p.hero.pct+'%';
+  document.getElementById('hero-icon').textContent=p.hero.icon;
+  // Checkmarks
+  ['rap','kids','fit'].forEach(id=>{
+    const chk=document.getElementById('chk-'+id);
+    if(id===pid){ chk.className=`w-6 h-6 rounded-full flex items-center justify-center text-xs font-black shrink-0 ${DB.profiles[id].iconCls.split(' ')[0].replace('L','').replace('rapL','rap').replace('kidsL','kids').replace('fitL','fit')} text-white`; }
+    else{ chk.className='w-6 h-6 rounded-full bg-slate-200 text-transparent flex items-center justify-center text-xs font-black shrink-0'; }
+  });
+  // Tools
+  document.getElementById('tool-core').classList.toggle('hidden', pid==='kids');
+  document.getElementById('tool-lunch').classList.toggle('hidden', pid!=='kids');
+  document.getElementById('tool-growth').classList.toggle('hidden', pid!=='kids');
+  // Nav color
+  document.querySelectorAll('.nb').forEach(b=>b.style.setProperty('--ac',p.ac));
+  document.getElementById('nb-medico').style.setProperty('--ac','#0d9488');
+  document.getElementById('nb-lab').style.setProperty('--ac','#0d9488');
+  // Carousel
+  buildCarousel(pid);
+  // Chat
+  buildSugg(pid);
+  if(curView==='academia') renderCourses(pid);
+  toggleSheet(); successSnd();
+}
+
+// ─────────────────────────────────────
+// CAROUSEL ARTÍCULOS
+// ─────────────────────────────────────
+function buildCarousel(pid){
+  const car=document.getElementById('carousel');
+  car.innerHTML='';
+  DB.profiles[pid].videos.forEach(key=>{
+    const a=DB.articles[key];
+    car.innerHTML+=`<button class="min-w-[260px] bg-white rounded-[1.5rem] p-4 shadow-card border border-slate-100 snap-start flex items-center gap-3 active:scale-[.97] transition-transform focus:outline-none text-left" onclick="openArt('${key}')">
+      <div class="w-14 h-14 rounded-2xl ${a.color} text-white flex items-center justify-center text-3xl shadow-md shrink-0">${a.emoji}</div>
+      <div class="flex-1 min-w-0">
+        <div class="flex gap-1.5 mb-1">
+          <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest">${a.cat}</span>
+          <span class="text-[9px] font-black text-slate-300">· ${a.time}</span>
+        </div>
+        <p class="font-black text-sm text-brand-dark leading-snug line-clamp-2">${a.title}</p>
+      </div>
+    </button>`;
+  });
+}
+
+// ─────────────────────────────────────
+// ARTICLE OVERLAY
+// ─────────────────────────────────────
+function openArt(key){
+  const a=DB.articles[key];
+  const hero=document.getElementById('art-hero');
+  hero.className=`relative flex justify-center items-center overflow-hidden rounded-b-[2.5rem] ${a.color}`;
+  hero.style.height='260px';
+  document.getElementById('art-emoji').textContent=a.emoji;
+  document.getElementById('art-cat').textContent=a.cat;
+  document.getElementById('art-time').textContent=a.time+' Read';
+  document.getElementById('art-auth-icon').textContent=a.icon;
+  document.getElementById('art-auth-name').textContent=a.author;
+  document.getElementById('art-auth-role').textContent=a.role;
+  document.getElementById('art-title').textContent=a.title;
+  document.getElementById('art-body').innerHTML=a.body;
+  document.getElementById('art-ovr').classList.add('on');
+  clickSnd();
+}
+function closeArt(){ document.getElementById('art-ovr').classList.remove('on'); clickSnd(); }
+
+// ─────────────────────────────────────
+// ACORDEÓN DE CURSOS
+// ─────────────────────────────────────
+function renderCourses(type){
+  const tabs=document.getElementById('course-tabs');
+  const list=document.getElementById('course-list');
+  tabs.innerHTML=''; list.innerHTML='';
+  ['rap','kids','fit'].forEach(id=>{
+    const p=DB.profiles[id];
+    const active=id===type;
+    tabs.innerHTML+=`<button onclick="renderCourses('${id}')" class="shrink-0 px-5 py-2.5 rounded-full text-[13px] font-black transition-all focus:outline-none ${active?`text-white shadow-md`:'bg-slate-100 text-slate-500'}" style="${active?`background:${p.ac}`:''}">
+      ${id==='rap'?'MamaRAP':id==='kids'?'Loncheras':'Cuchos Fit'}</button>`;
+  });
+  const p=DB.profiles[type];
+  DB.courses[type].forEach(mod=>{
+    const locked=mod.status==='bloqueado';
+    const classes=mod.classes.map((c,i)=>`
+      <div class="flex items-center gap-3 py-3 border-b border-slate-50 last:border-0 ${locked?'opacity-40':''}">
+        <div class="w-7 h-7 rounded-full bg-slate-100 flex items-center justify-center text-[11px] font-black text-slate-400 shrink-0">${i+1}</div>
+        <p class="text-[15px] font-bold text-brand-dark flex-1 leading-snug">${c}</p>
+        ${!locked?'<span class="text-slate-300 text-base">▶</span>':''}
+      </div>`).join('');
+    list.innerHTML+=`<div class="bg-white rounded-[1.75rem] shadow-card border border-slate-100 overflow-hidden">
+      <button onclick="toggleAccordion(this)" class="w-full p-5 flex justify-between items-center ${locked?'bg-slate-50':''} focus:outline-none active:bg-slate-50 transition-colors text-left" style="min-height:44px">
+        <div class="pr-3 flex-1">
+          <span class="text-[10px] font-black px-2.5 py-1 rounded-md uppercase tracking-wide ${locked?'bg-slate-200 text-slate-400':'text-white'}" style="${!locked?`background:${p.ac}`:''}">
+            ${locked?'🔒 Bloqueado':'▶ Activa'}</span>
+          <h3 class="font-black text-brand-dark text-base mt-2 leading-snug">${mod.title}</h3>
+          ${!locked?`<div class="mt-2 flex items-center gap-2"><div class="flex-1 h-1 bg-slate-100 rounded-full"><div class="h-full rounded-full" style="width:${mod.pct}%;background:${p.ac}"></div></div><span class="text-[10px] font-black" style="color:${p.ac}">${mod.pct}%</span></div>`:''}
+        </div>
+        <svg class="w-5 h-5 text-slate-300 transition-transform duration-300 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 9l-7 7-7-7"/></svg>
+      </button>
+      <div class="max-h-0 overflow-hidden transition-all duration-300 ease-in-out px-5">
+        ${classes}
+        ${!locked?`<button class="w-full mt-2 mb-5 text-white font-black py-3 rounded-xl text-sm active:scale-95 transition-transform focus:outline-none shadow-md" style="background:${p.ac}">Continuar Módulo →</button>`:''}
+      </div>
+    </div>`;
+  });
+}
+
+function toggleAccordion(btn){
+  const content=btn.nextElementSibling;
+  const icon=btn.querySelector('svg');
+  if(content.style.maxHeight){ content.style.maxHeight=null; icon.classList.remove('rotate-180'); }
+  else{ document.querySelectorAll('#course-list button+div').forEach(d=>{ d.style.maxHeight=null; d.previousElementSibling.querySelector('svg').classList.remove('rotate-180'); }); content.style.maxHeight=content.scrollHeight+'px'; icon.classList.add('rotate-180'); }
+  clickSnd();
+}
+
+// ─────────────────────────────────────
+// CHARTS
+// ─────────────────────────────────────
+Chart.defaults.font.family="'Nunito',sans-serif";
+Chart.defaults.font.weight='700';
+const coreD={ faja:[70,25,5], crunch:[60,35,5], rap:[5,10,85] };
+let coreChart=new Chart(document.getElementById('coreChart').getContext('2d'),{
+  type:'doughnut',
+  data:{labels:['Daño Suelo Pélvico','Empeora Diástasis','Sanación Core'],datasets:[{data:coreD.rap,backgroundColor:['#ef4444','#f97316','#10b981'],borderWidth:0}]},
+  options:{responsive:true,maintainAspectRatio:false,cutout:'72%',animation:{duration:600,easing:'easeOutQuart'},plugins:{legend:{display:false}}}
+});
+let lunchChart=new Chart(document.getElementById('lunchChart').getContext('2d'),{
+  type:'doughnut',
+  data:{labels:['Azúcar','Grasa Mala','Proteína','Vitaminas'],datasets:[{data:[65,25,5,5],backgroundColor:['#ef4444','#f97316','#cbd5e1','#e2e8f0'],borderWidth:0}]},
+  options:{responsive:true,maintainAspectRatio:false,cutout:'72%',animation:{duration:600,easing:'easeOutQuart'},plugins:{legend:{display:false}}}
+});
+
+function upChart(id,type,btn){
+  clickSnd();
+  btn.closest('[class*="grid"],div').querySelectorAll('button').forEach(b=>{
+    b.className=b.className.replace(/bg-red-500|bg-orange-500|bg-brand-rap|bg-brand-kids|text-white|shadow-md/g,'').trim();
+    if(!b.className.includes('col-span')) b.className='bg-slate-100 text-slate-500 text-xs font-black py-3 rounded-xl active:scale-95 focus:outline-none transition-all';
+  });
+  const tip=document.getElementById(id==='core'?'core-tip':'lunch-tip');
+  if(id==='core'){
+    coreChart.data.datasets[0].data=coreD[type]; coreChart.update();
+    if(type==='faja'){btn.className='bg-red-500 text-white text-xs font-black py-3 rounded-xl active:scale-95 focus:outline-none shadow-md transition-all';tip.className='mt-3 p-3 bg-red-50 text-red-700 rounded-xl text-[11px] font-black text-center';tip.textContent='¡PELIGRO! Empuja toda la presión hacia el piso pélvico. Causa prolapsos e incontinencia.';}
+    else if(type==='crunch'){btn.className='bg-orange-500 text-white text-xs font-black py-3 rounded-xl active:scale-95 focus:outline-none shadow-md transition-all';tip.className='mt-3 p-3 bg-orange-50 text-orange-700 rounded-xl text-[11px] font-black text-center';tip.textContent='Los abdominales clásicos empujan la pared hacia afuera. Empeoran la diástasis.';}
+    else{btn.className='col-span-2 bg-brand-rap text-white text-xs font-black py-3 rounded-xl active:scale-95 focus:outline-none shadow-md transition-all';tip.className='mt-3 p-3 bg-emerald-50 text-emerald-700 rounded-xl text-[11px] font-black text-center';tip.textContent='Activa el transverso. Cierra la diástasis y protege el suelo pélvico desde adentro. ✓';}
+  } else {
+    if(type==='bad'){lunchChart.data.datasets[0].data=[65,25,5,5];lunchChart.data.datasets[0].backgroundColor=['#ef4444','#f97316','#cbd5e1','#e2e8f0'];btn.className='flex-1 bg-red-500 text-white text-xs font-black py-3 rounded-xl active:scale-95 focus:outline-none shadow-md transition-all';tip.textContent='Alta azúcar → pico de insulina → crash 30 min después en el colegio.';}
+    else{lunchChart.data.datasets[0].data=[25,30,30,15];lunchChart.data.datasets[0].backgroundColor=['#facc15','#0ea5e9','#10b981','#a78bfa'];btn.className='flex-1 bg-brand-kids text-white text-xs font-black py-3 rounded-xl active:scale-95 focus:outline-none shadow-md transition-all';tip.textContent='Grasas para el cerebro + proteína = energía estable y foco toda la mañana. ✓';}
+    lunchChart.update();
+  }
+}
+
+// ─────────────────────────────────────
+// HÁBITO: AGUA
+// ─────────────────────────────────────
+function buildWater(){
+  const c=document.getElementById('water-drops');
+  c.innerHTML='';
+  for(let i=0;i<8;i++){
+    c.innerHTML+=`<div class="wdrop ${i<state.water?'fill':''}" onclick="tapWater(${i})" role="button" aria-label="Vaso ${i+1}">💧</div>`;
+  }
+  const pct=(state.water/8)*100;
+  document.getElementById('water-bar').style.width=pct+'%';
+  document.getElementById('water-label').textContent=`${state.water}/8`;
+  document.getElementById('mini-water').textContent=`${state.water}/8 vasos`;
+  const tips=['Toca cada gota al completar un vaso 💧','¡Sigue! Tu cuerpo te lo agradece 💪','Vas a mitad. ¡No pares! 🌊','¡Casi! Un vaso más ✨','¡Hidratación completa! 🏆'];
+  document.getElementById('water-tip').textContent=tips[Math.min(Math.floor(state.water/2),4)];
+  if(state.water===8) successSnd();
+}
+function tapWater(i){ state.water=(i<state.water?i:i+1); saveState(); buildWater(); clickSnd(); }
+
+// ─────────────────────────────────────
+// HÁBITO: SUEÑO
+// ─────────────────────────────────────
+function adjSleep(delta){
+  if(state.sleep===null) state.sleep=7.5;
+  state.sleep=Math.max(0,Math.min(12,Math.round((state.sleep+delta)*2)/2));
+  saveState(); updateSleepUI(); clickSnd();
+}
+function updateSleepUI(){
+  const h=state.sleep||7.5;
+  document.getElementById('sleep-val').textContent=h;
+  document.getElementById('mini-sleep').textContent=h+' hrs';
+  const el=document.getElementById('sleep-msg');
+  if(h<5){el.className='text-center text-[12px] font-black rounded-xl p-2.5 bg-red-50 text-red-700';el.textContent='Déficit severo 😰 Dormir poco eleva el cortisol y destruye músculo.';}
+  else if(h<7){el.className='text-center text-[12px] font-black rounded-xl p-2.5 bg-orange-50 text-orange-700';el.textContent='Déficit leve. Intenta llegar a 7-8 hrs para recuperar bien.';}
+  else if(h<=9){el.className='text-center text-[12px] font-black rounded-xl p-2.5 bg-emerald-50 text-emerald-700';el.textContent='¡Excelente! Tu cuerpo recupera y sintetiza músculo mientras duermes 😊';}
+  else{el.className='text-center text-[12px] font-black rounded-xl p-2.5 bg-yellow-50 text-yellow-700';el.textContent='Dormir demasiado también puede subir el cortisol. 7-9 hrs es lo ideal.';}
+}
+
+// ─────────────────────────────────────
+// HÁBITO: ÁNIMO
+// ─────────────────────────────────────
+function setMood(emoji, msg){
+  state.mood=emoji; saveState();
+  document.querySelectorAll('.mood-btn').forEach(b=>{ b.classList.toggle('sel', b.dataset.mood===emoji); });
+  document.getElementById('mood-msg').textContent=msg;
+  document.getElementById('mini-mood').textContent=emoji;
+  clickSnd();
+}
+
+// ─────────────────────────────────────
+// HÁBITO: RESPIRACIÓN
+// ─────────────────────────────────────
+let breathActive=false, breathTimer=null, breathPhase=0, breathCycles=0;
+const breathPhases=[
+  {label:'Inhala…',dur:4000,expand:true},
+  {label:'Retén…',dur:1000,expand:true},
+  {label:'Exhala…',dur:6000,expand:false}
+];
+function toggleBreath(){
+  if(!breathActive){ startBreath(); } else { stopBreath(); }
+}
+function startBreath(){
+  breathActive=true; breathPhase=0; breathCycles=state.breathCycles||0;
+  document.getElementById('breath-inner').textContent='Preparado...';
+  runBreathPhase();
+}
+function runBreathPhase(){
+  if(!breathActive) return;
+  const ph=breathPhases[breathPhase];
+  const ring=document.getElementById('breath-ring');
+  if(ph.expand) ring.classList.add('expand'); else ring.classList.remove('expand');
+  document.getElementById('breath-inner').textContent=ph.label;
+  document.getElementById('breath-phase').textContent=`Fase ${breathPhase+1}/3 · ${ph.dur/1000} seg`;
+  let elapsed=0;
+  const step=100;
+  clearInterval(breathTimer);
+  breathTimer=setInterval(()=>{
+    elapsed+=step;
+    if(elapsed>=ph.dur){
+      clearInterval(breathTimer);
+      breathPhase=(breathPhase+1)%3;
+      if(breathPhase===0){ breathCycles++; state.breathCycles=breathCycles; saveState(); document.getElementById('breath-count-label').textContent=breathCycles+' ciclos'; document.getElementById('mini-breath').textContent=breathCycles+' ciclos'; if(breathCycles>=5){successSnd();document.getElementById('breath-phase').textContent='¡5 ciclos! Excelente ejercicio. 🧘‍♀️';} }
+      runBreathPhase();
+    }
+  },step);
+}
+function stopBreath(){
+  breathActive=false; clearInterval(breathTimer);
+  document.getElementById('breath-ring').classList.remove('expand');
+  document.getElementById('breath-inner').textContent=breathCycles>0?breathCycles+' ciclos\ncompletados':'Toca\npara\niniciar';
+  document.getElementById('breath-phase').textContent='Respiración consciente activa tu transverso';
+}
+
+// ─────────────────────────────────────
+// HÁBITO: DIGESTIÓN
+// ─────────────────────────────────────
+function setDigestYN(yes, btn){
+  state.digestYN=yes; saveState();
+  btn.parentElement.querySelectorAll('button').forEach(b=>{ b.className='flex-1 py-2.5 rounded-xl font-black text-sm bg-slate-100 text-slate-500 border-2 border-transparent active:scale-95 focus:outline-none transition-all'; });
+  btn.className='flex-1 py-2.5 rounded-xl font-black text-sm bg-green-50 text-green-700 border-2 border-green-300 active:scale-95 focus:outline-none transition-all';
+  document.getElementById('bristol-section').classList.toggle('hidden', !yes);
+  document.getElementById('mini-digest').textContent=yes?'Sí ✓':'No ✗';
+  clickSnd();
+}
+function setBristol(n, btn){
+  state.bristol=n; saveState();
+  btn.parentElement.querySelectorAll('.bristol-btn').forEach(b=>b.classList.remove('sel'));
+  btn.classList.add('sel');
+  const msgs={1:'Estreñimiento. Bebe más agua y añade fibra soluble (chía, linaza).',2:'Tránsito lento. Más agua y movimiento físico.',3:'Bien. En el rango normal.',4:'¡Ideal! Excelente tránsito intestinal.',5:'Blanda. Revisa la fibra insoluble y lácteos.'};
+  document.getElementById('bristol-msg').textContent=msgs[n]||'';
+  clickSnd();
+}
+
+// ─────────────────────────────────────
+// HÁBITO: PESO
+// ─────────────────────────────────────
+function saveWeight(){
+  const v=parseFloat(document.getElementById('weight-input').value);
+  if(isNaN(v)||v<30||v>300){ return; }
+  if(!state.weightLog) state.weightLog=[];
+  state.weightLog.unshift({d:new Date().toLocaleDateString('es-CO',{day:'numeric',month:'short'}),w:v});
+  state.weightLog=state.weightLog.slice(0,7);
+  state.weight=v; saveState();
+  document.getElementById('mini-weight').textContent=v+' kg';
+  document.getElementById('weight-input').value='';
+  const hist=state.weightLog.slice(0,3).map(e=>`${e.d}: ${e.w}kg`).join(' · ');
+  document.getElementById('weight-history').textContent='Últimos: '+hist;
+  successSnd();
+}
+
+// ─────────────────────────────────────
+// NUTRIBOT CHAT
+// ─────────────────────────────────────
+// WHATSAPP HELPER
+// ─────────────────────────────────────
+function waBtn(msg){
+  const url='https://wa.me/573059330939?text='+encodeURIComponent(msg||'Hola, me contacto desde la Academia Nutrifit 👋');
+  return `<a href="${url}" target="_blank" rel="noopener noreferrer" style="display:inline-flex;align-items:center;gap:.5rem;margin-top:.875rem;background:#25D366;color:#fff;font-weight:900;font-size:.72rem;padding:.65rem 1.1rem;border-radius:.875rem;text-decoration:none;box-shadow:0 4px 14px rgba(37,211,102,.4);letter-spacing:.02em"><svg style="width:17px;height:17px;flex-shrink:0;fill:currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347zM12 0C5.373 0 0 5.373 0 12c0 2.127.558 4.126 1.533 5.862L0 24l6.293-1.51A11.933 11.933 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 01-5.006-1.372l-.36-.213-3.732.895.951-3.622-.234-.372A9.818 9.818 0 012.182 12C2.182 6.58 6.58 2.182 12 2.182c5.42 0 9.818 4.398 9.818 9.818 0 5.42-4.398 9.818-9.818 9.818z"/></svg>Escribir al WhatsApp</a>`;
+}
+
+// ─────────────────────────────────────
+// NUTRIBOT CHAT — KNOWLEDGE BASE
+// ─────────────────────────────────────
+const KB=[
+  [/verdura|vegetal|espinaca/,'El Dr. Pecue recomienda camuflarlo en salsas licuadas y cortadores divertidos. Exposición sin presión = aceptación. (Módulo 2) 🥦'],
+  [/mes|inflam|barriga|panz|hinch/,'¡Eso NO es grasa, es bioma colapsado + diástasis! MamaRAP Fase 1 te desinflamar desde el día 1 con respiración. 🎈'],
+  [/cardio|corre|trotar/,'Cardio constante eleva el cortisol y frena el metabolismo. Prioriza pesas 3x semana. (Cuchos Fit Mod 2) 💪'],
+  [/espalda|dolor lumbar/,'El dolor es porque tu core profundo está "apagado" por la diástasis. Tu lumbar carga todo. Empieza la reconexión neural hoy. 🙌'],
+  [/jugo|fruta|naran/,'El jugo elimina la fibra. Es azúcar directa al hígado de tu hijo. Dale fruta entera siempre. 🍎'],
+  [/faja/,'La faja inmoviliza la pared abdominal → atrofia + diástasis + prolapsos. Cambia a respiración MamaRAP. ❌'],
+  [/avena|cereal|granola/,'Avena instantánea = IG 79. Casi como pan blanco. Pásate a Rolled Oats con proteína y grasas saludables. 🥣'],
+  [/sueño|dormir|insomnio/,'Dormir poco eleva cortisol y grelina (hambre). Mínimo 7 hrs, cuarto frío, sin pantallas 60 min antes. 😴'],
+  [/ozempic|semaglutida|inyecc/,'Ozempic sí baja peso PERO hasta 40% es músculo, no grasa. Debe ir con protocolo de pesas + proteína alta. 💉'],
+  [/resp|diafragma|transverso/,'La respiración 4-1-6 activa el transverso y baja el cortisol. 10 ciclos al día es suficiente para empezar. 🧘‍♀️'],
+  [/agua|hidrat/,'Mínimo 35ml por kg de peso corporal al día. Para 60kg = 2.1 litros. El agua fría activa ligero el metabolismo. 💧'],
+  [/proteína|carne|pollo/,'1.6-2g por kg de peso en posparto y entrenamiento. Prioriza: huevo, pollo, res magra, yogur griego. 🥩'],
+  [/lactancia|leche|mamar/,'Amamantando necesitas +500 kcal al día. No restrinjas calorías en lactancia. El cuerpo prioriza al bebé. 🤱'],
+  [/hablar|contactar|cita|agendar|consulta personal|doctor|médico|dr\.|juan pablo|pecue|quiero hablar|quiero consultar|quiero una cita|necesito ayuda médica/,
+    '¡Con gusto te conecto! 🩺 Nuestros doctores te atenderán por WhatsApp directamente.<br><br><b>Dr. Juan Pablo</b> — Nutriólogo, Postparto & Deportivo<br><b>Dr. Pecue</b> — Pediatría Integral'+
+    waBtn('Hola 👋 Me contacto desde la Academia Nutrifit y quisiera agendar una consulta médica.')],
+  [/precio|costo|cuánto|valor|planes|suscripción/,
+    '📋 Para información de precios, planes y suscripciones, escríbenos al WhatsApp y te asesoramos personalizado.'+
+    waBtn('Hola 👋 Quisiera información sobre los precios y planes de la Academia Nutrifit.')],
+];
+function buildSugg(pid){
+  const c=document.getElementById('chat-sugg');
+  c.innerHTML='';
+  DB.profiles[pid].sugg.forEach(s=>{
+    c.innerHTML+=`<button onclick="sendChat('${s}')" class="shrink-0 bg-white border border-slate-200 text-[13px] font-bold text-slate-600 px-3.5 py-2 rounded-2xl shadow-sm active:scale-95 transition-all focus:outline-none snap-start">${s}</button>`;
+  });
+}
+function appendMsg(text, isUser){
+  const h=document.getElementById('chat-history');
+  const d=document.createElement('div');
+  d.className=`flex gap-3 anim-pop ${isUser?'flex-row-reverse':''}`;
+  const av=isUser?`<div style="width:36px;height:36px;border-radius:50%;background:#e2e8f0;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:1.1rem;border:2px solid #fff;margin-top:auto">👩</div>`
+                 :`<div id="ba-${Date.now()}" style="width:36px;height:36px;border-radius:50%;background:#0d9488;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:1rem;margin-top:auto">🤖</div>`;
+  const cls=isUser?'background:#0f172a;color:#fff;border-radius:1.5rem 1.5rem .25rem 1.5rem':'background:#fff;color:#1e293b;border:1px solid #f1f5f9;box-shadow:0 2px 8px rgba(0,0,0,.04);border-radius:1.5rem 1.5rem 1.5rem .25rem';
+  d.innerHTML=`${av}<div style="${cls};font-weight:600;padding:1rem;font-size:15px;line-height:1.5;max-width:80%">${text}</div>`;
+  h.appendChild(d);
+  setTimeout(()=>h.scrollTo({top:h.scrollHeight,behavior:'smooth'}),50);
+}
+function sendChat(override=null){
+  const inp=document.getElementById('chat-input');
+  const txt=(override||inp.value).trim();
+  if(!txt) return;
+  appendMsg(txt.replace(/^[^\w¿¡]+/,'').trim(), true);
+  inp.value=''; inp.style.height='auto';
+  const h=document.getElementById('chat-history');
+  const tid='t'+Date.now();
+  const td=document.createElement('div');
+  td.id=tid; td.className='flex gap-3';
+  td.innerHTML=`<div style="width:36px;height:36px;border-radius:50%;background:#0d9488;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;margin-top:auto">🤖</div><div style="background:#fff;border:1px solid #f1f5f9;padding:.75rem 1rem;border-radius:1.5rem 1.5rem 1.5rem .25rem;display:flex;gap:6px;align-items:center"><span style="width:8px;height:8px;background:#cbd5e1;border-radius:50%;animation:bounce3 1.2s infinite"></span><span style="width:8px;height:8px;background:#cbd5e1;border-radius:50%;animation:bounce3 1.2s .12s infinite"></span><span style="width:8px;height:8px;background:#cbd5e1;border-radius:50%;animation:bounce3 1.2s .24s infinite"></span></div>`;
+  h.appendChild(td); h.scrollTo({top:h.scrollHeight,behavior:'smooth'});
+  setTimeout(()=>{
+    document.getElementById(tid)?.remove();
+    const lower=txt.toLowerCase();
+    let res='Es una excelente pregunta. Revisa los módulos del programa para ver la ciencia detrás. 📚 Si necesitas una respuesta personalizada, consulta con tu doctor de la academia.';
+    for(const [pat,reply] of KB){ if(pat.test(lower)){ res=reply; break; } }
+    appendMsg(res, false);
+    if(navigator.vibrate) navigator.vibrate(15);
+  }, 900+Math.random()*600);
+  clickSnd();
+}
+
+// Teclado virtual
+if(window.visualViewport){
+  window.visualViewport.addEventListener('resize',()=>{
+    if(curView==='medico'){
+      const bar=document.getElementById('chat-bar');
+      const offset=window.innerHeight - window.visualViewport.height - window.visualViewport.offsetTop;
+      bar.style.paddingBottom=offset>10?offset+'px':'max(1rem,env(safe-area-inset-bottom))';
+      const h=document.getElementById('chat-history');
+      h.scrollTop=h.scrollHeight;
+    }
+  });
+}
+const ci=document.getElementById('chat-input');
+ci.addEventListener('input',function(){ this.style.height='auto'; this.style.height=Math.min(this.scrollHeight,96)+'px'; });
+ci.addEventListener('keypress',e=>{ if(e.key==='Enter'&&!e.shiftKey){ e.preventDefault(); sendChat(); } });
+
+// ─────────────────────────────────────
+// PERFIL DE USUARIO (persistente)
+// ─────────────────────────────────────
+let profileData = JSON.parse(localStorage.getItem('nf_profile') || '{"name":"","email":"","phone":"","loginMethod":"","city":"","age":""}');
+function savePD(){ localStorage.setItem('nf_profile', JSON.stringify(profileData)); }
+
+function openProfile(){
+  renderProfile();
+  document.getElementById('profile-ovr').classList.add('on');
+  clickSnd();
+}
+function closeProfile(){
+  document.getElementById('profile-ovr').classList.remove('on');
+  clickSnd();
+}
+
+function renderProfile(){
+  const p = profileData;
+  const prof = DB.profiles[curProfile];
+
+  // Hero gradient según perfil activo
+  document.getElementById('prof-hero-bg').style.background =
+    `linear-gradient(135deg,${prof.ac},${prof.ac}bb)`;
+
+  // Avatar (seed = nombre del usuario)
+  const seed = (p.name||'User').replace(/\s+/g,'');
+  const avatarUrl = `https://api.dicebear.com/7.x/notionists/svg?seed=${seed}&backgroundColor=fce7f3`;
+  document.getElementById('prof-avatar-img').src = avatarUrl;
+  const hdrAv = document.getElementById('hdr-avatar-img');
+  if(hdrAv) hdrAv.src = avatarUrl;
+
+  // Nombre + sub
+  document.getElementById('prof-name-display').textContent = p.name || 'Tu Nombre';
+  const parts = [];
+  if(p.email) parts.push(p.email);
+  else if(p.phone) parts.push(p.phone);
+  if(p.city) parts.push(p.city);
+  if(p.age) parts.push(p.age+' años');
+  document.getElementById('prof-sub-display').textContent =
+    parts.length ? parts.join(' · ') : 'Toca ✏️ para completar tu perfil';
+
+  // Badges
+  const methodLabels = {google:'🌐 Google', email:'📧 Correo', phone:'📱 Celular'};
+  const badgesEl = document.getElementById('prof-badges');
+  badgesEl.innerHTML = `<span class="text-[11px] font-black px-3 py-1.5 rounded-xl text-white" style="background:${prof.ac}">${prof.icon} ${prof.label}</span>`;
+  if(p.loginMethod)
+    badgesEl.innerHTML += `<span class="text-[11px] font-black px-3 py-1.5 rounded-xl bg-white border border-slate-200 text-slate-600">${methodLabels[p.loginMethod]||p.loginMethod}</span>`;
+  if(p.email||p.phone)
+    badgesEl.innerHTML += `<span class="text-[11px] font-black px-3 py-1.5 rounded-xl bg-emerald-50 text-emerald-700 border border-emerald-200">✓ Verificado</span>`;
+
+  // Stats del día
+  const statsEl = document.getElementById('prof-stats');
+  const statItems = [
+    {icon:'💧', label:'Agua',    val:`${state.water||0}/8`,              color:'#0ea5e9'},
+    {icon:'😴', label:'Sueño',   val:state.sleep ? state.sleep+'h':'—',  color:'#7c3aed'},
+    {icon:'🧠', label:'Ánimo',   val:state.mood||'—',                    color:'#d97706'},
+    {icon:'🔥', label:'Puntos',  val:calcPoints()+'pts',                 color:'#ea580c'},
+    {icon:'📅', label:'Racha',   val:(state.streak||1)+'d',              color:'#be185d'},
+    {icon:'🧘', label:'Resp.',   val:(state.breathCycles||0)+' c',       color:'#0d9488'},
+  ];
+  statsEl.innerHTML = statItems.map(s=>`
+    <div class="prof-stat-cell">
+      <span style="font-size:1.25rem;margin-bottom:.25rem">${s.icon}</span>
+      <span style="font-size:.8rem;font-weight:900;color:${s.color};line-height:1">${s.val}</span>
+      <span style="font-size:.6rem;font-weight:700;color:#94a3b8;margin-top:.2rem">${s.label}</span>
+    </div>`).join('');
+
+  // NutriPoints bar
+  const pts = calcPoints();
+  document.getElementById('prof-pts-display').textContent = pts + ' / 100 pts';
+  document.getElementById('prof-pts-bar').style.width = pts + '%';
+
+  // Progreso del curso
+  const courses = DB.courses[curProfile];
+  const activeCourse = courses.find(c=>c.status==='activo') || courses[0];
+  const doneClasses = Math.round((activeCourse.pct/100) * activeCourse.classes.length);
+  document.getElementById('prof-progress').innerHTML = `
+    <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:.75rem">
+      <div style="width:2.75rem;height:2.75rem;border-radius:.875rem;background:${prof.ac}22;display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0">${prof.icon}</div>
+      <div style="flex:1;min-width:0">
+        <p style="font-weight:900;font-size:.8rem;color:#0f172a;line-height:1.3">${activeCourse.title}</p>
+        <p style="font-size:.68rem;font-weight:700;color:#94a3b8;margin-top:.2rem">${doneClasses} de ${activeCourse.classes.length} clases completadas</p>
+      </div>
+    </div>
+    <div style="height:10px;background:#f1f5f9;border-radius:99px;overflow:hidden">
+      <div style="height:100%;width:${activeCourse.pct}%;background:${prof.ac};border-radius:99px;transition:width .6s ease"></div>
+    </div>
+    <div style="display:flex;justify-content:space-between;margin-top:.5rem">
+      <span style="font-size:.65rem;font-weight:700;color:#94a3b8">Progreso del módulo activo</span>
+      <span style="font-size:.65rem;font-weight:900;color:${prof.ac}">${activeCourse.pct}%</span>
+    </div>
+    <div style="margin-top:.875rem;display:flex;gap:.5rem;flex-wrap:wrap">
+      ${courses.map(c=>`<span style="font-size:.65rem;font-weight:900;padding:.25rem .65rem;border-radius:.5rem;background:${c.status==='activo'?prof.ac:'#f1f5f9'};color:${c.status==='activo'?'#fff':'#94a3b8'}">${c.status==='activo'?'▶ ':'🔒 '}${c.status==='activo'?'En curso':'Bloqueado'}</span>`).join('')}
+    </div>`;
+
+  // Cuenta
+  const accItems = [
+    {icon:'👤', label:'Nombre',      val: p.name  || 'Sin registrar'},
+    {icon:'📧', label:'Correo',      val: p.email || 'Sin registrar'},
+    {icon:'📱', label:'Celular',     val: p.phone || 'Sin registrar'},
+    {icon:'🏙️', label:'Ciudad',     val: p.city  || 'Sin registrar'},
+    {icon:'🎂', label:'Edad',        val: p.age   ? p.age+' años':'Sin registrar'},
+    {icon:'🔐', label:'Sesión via',  val: methodLabels[p.loginMethod]||'Sin configurar'},
+  ];
+  document.getElementById('prof-account').innerHTML = accItems.map((item,i)=>`
+    <button onclick="openEditProfile();clickSnd()" class="w-full flex items-center gap-3 active:opacity-60 focus:outline-none text-left">
+      <div class="acc-row-icon">${item.icon}</div>
+      <div style="flex:1;min-width:0">
+        <p style="font-size:.6rem;font-weight:900;color:#94a3b8;text-transform:uppercase;letter-spacing:.07em">${item.label}</p>
+        <p style="font-size:.875rem;font-weight:700;color:#0f172a;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${item.val}</p>
+      </div>
+      <svg style="width:1rem;height:1rem;color:#cbd5e1;flex-shrink:0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg>
+    </button>
+    ${i<accItems.length-1?'<div style="height:1px;background:#f8fafc;margin-left:3rem"></div>':''}`).join('');
+}
+
+// ── Edit Profile Sheet ──
+function openEditProfile(){
+  const p = profileData;
+  document.getElementById('edit-name').value  = p.name  || '';
+  document.getElementById('edit-email').value = p.email || '';
+  document.getElementById('edit-phone').value = p.phone || '';
+  document.getElementById('edit-city').value  = p.city  || '';
+  document.getElementById('edit-age').value   = p.age   || '';
+  document.querySelectorAll('.login-method-btn').forEach(b=>b.classList.remove('sel-method'));
+  if(p.loginMethod){
+    const sel = document.querySelector(`.login-method-btn[onclick*="'${p.loginMethod}'"]`);
+    if(sel) sel.classList.add('sel-method');
+  }
+  document.getElementById('edit-sbg').classList.add('on');
+  document.getElementById('edit-sht').classList.add('on');
+  clickSnd();
+}
+function closeEditProfile(){
+  document.getElementById('edit-sbg').classList.remove('on');
+  document.getElementById('edit-sht').classList.remove('on');
+  clickSnd();
+}
+function selectLoginMethod(method, btn){
+  profileData.loginMethod = method;
+  document.querySelectorAll('.login-method-btn').forEach(b=>b.classList.remove('sel-method'));
+  btn.classList.add('sel-method');
+  clickSnd();
+}
+function saveProfileData(){
+  profileData.name  = document.getElementById('edit-name').value.trim();
+  profileData.email = document.getElementById('edit-email').value.trim();
+  profileData.phone = document.getElementById('edit-phone').value.trim();
+  profileData.city  = document.getElementById('edit-city').value.trim();
+  profileData.age   = document.getElementById('edit-age').value.trim();
+  savePD();
+  closeEditProfile();
+  renderProfile();
+  successSnd();
+}
+
+// ─────────────────────────────────────
+// OMS · CURVAS DE CRECIMIENTO
+// ─────────────────────────────────────
+const OMS_AGES = [0,3,6,9,12,18,24,36,48,60];
+
+// Tablas OMS 2006 — Percentiles (P3,P15,P50,P85,P97)
+const OMS_DATA = {
+  m:{ // Niños
+    pe:{ // Peso para la edad (kg)
+      p3: [2.5,4.9,6.4,7.4,7.8,8.6,9.3,10.6,11.9,13.1],
+      p15:[2.9,5.6,7.3,8.4,9.0,9.9,10.8,12.3,13.8,15.2],
+      p50:[3.3,6.4,8.2,9.4,10.2,11.3,12.2,14.1,15.9,17.7],
+      p85:[3.9,7.2,9.2,10.5,11.5,12.8,13.9,16.1,18.3,20.4],
+      p97:[4.4,8.0,10.2,11.6,12.7,14.2,15.5,18.0,20.5,22.9],
+    },
+    te:{ // Talla para la edad (cm)
+      p3: [46.3,57.3,63.3,68.0,71.7,77.5,82.3,89.7,95.8,101.5],
+      p15:[48.2,59.4,65.7,70.5,74.3,80.4,85.5,93.1,99.6,105.4],
+      p50:[49.9,61.4,67.6,72.7,76.5,82.7,88.0,96.1,102.9,109.2],
+      p85:[51.8,63.5,69.8,74.9,78.8,85.4,90.8,99.2,106.6,113.1],
+      p97:[53.4,65.5,71.9,77.1,81.2,88.1,93.6,102.3,110.1,116.7],
+    }
+  },
+  f:{ // Niñas
+    pe:{
+      p3: [2.4,4.5,5.8,6.8,7.1,8.0,8.8,10.0,11.2,12.5],
+      p15:[2.8,5.2,6.7,7.7,8.2,9.2,10.2,11.7,13.0,14.5],
+      p50:[3.2,5.8,7.5,8.7,9.5,10.8,11.5,13.5,15.3,17.0],
+      p85:[3.7,6.6,8.5,9.9,10.7,12.2,13.2,15.5,17.7,20.0],
+      p97:[4.2,7.5,9.6,11.0,12.0,13.7,14.9,17.5,20.3,23.1],
+    },
+    te:{
+      p3: [45.6,55.8,61.5,66.3,70.0,76.0,80.8,88.3,94.3,99.9],
+      p15:[47.5,57.9,63.7,68.6,72.6,78.8,83.8,91.5,97.9,104.0],
+      p50:[49.1,59.8,65.7,70.7,74.8,81.2,86.4,94.3,101.6,107.9],
+      p85:[51.0,61.8,67.8,73.0,77.2,83.9,89.3,97.7,105.3,112.0],
+      p97:[52.7,63.9,70.0,75.2,79.6,86.7,92.3,101.0,109.0,116.0],
+    }
+  }
+};
+
+let growSex='m', growPeChart=null, growTeChart=null;
+
+function setGrowSex(sex,btn){
+  growSex=sex;
+  const baseOn ='rounded-xl font-black text-[12px] bg-brand-kids text-white focus:outline-none active:scale-95 transition-all flex-1';
+  const baseOff='rounded-xl font-black text-[12px] bg-slate-100 text-slate-500 focus:outline-none active:scale-95 transition-all flex-1';
+  document.getElementById('grow-btn-m').className=sex==='m'?baseOn:baseOff;
+  document.getElementById('grow-btn-f').className=sex==='f'?baseOn:baseOff;
+  clickSnd();
+}
+
+// Interpolación lineal entre puntos OMS
+function omsInterp(ageMo,row){
+  const A=OMS_AGES;
+  if(ageMo<=A[0]) return row[0];
+  if(ageMo>=A[A.length-1]) return row[A.length-1];
+  let i=0; while(i<A.length-1&&A[i+1]<ageMo)i++;
+  const t=(ageMo-A[i])/(A[i+1]-A[i]);
+  return +(row[i]+t*(row[i+1]-row[i])).toFixed(2);
+}
+
+// Clasificación de percentil
+function omsBand(val,p3,p15,p85,p97){
+  if(val<p3)  return {label:'Bajo peso severo',emoji:'🚨',color:'#ef4444',bg:'#fef2f2',z:'< P3'};
+  if(val<p15) return {label:'Bajo peso',       emoji:'⚠️',color:'#f97316',bg:'#fff7ed',z:'P3 – P15'};
+  if(val<p85) return {label:'Normal ✓',         emoji:'✅',color:'#10b981',bg:'#ecfdf5',z:'P15 – P85'};
+  if(val<p97) return {label:'Sobrepeso',         emoji:'📊',color:'#f59e0b',bg:'#fffbeb',z:'P85 – P97'};
+  return             {label:'Obesidad',          emoji:'🏥',color:'#dc2626',bg:'#fef2f2',z:'> P97'};
+}
+
+// IMC clasificación infantil simplificada
+function imcClass(imc){
+  if(imc<12.5) return {label:'Muy bajo',  color:'#3b82f6'};
+  if(imc<14.0) return {label:'Delgadez',  color:'#0ea5e9'};
+  if(imc<17.5) return {label:'Normal ✓',  color:'#10b981'};
+  if(imc<19.0) return {label:'Sobrepeso', color:'#f59e0b'};
+  return              {label:'Obesidad',  color:'#ef4444'};
+}
+
+function calcGrowth(){
+  const ageMo=parseFloat(document.getElementById('grow-age').value);
+  const wt=parseFloat(document.getElementById('grow-weight').value);
+  const ht=parseFloat(document.getElementById('grow-height').value);
+
+  if(isNaN(ageMo)||ageMo<0||ageMo>60){document.getElementById('grow-age').focus();return;}
+  if(isNaN(wt)||wt<1||wt>30){document.getElementById('grow-weight').focus();return;}
+  if(isNaN(ht)||ht<40||ht>130){document.getElementById('grow-height').focus();return;}
+
+  clickSnd();
+  const d=OMS_DATA[growSex];
+
+  // Interpolar percentiles para esta edad
+  const pe={p3:omsInterp(ageMo,d.pe.p3),p15:omsInterp(ageMo,d.pe.p15),p50:omsInterp(ageMo,d.pe.p50),p85:omsInterp(ageMo,d.pe.p85),p97:omsInterp(ageMo,d.pe.p97)};
+  const te={p3:omsInterp(ageMo,d.te.p3),p15:omsInterp(ageMo,d.te.p15),p50:omsInterp(ageMo,d.te.p50),p85:omsInterp(ageMo,d.te.p85),p97:omsInterp(ageMo,d.te.p97)};
+
+  const peBand=omsBand(wt,pe.p3,pe.p15,pe.p85,pe.p97);
+  const teBand=omsBand(ht,te.p3,te.p15,te.p85,te.p97);
+
+  // IMC
+  const imc=wt/Math.pow(ht/100,2);
+  const imcR=Math.round(imc*10)/10;
+  const imcCls=imcClass(imc);
+
+  // Actualizar cards P/E y T/E
+  const peCard=document.getElementById('grow-card-pe');
+  peCard.style.background=peBand.color;
+  document.getElementById('grow-pe-val').textContent=wt+' kg · '+peBand.z;
+  document.getElementById('grow-pe-label').textContent=peBand.emoji+' '+peBand.label;
+
+  const teCard=document.getElementById('grow-card-te');
+  teCard.style.background=teBand.color;
+  document.getElementById('grow-te-val').textContent=ht+' cm · '+teBand.z;
+  document.getElementById('grow-te-label').textContent=teBand.emoji+' '+teBand.label;
+
+  // IMC bar indicator
+  document.getElementById('grow-imc-display').textContent='IMC: '+imcR;
+  // Mapear IMC a posición en barra (rango 10-22)
+  const pct=Math.min(100,Math.max(0,(imc-10)/12*100));
+  document.getElementById('grow-imc-indicator').style.left=pct+'%';
+  document.getElementById('grow-imc-class').textContent=imcCls.label+' · IMC '+imcR;
+  document.getElementById('grow-imc-class').style.color=imcCls.color;
+  document.getElementById('grow-imc-class').style.background=imcCls.color+'15';
+
+  // Consejo Dr. Pecue
+  const nino=growSex==='m'?'niño':'niña';
+  const advMap={
+    'Normal ✓':{text:`¡Crecimiento excelente! El ${nino} está en el rango P15-P85 esperado para su edad. Continúa con lactancia o alimentación complementaria variada, citas de seguimiento cada 2 meses y estimulación física con juego activo.`},
+    'Bajo peso':{text:`El ${nino} está por debajo del percentil 15. Aumenta la frecuencia de comidas a 5-6 al día, prioriza alimentos calórico-proteicos (aguacate, huevo, leguminosas, lácteos enteros) y programa consulta pronto.`},
+    'Bajo peso severo':{text:`Se detecta peso muy por debajo de P3. Esto requiere evaluación médica urgente. Agenda consulta con el Dr. Pecue para un plan de recuperación nutricional intensivo y descartar causas subyacentes.`},
+    'Sobrepeso':{text:`El ${nino} supera el percentil 85. Revisemos la calidad de alimentos: menos azúcares añadidos, jugos y ultraprocesados. Aumentar juego activo al aire libre mínimo 60 min/día. No se hacen dietas restrictivas en menores sin supervisión.`},
+    'Obesidad':{text:`IMC superior a P97. El Dr. Pecue diseñará un plan familiar integral: cambio de patrones alimentarios en el hogar, actividad física progresiva y seguimiento mensual. Nunca restricción calórica severa sin control médico.`}
+  };
+  const adv=advMap[peBand.label]||advMap['Normal ✓'];
+  const advEl=document.getElementById('grow-advice');
+  advEl.style.background=peBand.bg;
+  advEl.style.borderColor=peBand.color+'44';
+  advEl.innerHTML=`<div style="display:flex;gap:.75rem;align-items:flex-start">
+    <span style="font-size:1.5rem;flex-shrink:0">${peBand.emoji}</span>
+    <div>
+      <p style="font-size:.7rem;font-weight:900;color:${peBand.color};text-transform:uppercase;letter-spacing:.06em;margin-bottom:.35rem">Consejo del Dr. Pecue · Pediatra</p>
+      <p style="font-size:.78rem;font-weight:600;color:#475569;line-height:1.5">${adv.text}</p>
+      <p style="font-size:.68rem;font-weight:700;color:#94a3b8;margin-top:.5rem">P50 esperado: ${pe.p50} kg · ${te.p50} cm para ${Math.round(ageMo)} meses</p>
+    </div>
+  </div>`;
+
+  // Mostrar resultados
+  document.getElementById('grow-results').classList.remove('hidden');
+  setTimeout(()=>buildGrowthCharts(ageMo,wt,ht,peBand.color,teBand.color),150);
+  successSnd();
+}
+
+function toXY(ages,vals){ return ages.map((a,i)=>({x:a,y:vals[i]})); }
+
+function buildGrowthCharts(ageMo,wt,ht,peColor,teColor){
+  const d=OMS_DATA[growSex];
+  const mkChart=(canvasId,titulo,unidad,p3d,p15d,p50d,p85d,p97d,patY,dotColor)=>{
+    const existing=Chart.getChart(canvasId);
+    if(existing) existing.destroy();
+    return new Chart(document.getElementById(canvasId).getContext('2d'),{
+      type:'line',
+      data:{datasets:[
+        {label:'P97', data:toXY(OMS_AGES,p97d), borderColor:'#ef4444', borderDash:[6,4], borderWidth:1.5, pointRadius:0, fill:false, tension:.35},
+        {label:'P85', data:toXY(OMS_AGES,p85d), borderColor:'#f97316', borderDash:[4,3], borderWidth:1.5, pointRadius:0, fill:false, tension:.35},
+        {label:'P50', data:toXY(OMS_AGES,p50d), borderColor:'#0ea5e9', borderWidth:2,    pointRadius:0, fill:false, tension:.35},
+        {label:'P15', data:toXY(OMS_AGES,p15d), borderColor:'#f97316', borderDash:[4,3], borderWidth:1.5, pointRadius:0, fill:false, tension:.35},
+        {label:'P3',  data:toXY(OMS_AGES,p3d),  borderColor:'#ef4444', borderDash:[6,4], borderWidth:1.5, pointRadius:0, fill:false, tension:.35},
+        {label:'Bebé',type:'scatter', data:[{x:ageMo,y:patY}],
+         backgroundColor:dotColor||'#0f172a', borderColor:'#fff', borderWidth:2.5,
+         pointRadius:9, pointHoverRadius:11},
+      ]},
+      options:{
+        responsive:true, maintainAspectRatio:false,
+        animation:{duration:700},
+        plugins:{
+          legend:{display:false},
+          tooltip:{
+            callbacks:{
+              label:c=>c.dataset.label==='Bebé'
+                ? ` Tu bebé: ${c.parsed.y} ${unidad}`
+                : ` ${c.dataset.label}: ${c.parsed.y} ${unidad}`
+            }
+          }
+        },
+        scales:{
+          x:{type:'linear',min:0,max:60,
+             title:{display:true,text:'Edad (meses)',font:{size:9,weight:'700',family:'Nunito'},color:'#94a3b8'},
+             ticks:{font:{size:8,family:'Nunito'},stepSize:12,color:'#94a3b8'},
+             grid:{color:'#f1f5f9'}},
+          y:{title:{display:true,text:`${titulo} (${unidad})`,font:{size:9,weight:'700',family:'Nunito'},color:'#94a3b8'},
+             ticks:{font:{size:8,family:'Nunito'},color:'#94a3b8'},
+             grid:{color:'#f1f5f9'}}
+        }
+      }
+    });
+  };
+  growPeChart=mkChart('growthPeChart','Peso','kg',  d.pe.p3,d.pe.p15,d.pe.p50,d.pe.p85,d.pe.p97, wt, peColor);
+  growTeChart=mkChart('growthTeChart','Talla','cm', d.te.p3,d.te.p15,d.te.p50,d.te.p85,d.te.p97, ht, teColor);
+}
+
+// ─────────────────────────────────────
+// NUTRIPOINTS
+// ─────────────────────────────────────
+function calcPoints(){
+  let pts=0;
+  pts+=(state.water||0)*3;                           // max 24
+  if(state.sleep>=7&&state.sleep<=9) pts+=20;
+  if(state.mood) pts+=10;
+  pts+=Math.min((state.breathCycles||0)*3,15);       // max 15
+  if(state.digestYN!==null) pts+=10;
+  if(state.weight) pts+=10;
+  return Math.min(pts,100);
+}
+function updatePointsBadge(){
+  const pts=calcPoints();
+  const ev=document.getElementById('pts-val');
+  const sl=document.getElementById('pts-streak-label');
+  if(ev) ev.textContent=pts+' pts';
+  if(sl) sl.textContent='Racha: '+(state.streak||1)+'d';
+}
+
+// ─────────────────────────────────────
+// BUILD: TALLERES
+// ─────────────────────────────────────
+function buildTalleres(){
+  const el=document.getElementById('talleres-list');
+  if(!el) return;
+  el.innerHTML=DB.talleres.map(t=>`
+    <div class="taller-card snap-start">
+      <div class="p-4">
+        <div class="flex items-start gap-3 mb-3">
+          <div class="w-11 h-11 rounded-xl flex items-center justify-center text-2xl shrink-0" style="background:${t.colorL}">${t.icon}</div>
+          <div class="min-w-0">
+            <p class="text-[10px] font-black uppercase tracking-wide mb-0.5" style="color:${t.color}">${t.date} · ${t.hora}</p>
+            <p class="font-black text-[14px] text-brand-dark leading-snug">${t.tema}</p>
+          </div>
+        </div>
+        <div class="flex items-center justify-between">
+          <span class="text-[11px] font-bold text-slate-400">${t.doc}</span>
+          <span class="text-[10px] font-black px-2 py-1 rounded-lg" style="background:${t.colorL};color:${t.color}">${t.cupos}</span>
+        </div>
+      </div>
+      <button onclick="clickSnd()" class="w-full py-3 font-black text-[13px] text-white active:opacity-80 transition-opacity focus:outline-none" style="background:${t.color}">
+        Reservar Lugar →
+      </button>
+    </div>`).join('');
+}
+
+// ─────────────────────────────────────
+// BUILD: TESTIMONIOS
+// ─────────────────────────────────────
+function buildTestimonios(){
+  const el=document.getElementById('test-list');
+  if(!el) return;
+  el.innerHTML=DB.testimonios.map(t=>`
+    <div class="test-card snap-start">
+      <div class="flex gap-0.5 mb-2.5" aria-label="${t.stars} estrellas">${'⭐'.repeat(t.stars)}</div>
+      <p class="text-[13px] font-semibold text-slate-600 leading-snug mb-4">"${t.texto}"</p>
+      <div class="flex items-center gap-2.5">
+        <div class="w-9 h-9 rounded-full bg-slate-50 border border-slate-100 flex items-center justify-center text-lg">${t.emoji}</div>
+        <div>
+          <p class="font-black text-[13px] text-brand-dark leading-none">${t.nombre}</p>
+          <p class="text-[10px] font-bold text-slate-400 mt-0.5">${t.programa}</p>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+// ─────────────────────────────────────
+// BUILD: RECETAS
+// ─────────────────────────────────────
+function buildRecetas(){
+  const el=document.getElementById('recetas-list');
+  if(!el) return;
+  el.innerHTML=DB.recetas.map(r=>`
+    <div class="receta-card snap-start">
+      <div class="flex flex-col items-center text-center px-4 pt-4 pb-3" style="background:${r.colorL}">
+        <span class="text-4xl mb-1.5">${r.emoji}</span>
+        <p class="font-black text-[13px] text-brand-dark leading-snug">${r.nombre}</p>
+      </div>
+      <div class="px-3 pt-2.5 pb-3">
+        <div class="flex justify-between mb-2">
+          <span class="text-[10px] font-black text-slate-400">⏱ ${r.tiempo}</span>
+          <span class="text-[10px] font-black text-slate-400">🔥 ${r.cals}</span>
+        </div>
+        <div class="flex gap-1 flex-wrap">
+          ${r.tags.map(tag=>`<span class="text-[9px] font-black px-1.5 py-0.5 rounded-md" style="background:${r.colorL};color:${r.color}">${tag}</span>`).join('')}
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+// ─────────────────────────────────────
+// INIT
+// ─────────────────────────────────────
+window.addEventListener('DOMContentLoaded',()=>{
+  // Splash
+  const bar=document.getElementById('splash-bar');
+  bar.style.width='100%';
+  setTimeout(()=>{ document.getElementById('splash').classList.add('gone'); },1600);
+
+  // Agua init
+  buildWater();
+  // Sueño init
+  if(state.sleep!==null) updateSleepUI();
+  // Mood init
+  if(state.mood){ document.querySelectorAll('.mood-btn').forEach(b=>{ if(b.dataset.mood===state.mood) b.classList.add('sel'); }); document.getElementById('mini-mood').textContent=state.mood; }
+  // Breath init
+  if(state.breathCycles){ document.getElementById('breath-count-label').textContent=state.breathCycles+' ciclos'; document.getElementById('mini-breath').textContent=state.breathCycles+' ciclos'; document.getElementById('breath-inner').textContent=state.breathCycles+' ciclos\ncompletados'; }
+  // Digest init
+  if(state.digestYN!==null){ document.getElementById('mini-digest').textContent=state.digestYN?'Sí ✓':'No ✗'; if(state.digestYN) document.getElementById('bristol-section').classList.remove('hidden'); }
+  // Weight init
+  if(state.weight){ document.getElementById('mini-weight').textContent=state.weight+' kg'; }
+  // Chat init
+  switchProfile('rap');
+  appendMsg('¡Hola! 👋 Soy el asistente de la <b>Academia Nutrifit</b>.<br><br>Conozco los protocolos del <b>Dr. Juan Pablo</b> (Nutriólogo) y el <b>Dr. Pecue</b> (Pediatra). Puedo responder tus preguntas o conectarte directo con ellos.<br><br>¿En qué te ayudo hoy? 😊', false);
+
+  // Nuevas secciones
+  buildTalleres();
+  buildTestimonios();
+  buildRecetas();
+  updatePointsBadge();
+});
+</script>
+</body>
+</html>

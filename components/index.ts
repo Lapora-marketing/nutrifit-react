@@ -10,6 +10,7 @@ export { ScrollProgress } from './ScrollProgress'
 export { AnimatedNumber } from './AnimatedNumber'
 export { TrustBadges } from './TrustBadges'
 export { BorderBeamButton } from './BorderBeamButton'
+export { PWAInstaller } from './PWAInstaller'
 
 // Sections
 export { HeroSection } from './sections/HeroSection'
